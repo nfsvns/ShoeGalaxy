@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/layout/layout.html::dynamic(~{::title}, ~{::body})}">
+<head>
+<title>Shoppers &mdash; Colorlib e-Commerce Template</title>
+<meta charset="utf-8">
+</head>
+<body>
+	<div class="bg-light py-3">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12 mb-0">
+					<a href="index.html">Home</a> <span class="mx-2 mb-0">/</span> <a
+						href="cart.html">Cart</a> <span class="mx-2 mb-0">/</span> <strong
+						class="text-black">Checkout</strong>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="site-section">
+		<div class="container">
+			<div class="row mb-5">
+				<div class="col-md-12">
+					<div class="border p-4 rounded" role="alert">
+						Returning customer? <a href="#">Click here</a> to login
+					</div>
+				</div>
+			</div>
+
+			<form action="/checkout.html" method="post">
+				<div class="row">
+					<div class="col-md-6 mb-5 mb-md-0">
+						<h2 class="h3 mb-3 text-black">Your Order</h2>
+
+						<div class="p-3 p-lg-5 border">
+							<table class="table site-block-order-table mb-5">
+								<thead>
+									<th>Image</th>
+									<th>Id</th>
+									<th>Size</th>
+									<th>Price</th>
+									<th>Count</th>
+									<th>Total</th>
+								</thead>
+								<tbody>
+									<tr ng-repeat="item in cart.items">
+										<td><img src="/images/{{item.image}}" style="width: 50%"></td>
+										<td><input type="text" ng-model="item.id"
+											name="idProduct"
+											class="border border-light" /></td>
+										<td>{{item.sizes}}</td>
+										<td>${{item.price | number : 2}}</td>
+										
+										<td><input ng-model="item.qty" type="text"
+											name="countProduct" style="width: 20px" class="border border-light" /></td>
+										<td>${{cart.amt_of(item) | number : 2}}</td>
+
+
+									</tr>
+									<tr>
+										<td class="text-black font-weight-bold"><strong>Order
+												Total</strong></td>
+										<td class="text-black font-weight-bold"><strong>${{cart.amount
+												| number : 2}}</strong></td>
+										<td><input type="hidden" id="inputAmount" name="total"
+											value="{{cart.amount | number : 2}}" /></td>
+									</tr>
+								</tbody>
+							</table>
+
+							<div class="btn-group btn-group-toggle d-flex flex-column mb-4"
+								data-toggle="buttons">
+								<label class="btn btn-secondary active"> <input
+									type="radio" name="options" id="option1" autocomplete="off"
+									checked> Thanh toán khi nhận hàng
+								</label> <label class="btn btn-secondary"> <input type="radio"
+									name="options" id="option2" autocomplete="off">
+									Momo/ZaloPay
+								</label> <label class="btn btn-secondary"> <input type="radio"
+									name="options" id="option3" autocomplete="off"> Thẻ
+									ngân hàng
+								</label>
+							</div>
+
+							<div class="form-group">
+								<button class="btn btn-primary btn-lg py-3 btn-block">Place
+									Order</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+
+						<div class="row mb-5">
+							<div class="col-md-12">
+								<h2 class="h3 mb-3 text-black">Billing Details</h2>
+								<div class="p-3 p-lg-5 border">
+
+									<div class="form-group row">
+										<div class="col-md-12">
+										<label th:text="${message}"></label>
+											<label for="c_fname" class="text-black">Name<span
+												class="text-danger">*</span>
+											</label> <input type="text" class="form-control" id="fullname"
+												name="fullname"
+												th:value="${session.user != null ? session.user.fullname : ''}"
+												required>
+										</div>
+									
+
+									
+										<div class="col-md-12">
+											<label for="c_address" class="text-black">Address <span
+												class="text-danger">*</span></label> <input type="text"
+												class="form-control" id="address" name="address"
+												placeholder="Address" required>
+										</div>
+										<div class="col-md-12 pt-4">
+											<label for="c_email_address" class="text-black">Email
+												Address <span class="text-danger">*</span>
+											</label> <input type="text" class="form-control" id="email"
+												name="email"
+												th:value="${session.user != null ? session.user.email : ''}"
+												required>
+										</div>
+									</div>
+								
+								</div>
+							</div>
+						</div>
+
+						<div class="row mb-5">
+							<div class="col-md-12">
+								<h2 class="h3 mb-3 text-black">Coupon Code</h2>
+								<div class="p-3 p-lg-5 border">
+									<label for="c_code" class="text-black mb-3">Enter your
+										coupon code if you have one</label>
+									<div class="input-group w-75">
+										<input type="text" class="form-control" id="c_code"
+											placeholder="Coupon Code" aria-label="Coupon Code"
+											aria-describedby="button-addon2">
+										<div class="input-group-append">
+											<button class="btn btn-primary btn-sm" type="button"
+												id="button-addon2">Apply</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

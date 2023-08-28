@@ -1,0 +1,12 @@
+<nav class="navbar navbar-inverse" style="font-variant: small-caps;">
+	<div class="container-fluid">
+		<ul class="nav navbar-nav">
+			<li><a href="/">Home</a></li>
+			<li><a href="#!product">Products</a></li>
+			<li><a href="#!history">Historys</a></li>
+			<li th:if="${#request.isUserInRole('STAF')}"><a href="#!authorize">Authorizing</a></li>
+			<li th:if="${#request.isUserInRole('STAF')}"><a href="#!revenue">Revenue</a></li>
+			<li><a href="/logout">Sign Out</a></li>
+		</ul>
+	</div>
+</nav>
