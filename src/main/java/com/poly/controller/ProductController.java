@@ -38,6 +38,12 @@ public class ProductController {
 		Pageable pageable = PageRequest.of(p.orElse(0), 6);
 		Page<Product> page = dao.findAll(pageable);
 		model.addAttribute("products", page);
+		int count = dao.countMlBProducts();
+		model.addAttribute("count", count);
+		int countAD = dao.countADProducts();
+		model.addAttribute("countAD", countAD);
+		int countNK = dao.countNKProducts();
+		model.addAttribute("countNK", countNK);
 		return "shop";
 	}
 
