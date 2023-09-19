@@ -13,12 +13,9 @@ public class Size {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-
 	@ManyToOne @JoinColumn(name = "productId")
 	private Product product;
 	
-	
-
 	@Column(name = "size")
 	private Integer sizes;
 

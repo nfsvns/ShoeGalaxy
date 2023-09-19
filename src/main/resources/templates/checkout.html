@@ -36,8 +36,8 @@
 						<div class="p-3 p-lg-5 border">
 							<table class="table site-block-order-table mb-5">
 								<thead>
-									<th>Image</th>
 									<th>Id</th>
+									<th>Image</th>
 									<th>Size</th>
 									<th>Price</th>
 									<th>Count</th>
@@ -45,53 +45,32 @@
 								</thead>
 								<tbody>
 									<tr ng-repeat="item in cart.items">
-										<td><img src="/images/{{item.image}}" style="width: 30%"></td>
-										<td><input type="text" style="width: 20%"
+										<td><input type="text" style="width:30%"
 											ng-model="item.id" name="idProduct"
 											class="border border-light" /></td>
+										<td><img src="/images/{{item.image}}" style="width:30%"></td>
+
 										<td>{{item.sizes}}</td>
-										<td>${{item.price | number : 2}}</td>
+										<td>${{cart.price_product(item)}}</td>
 										<td><input ng-model="item.qty" type="text"
-											name="countProduct" style="width: 20px"
+											name="countProduct" style="width: 30px"
 											class="border border-light" /></td>
-										<td>${{cart.amt_of(item) | number : 2}}</td>
+										<td>${{cart.amtt_of(item) | number : 2}}</td>
 
 
 									</tr>
 									<tr>
 										<td class="text-black font-weight-bold"><strong>Order
 												Total</strong></td>
-										<!-- 	<td class="text-black font-weight-bold"><strong>${{cart.amount
-												| number : 2}} </strong></td>
 
-
-										<td th:each="discountCode : ${discountCodes}"
-											th:text="${discountCode.discountAmount}"></td>
-
-										<td class="text-black font-weight-bold"><strong
-											th:text="${calculatedValue != null ? ('$' + calculatedValue ) : ' '}"></strong>
-										</td> -->
-
-
-									<!-- 	<td class="text-black font-weight-bold"><strong
-											th:if="${calculatedValue != null}"
-											th:text="${'$' + calculatedValue }"></strong> <strong
-											th:unless="${calculatedValue != null}"> <span><strong>${{cart.amount
-														| number : 2}} </strong></span>
-										</strong></td> -->
-										<td><input class="text-black font-weight-bold border border-light" 
+										<td><input
+											class="text-black font-weight-bold border border-light"
 											type="text" name="total"
 											th:value="${calculatedValue != null ?  + calculatedValue : '{{cart.amount | number : 2}}'}" />
-										</td>
 
-
-										<!-- 
-										<td class="text-black font-weight-bold"><strong>
-												<input type="text"
-												th:value="${calculatedValue != null ? ('$' + calculatedValue) : ''}" />
-										</strong></td>
--->
-
+											<input style="text-decoration: line-through;"
+											class="text-black font-weight-bold border border-light"
+											type="text" th:value="${{cartAmount}}" /></td>
 										<td><input type="hidden" id="inputAmount"
 											name="totalAmount" value="{{cart.amount}}" /></td>
 									</tr>
@@ -171,31 +150,14 @@
 									<div class="input-group w-75">
 										<input type="text" name="code" placeholder="Nhập mã giảm giá"
 											th:value="${code}">
-											
+
 										<div class="input-group-append">
 											<button type="submit" formaction="/searchCodee">Tìm
 												kiếm</button>
 
 										</div>
 
-									<!-- 	<table>
-											<thead>
-												<tr>
-													<th>ID</th>
-													<th>Mã giảm giá</th>
-													<th>Số tiền giảm</th>
-													<th>Ngày hết hạn</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr th:each="discountCode : ${discountCodes}">
-													<td th:text="${discountCode.id}"></td>
-													<td th:text="${discountCode.code}"></td>
-													<td th:text="${discountCode.discountAmount}"></td>
-													<td th:text="${discountCode.expirationDate}"></td>
-												</tr>
-											</tbody>
-										</table> -->
+										
 									</div>
 								</div>
 							</div>

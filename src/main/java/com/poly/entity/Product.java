@@ -31,14 +31,25 @@ public class Product implements Serializable {
 	private Integer size;
 	private Integer quantity;
 	private Boolean available;
-	
-	@ManyToOne @JoinColumn(name = "category_id")
+
+	@ManyToOne
+	@JoinColumn(name = "category_id")
 	private Category category;
+	
+	
+	@ManyToOne
+	@JoinColumn(name = "sale_id")
+	private Discount_Sale discount_sale; 
+	
 	@JsonIgnore
 	@OneToMany(mappedBy = "product")
 	private List<OrderDetail> orderDetails;
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "product")
 	private List<Size> sizes;
+	
+	
+	
 
 }

@@ -87,6 +87,7 @@ public class OrderController {
 
 				// Truyền giá trị mới vào view
 				model.addAttribute("calculatedValue", calculatedValue);
+				model.addAttribute("cartAmount", cartAmount);
 			} else {
 				double calculatedValue = Double.parseDouble(totalAmount);
 				model.addAttribute("calculatedValue", calculatedValue);
@@ -149,9 +150,7 @@ public class OrderController {
 		order.setCreateDate(now);
 		order.setAddress(address);
 
-//		if (user != null) {
-//			order.setAccount(user);
-//		}
+
 
 		order.setAccount(user);
 		order.setNguoinhan(fullname);

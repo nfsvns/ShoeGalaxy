@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.poly.dao.CategoryDAO;
+
+import com.poly.dao.DiscountSaleDAO;
 import com.poly.dao.ProductDAO;
 import com.poly.dao.SizeDAO;
 import com.poly.entity.Product;
@@ -30,6 +32,8 @@ public class ProductController {
 	@Autowired
 	SizeDAO sizeDAO;
 
+
+
 	@Autowired
 	SessionService sessionService;
 
@@ -37,7 +41,10 @@ public class ProductController {
 	public String list(Model model, @RequestParam("p") Optional<Integer> p) {
 		Pageable pageable = PageRequest.of(p.orElse(0), 6);
 		Page<Product> page = dao.findAll(pageable);
+
 		model.addAttribute("products", page);
+		
+
 		int count = dao.countMlBProducts();
 		model.addAttribute("count", count);
 		int countAD = dao.countADProducts();
@@ -58,6 +65,12 @@ public class ProductController {
 		model.addAttribute("products", page);
 		model.addAttribute("keywords", keywords);
 		model.addAttribute("check", "1");
+		int count = dao.countMlBProducts();
+		model.addAttribute("count", count);
+		int countAD = dao.countADProducts();
+		model.addAttribute("countAD", countAD);
+		int countNK = dao.countNKProducts();
+		model.addAttribute("countNK", countNK);
 		return "shop";
 	}
 
@@ -73,6 +86,12 @@ public class ProductController {
 		Page<Product> item = dao.findByPriceBetween(minPrice, maxPrice, pageable);
 		model.addAttribute("products", item);
 		model.addAttribute("check", "2");
+		int count = dao.countMlBProducts();
+		model.addAttribute("count", count);
+		int countAD = dao.countADProducts();
+		model.addAttribute("countAD", countAD);
+		int countNK = dao.countNKProducts();
+		model.addAttribute("countNK", countNK);
 		return "shop";
 	}
 
@@ -86,6 +105,12 @@ public class ProductController {
 		Page<Product> page = dao.findByBrand(brand, pageable);
 		model.addAttribute("products", page);
 		model.addAttribute("check", "3");
+		int count = dao.countMlBProducts();
+		model.addAttribute("count", count);
+		int countAD = dao.countADProducts();
+		model.addAttribute("countAD", countAD);
+		int countNK = dao.countNKProducts();
+		model.addAttribute("countNK", countNK);
 		return "shop";
 	}
 
@@ -100,6 +125,12 @@ public class ProductController {
 		Page<Product> page = dao.findAll(pageable);
 		model.addAttribute("products", page);
 		model.addAttribute("check", "4");
+		int count = dao.countMlBProducts();
+		model.addAttribute("count", count);
+		int countAD = dao.countADProducts();
+		model.addAttribute("countAD", countAD);
+		int countNK = dao.countNKProducts();
+		model.addAttribute("countNK", countNK);
 		return "shop";
 	}
 
@@ -112,6 +143,12 @@ public class ProductController {
 		Page<Product> page = dao.findAll(pageable);
 		model.addAttribute("products", page);
 		model.addAttribute("check", "5");
+		int count = dao.countMlBProducts();
+		model.addAttribute("count", count);
+		int countAD = dao.countADProducts();
+		model.addAttribute("countAD", countAD);
+		int countNK = dao.countNKProducts();
+		model.addAttribute("countNK", countNK);
 		return "shop";
 	}
 

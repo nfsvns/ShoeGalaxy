@@ -9,6 +9,7 @@
 				<th>Size</th>
 				<th>Image</th>
 				<th>Category</th>
+				<th>DiscountSale</th>
 				<th>Available?</th>
 				<th></th>
 			</tr>
@@ -21,6 +22,10 @@
 				<td>{{item.size}}</td>
 				<td>{{item.image}}</td>
 				<td>{{item.category.name}}</td>
+				<td>
+    <span ng-if="item.discount_sale.name">{{item.discount_sale.name}}</span>
+    <span ng-if="!item.discount_sale.name">null</span>
+</td>
 				<td>{{item.available?'Yes':'No'}}</td>
 				<td>
 					<div class="btn-group btn-group-xs">

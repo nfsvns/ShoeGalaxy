@@ -37,7 +37,6 @@ public class ProductDiscountsController {
 	@GetMapping("/discount")
 	public String homeIndex(Model model, @RequestParam("p") Optional<Integer> p) {
 		DiscountCode item = new DiscountCode();
-
 		model.addAttribute("item", item);
 		Pageable pageable = PageRequest.of(p.orElse(0), 6);
 		Page<DiscountCode> page = dcDAO.findAll(pageable);
