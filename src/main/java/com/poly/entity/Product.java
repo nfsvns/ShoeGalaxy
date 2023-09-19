@@ -28,7 +28,6 @@ public class Product implements Serializable {
 	private String image;
 	private Double price;
 	@JoinColumn(name = "size")
-	private Integer size;
 	private Integer quantity;
 	private Boolean available;
 

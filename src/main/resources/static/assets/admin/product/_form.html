@@ -37,15 +37,23 @@
 						<div>Size</div>
 						<input ng-model="form.size" type="text" class="form-control">
 					</div>-->
+					
 					<div class="form-group col-sm-6">
-						<label for="sizeSelect">Size</label> <select ng-model="form.size"
+							<div>Sale ID</div>
+							<select ng-model="form.discount_sale.id" class="form-control">
+								<option value="" disabled selected>Chọn mã khuyến mãi</option>
+								<option ng-repeat="d in discountSale" ng-value="d.id">{{d.name}}</option>
+							</select>
+						</div>
+				<!-- 	<div class="form-group col-sm-6">
+						 <label for="sizeSelect">Size</label> <select ng-model="form.size"
 							id="sizeSelect" class="form-control">
 							<option value="" disabled selected>Chọn size</option>
 							<option
 								ng-repeat="size in [36, 37, 38, 39, 40, 41, 42, 43, 44, 45]">{{
 								size }}</option>
-						</select>
-					</div>
+						</select> 
+					</div> -->
 					<div class="form-group col-sm-6">
 						<div>Available?</div>
 						<div class="form-control">
@@ -60,13 +68,7 @@
 					</div>
 					<div class="row">
 					
-						<div class="form-group col-sm-6">
-							<div>Sale ID</div>
-							<select ng-model="form.discount_sale.id" class="form-control">
-								<option value="" disabled selected>Chọn mã khuyến mãi</option>
-								<option ng-repeat="d in discountSale" ng-value="d.id">{{d.name}}</option>
-							</select>
-						</div>
+						
 					</div>
 
 					<!-- <div class="form-group col-sm-6">
