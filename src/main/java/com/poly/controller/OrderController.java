@@ -1,6 +1,8 @@
 package com.poly.controller;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -10,16 +12,19 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.poly.dao.AccountDAO;
+import com.poly.dao.DiscountCodeDAO;
 import com.poly.dao.OrderDAO;
 import com.poly.dao.OrderDetailDAO;
 import com.poly.dao.ProductDAO;
 import com.poly.dao.ShoppingCartDAO;
 import com.poly.entity.Account;
+import com.poly.entity.DiscountCode;
 import com.poly.entity.MailInfo;
 import com.poly.entity.Order;
 import com.poly.entity.OrderDetail;
@@ -44,15 +49,54 @@ public class OrderController {
 
 	@Autowired
 	AccountDAO accountDAO;
+	@Autowired
+	DiscountCodeDAO dcDAO;
 
 	///// ORDER /////
 	@RequestMapping("checkout.html")
-	public String checkout(Model model, HttpServletRequest request) {
+	public String checkout(Model model, HttpServletRequest request,
+			@RequestParam(value = "totalAmount", required = false) String totalAmount) {
 		model.addAttribute("cartItems", shoppingCartDAO.getAll());
 		model.addAttribute("total", shoppingCartDAO.getAmount());
 //		String username = request.getRemoteUser();
 //		model.addAttribute("orders", orderDAO.findByUsername(username));
 		return "checkout";
+	}
+
+	@RequestMapping("/searchCodee")
+	public String searchDiscountCode(Model model, @RequestParam(value = "code", required = false) String code,
+			@RequestParam(value = "totalAmount", required = false) String totalAmount) {
+		List<DiscountCode> discountCodes = new ArrayList();
+
+		if (code != null && !code.isEmpty()) {
+			discountCodes = dcDAO.findBykeyword(code);
+
+			// Kiểm tra ngày hết hạn
+			LocalDate currentDate = LocalDate.now();
+			discountCodes
+					.removeIf(dc -> dc.getExpirationDate() != null && dc.getExpirationDate().isBefore(currentDate));
+
+			if (!discountCodes.isEmpty()) {
+				// Tìm thấy mã giảm giá, tính toán giá trị mới
+
+				double cartAmount = Double.parseDouble(totalAmount); // Thay thế bằng giá trị thực tế từ HTML
+				double discountAmount = discountCodes.get(0).getDiscountAmount(); // Thay thế bằng phần trăm thực tế
+
+				// Tính toán giá trị mới
+				double calculatedValue = cartAmount - (cartAmount * (discountAmount / 100.0));
+
+				// Truyền giá trị mới vào view
+				model.addAttribute("calculatedValue", calculatedValue);
+				model.addAttribute("cartAmount", cartAmount);
+			} else {
+				double calculatedValue = Double.parseDouble(totalAmount);
+				model.addAttribute("calculatedValue", calculatedValue);
+			}
+		}
+
+		model.addAttribute("code", code);
+		model.addAttribute("discountCodes", discountCodes);
+		return "checkout.html";
 	}
 
 	@PostMapping("checkout.html")
@@ -67,8 +111,8 @@ public class OrderController {
 
 		// Tạo nội dung email
 		StringBuilder bodyBuilder = new StringBuilder();
-		bodyBuilder.append("Tổng hóa đơn của ").append(fullname).append(" là: $").append(total)
-				.append(" tại địa chỉ: ").append(address).append("<br><br>");
+		bodyBuilder.append("Tổng hóa đơn của ").append(fullname).append(" là: $").append(total).append(" tại địa chỉ: ")
+				.append(address).append("<br><br>");
 
 		// Tạo bảng với CSS
 		bodyBuilder.append("<table style=\"border-collapse: collapse;\">");
@@ -106,10 +150,8 @@ public class OrderController {
 		order.setCreateDate(now);
 		order.setAddress(address);
 
-//		if (user != null) {
-//			order.setAccount(user);
-//		}
-		
+
+
 		order.setAccount(user);
 		order.setNguoinhan(fullname);
 		order.setTongtien(total);
