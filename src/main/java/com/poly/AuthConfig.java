@@ -42,16 +42,12 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
 
 		// phân quyền sử dụng
 		// demo 1
-		http.authorizeRequests().antMatchers("/checkout.html/**").authenticated()
-//			.antMatchers("/history", "/revenue", "/account.html", "/orderDetail", "/productAdmin",
-//				"/categoryAdmin", "/report").hasAnyRole("DIRE", "STAF")
-			.antMatchers("/admin/**").hasAnyRole("STAF", "DIRE")
-			.antMatchers("/rest/authorities", "/rest/revenue").hasRole("DIRE")
-			.antMatchers("/assets/**").authenticated()
-			.anyRequest().permitAll(); // anonymous
-
-		// điều khiển lỗi truy cập không đúng vai trò
-		http.exceptionHandling().accessDeniedPage("/access/denied"); // lỗi
+		http.authorizeRequests()
+//		.antMatchers("/history", "/revenue", "/account.html", "/orderDetail", "/productAdmin",
+//			"/categoryAdmin", "/report").hasAnyRole("DIRE", "STAF")
+		.antMatchers("/assets/**").hasAnyRole("STAF", "DIRE")
+		.antMatchers("/rest/authorities", "/rest/revenue").hasRole("DIRE")
+		.anyRequest().permitAll(); // anonymous
 
 		// giao diện đăng nhập
 		http.formLogin().loginPage("/login").loginProcessingUrl("/login/success") // login
