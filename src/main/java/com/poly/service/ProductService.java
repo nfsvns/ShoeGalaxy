@@ -5,7 +5,6 @@ import java.util.List;
 import com.poly.entity.Product;
 
 
-
 public interface ProductService {
 	public List<Product> findAll() ;
 	
