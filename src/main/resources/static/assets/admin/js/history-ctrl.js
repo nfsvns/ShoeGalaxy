@@ -1,13 +1,27 @@
 app.controller("history-ctrl", function($scope, $http){
 	$scope.items = [];
 	$scope.form = {};
-	
+	$scope.showDetail = false;
+	$scope.getDetailData = function(item){
+		if( item.showDetail){
+            item.showDetail = false;		
+		}
+		else{
+		$http.get(`/rest/historys/details/${item.id}`)
+		.then(function(resp){
+			item.detailData = resp.data;
+			item.showDetail = true;
+		}).catch(function(error){
+			console.error("error: ",error)
+		})
+	}
+	}
 	$scope.initialize = function(){
 		$http.get("/rest/historys").then(resp => {
 			$scope.items = resp.data;
 			$scope.form = {
 				available : true,
-			}
+			};
 		})
 
 		$scope.reset(); //để có hình mây lyc1 mới đầu
@@ -78,5 +92,6 @@ app.controller("history-ctrl", function($scope, $http){
 			this.page--;
 		}
 	}
+    
 	$scope.initialize();
 });
