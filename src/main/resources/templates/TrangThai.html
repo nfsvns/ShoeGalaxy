@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/layout/layout.html::dynamic(~{::title}, ~{::body})}">
+<head>
+
+<title>Trạng thái đơn hàng</title>
+<meta charset="utf-8">
+</head>
+<body>
+    <h2>Trạng thái đơn hàng</h2>       
+   <table class="col-12 table mx-5">
+    <thead>
+        <tr>
+            <th scope="col">Mã đơn hàng</th>
+           
+            <th scope="col">Tên sản phẩm</th>
+            <th scope="col">Số lượng</th>
+             <th scope="col">Trạng thái</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="orderDetail : ${uniqueOrderDetails}">
+            <td th:text="${orderDetail.order.id}"></td>
+            <td th:text="${orderDetail.product != null ? orderDetail.product.name : 'Sản phẩm không tồn tại'}"></td>
+            <td th:text="${productCounts[orderDetail.product != null ? orderDetail.product.name : 'Sản phẩm không tồn tại']}"></td>
+            <td th:text="${orderDetail.order.available != null && orderDetail.order.available ? 'Đã giao hàng' : 'Chưa giao hàng'}"></td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,6 +31,7 @@ import com.poly.entity.Order;
 import com.poly.entity.OrderDetail;
 import com.poly.entity.Product;
 import com.poly.service.MailerService;
+import com.poly.service.OrderService;
 import com.poly.service.SessionService;
 
 @Controller
@@ -51,6 +53,8 @@ public class OrderController {
 	AccountDAO accountDAO;
 	@Autowired
 	DiscountCodeDAO dcDAO;
+	@Autowired
+	OrderService orderService;
 
 	///// ORDER /////
 	@RequestMapping("checkout.html")
@@ -177,4 +181,17 @@ public class OrderController {
 		sessionService.setAttribute("cartQuantity", shoppingCartDAO.getCount());
 		return "thankyou";
 	}
+	
+	
+	
+	/*
+	  @RequestMapping("/TrangThai") public String
+	  getOrderStatus(Model model) {
+	  
+	  boolean a = true; System.out.println(a); model.addAttribute("b", a);
+	  
+	  
+	  return "TrangThai"; }
+	 */
 }
+

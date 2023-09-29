@@ -3,6 +3,7 @@ package com.poly.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.poly.dao.ProductDAO;
@@ -52,5 +53,14 @@ public class ProductServiceImpl implements ProductService{
 	}
 	public List<Product> sortPriceHightToLow(){
 		return dao.sortPriceHightToLow();
+	}
+	public Product deletu(Product product) {
+		product.setAvailable(Boolean.FALSE);
+		return dao.save(product);	
+	}
+	@Override
+	public Page<Product> findDelete(){
+		return dao.findDelete(null);
+		
 	}
 }

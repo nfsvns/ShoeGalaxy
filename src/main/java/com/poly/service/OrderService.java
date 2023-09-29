@@ -20,4 +20,5 @@ public interface OrderService {
 	public void delete(Long id) ;
 	
 	public void deleteOrderDetailByOrderId(Long id);
+	public List<Order> getCurrentUserOrders();
 }

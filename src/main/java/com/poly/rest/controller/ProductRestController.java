@@ -2,6 +2,8 @@ package com.poly.rest.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.poly.entity.Product;
@@ -36,12 +39,16 @@ public class ProductRestController {
 		productService.create(product);
 		return product;
 	}
-	@PutMapping("{id}")
-	public Product put(@PathVariable("id") Integer id, @RequestBody Product product) {
-		return productService.update(product);
+	@RequestMapping(value = "{id}", method = {RequestMethod.PUT, RequestMethod.DELETE})
+	public Product putOrDelete(@PathVariable("id") Integer id, @RequestBody Product product, 
+			HttpServletRequest request) {
+	    if (request.getMethod().equals(RequestMethod.DELETE.toString())) {
+	    	return productService.deletu(product);
 	}
-	@DeleteMapping("{id}")
-	public void delete(@PathVariable("id") Integer id) {
-		productService.delete(id);
+	    else if (request.getMethod().equals(RequestMethod.PUT.toString())) {
+	    	return productService.update(product);
+	}
+		return product;
+	    
 	}
 }
