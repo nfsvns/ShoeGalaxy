@@ -16,7 +16,6 @@ app.controller("cart-ctrl", function($scope, $http) {
 
 
 
-
 	var $cart = $scope.cart = {
 		items: [],
 		add(id) {
@@ -32,10 +31,28 @@ app.controller("cart-ctrl", function($scope, $http) {
 				this.saveToLocalStorage();
 			} else {
 				$http.get(`/rest/products/${id}`).then(resp => {
-					resp.data.qty = 1;
-					resp.data.sizes = $scope.selectedSize;
-					this.items.push(resp.data);
-					this.saveToLocalStorage();
+					// Lấy danh sách hình ảnh từ API và chọn hình ảnh cụ thể (ví dụ: lấy hình ảnh đầu tiên)
+					$http.get(`/rest/products/${id}/images`).then(imageResp => {
+						if (imageResp.data.length > 0) {
+							resp.data.image = imageResp.data[0].image;
+						} else {
+							// Nếu không có hình ảnh, bạn có thể gán một URL mặc định hoặc hiển thị thông báo lỗi
+							resp.data.image = 'url_to_default_image.jpg';
+						}
+
+						// Tiếp tục thêm sản phẩm vào giỏ hàng
+						/*productData.qty = 1;
+						productData.sizes = $scope.selectedSize;
+						this.items.push(productData);
+						this.saveToLocalStorage();*/
+						resp.data.qty = 1;
+
+						resp.data.sizes = $scope.selectedSize;
+						this.items.push(resp.data);
+						this.saveToLocalStorage();
+					});
+
+
 				});
 			}
 		},

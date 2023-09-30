@@ -16,6 +16,7 @@
 			</div>
 		</div>
 	</div>
+<<<<<<< HEAD
 	<form action="/check" method="post">
 		<div class="site-section">
 			<div class="container">
@@ -38,6 +39,32 @@
 							<tbody>
 								<tr ng-repeat="item in cart.items">
 									<td><img src="/images/{{item.image}}" style="width: 50%"></td>
+=======
+
+	<div class="site-section">
+		<div class="container">
+			<div class="row mb-5">
+				<!-- <form class="col-md-12" action="/cart.html/update" method="post"> -->
+				<div class="site-blocks-table">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th class="product-thumbnail">Image</th>
+								<th class="product-name">Product</th>
+								<th class="product-size">Size</th>
+								<th class="product-price">Price</th>
+								<th class="product-quantity">Quantity</th>
+								<th class="product-total">Total</th>
+								<th class="product-remove">Remove</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in cart.items">
+								<td >
+									<img src="/images/{{item.image}}"style="width: 50%">
+								</td>
+>>>>>>> hoan_forget_images
 
 
 									<td>{{item.name}}</td>

@@ -1,64 +1,77 @@
-//package com.poly.controller;
-//
-//import java.util.List;
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Controller;
-//import org.springframework.ui.Model;
-//import org.springframework.web.bind.annotation.PathVariable;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//
-//import com.poly.dao.AccountDAO;
-//
-//import com.poly.entity.Account;
-//import com.poly.service.SessionService;
-//
-//@Controller
-//public class AccountController {
-//	@Autowired
-//	AccountDAO dao;
-//	@Autowired
-//	SessionService sessionService;
-//
-//	@RequestMapping("/account.html")
-//	public String index(Model model) {
-//		Account user = sessionService.getAttribute("user");
-//		if(!user.getAdmin()) {			
-//			String error="Khong du quyen truy cap ";
-//			return "redirect:/login.html?error="+error;
-//		}
-//		Account item = new Account();
-//		model.addAttribute("item", item);
-//		List<Account> items = dao.findAll();
-//		model.addAttribute("accounts", items);
-//		return "account";
-//	}
-//
-//	@RequestMapping("/account.html/create")
-//	public String create(Account item) {
-//		dao.save(item);
-//		return "redirect:/account.html";
-//	}
-//
-//	@RequestMapping("/account.html/update")
-//	public String update(Account item) {
-//		dao.save(item);
-//		return "redirect:/account.html/edit/" + item.getUsername();
-//	}
-//
-//	@RequestMapping("/account.html/delete/{username}")
-//	public String delete(@PathVariable("username") String username) {
-//		dao.deleteById(username);
-//		return "redirect:/account.html";
-//	}
-//
-//	@RequestMapping("/account.html/edit/{username}")
-//	public String edit(Model model, @PathVariable("username") String username) {
-//		Account item = dao.findById(username).get();
-//		model.addAttribute("item", item);
-//		List<Account> items = dao.findAll();
-//		model.addAttribute("accounts", items);
-//		return "account";
-//	}
-//
-//}
+package com.poly.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.poly.dao.AccountDAO;
+import com.poly.entity.Account;
+import com.poly.entity.MailInfo;
+import com.poly.entity.Product;
+import com.poly.service.MailerService;
+
+@Controller
+public class AccountController {
+	
+	@Autowired
+	AccountDAO dao;
+	
+	@Autowired
+	MailerService mailerService;
+	
+	@RequestMapping("/forgetPassword")
+	public String forgetHome(Model model) {
+		
+		return "forget";
+	}
+	@PostMapping("/forgetPassword/success")
+	public String forgetPassword(Model model, @RequestParam("email") String email) {
+		if(email != null) {
+			MailInfo mail = new MailInfo();
+			Account account = dao.getAccountByEmail(email);
+			
+			
+			// random mk moi
+			double randomDouble = Math.random();
+            randomDouble = randomDouble * 1000 + 1;
+            int randomInt = (int) randomDouble;
+            
+            account.setPassword(String.valueOf(randomInt));
+            
+			mail.setTo(email);
+			mail.setSubject("Khôi phục mật khẩu thành công");
+			// Tạo nội dung email
+			StringBuilder bodyBuilder = new StringBuilder();
+			bodyBuilder.append("Mật khẩu đã được reset. Đây là thông tin tài khoản của bạn").append("<br><br>");
+			
+			// Tạo bảng với CSS
+			bodyBuilder.append("<table style=\"border-collapse: collapse;\">");
+			bodyBuilder.append(
+					"<tr><th style=\"border: 1px solid black; padding: 8px;\">Fullname</th>"
+					+ "<th style=\"border: 1px solid black; padding: 8px;\">Username</th>"
+					+ "<th style=\"border: 1px solid black; padding: 8px;\">Password</th></tr>");
+
+			// Lấy thông tin chi tiết của từng sản phẩm trong giỏ hàng và thêm vào bảng
+				bodyBuilder.append("<tr>");
+				bodyBuilder.append("<td style=\"border: 1px solid black; padding: 8px; text-align: center;\">")
+						.append(account.getFullname()).append("</td>");
+				bodyBuilder.append("<td style=\"border: 1px solid black; padding: 8px; text-align: center;\">")
+						.append(account.getUsername()).append("</td>");
+				bodyBuilder.append("<td style=\"border: 1px solid black; padding: 8px; text-align: center;\">")
+						.append(account.getPassword()).append("</td>");
+				bodyBuilder.append("</tr>");
+		
+
+			bodyBuilder.append("</table>");
+			mail.setBody(bodyBuilder.toString());
+			
+			dao.save(account);
+
+			mailerService.queue(mail);
+		}
+		return "redirect:/login";
+	}
+}
