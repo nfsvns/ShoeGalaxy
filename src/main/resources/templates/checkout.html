@@ -27,7 +27,9 @@
 					</div>
 				</div>
 			</div>
-
+			<div th:if="${messages != null}" class="alert alert-danger">
+				<p th:text="${messages}"></p>
+			</div>
 			<form action="/checkout.html" method="post">
 				<div class="row">
 					<div class="col-md-6 mb-5 mb-md-0">
@@ -45,12 +47,13 @@
 								</thead>
 								<tbody>
 									<tr ng-repeat="item in cart.items">
-										<td><input type="text" style="width:30%"
-											ng-model="item.id" name="idProduct"
-											class="border border-light" /></td>
-										<td><img src="/images/{{item.image}}" style="width:30%"></td>
+										<td><input ng-model="item.id" type="text"
+											name="productId" style="width: 50%"></td>
 
-										<td>{{item.sizes}}</td>
+										<td><img style="width: 50%" src="/images/{{item.image}}"></td>
+
+										<td><input ng-model="item.sizes" type="text"
+											name="sizeId" style="width: 100%"><br></td>
 										<td>${{cart.price_product(item)}}</td>
 										<td><input ng-model="item.qty" type="text"
 											name="countProduct" style="width: 30px"
@@ -77,6 +80,8 @@
 
 								</tbody>
 							</table>
+
+
 
 							<div class="btn-group btn-group-toggle d-flex flex-column mb-4"
 								data-toggle="buttons">
@@ -140,6 +145,15 @@
 
 						<div class="row mb-5">
 							<div class="col-md-12">
+								<h2>Quantities:</h2>
+								<ul>
+									<li th:each="quantity : ${quantities}" th:text="${quantity}"></li>
+								</ul>
+								<ul>
+									<li th:each="remainingQuantities : ${remainingQuantities}"
+										th:text="${remainingQuantities}"></li>
+								</ul>
+
 								<div th:if="${error}" class="alert alert-danger">
 									<p th:text="${error}"></p>
 								</div>
@@ -157,7 +171,7 @@
 
 										</div>
 
-										
+
 									</div>
 								</div>
 							</div>

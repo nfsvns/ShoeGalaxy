@@ -1,51 +1,50 @@
 <div class="panel panel-default">
-	<div class="panel-heading">HISTORY EDITION</div>
+	<div class="panel-heading">Discount Product</div>
 	<div class="panel-body">
 		<div class="row">
 			<div class="col-sm-12">
 				<div class="row">
 					<div class="form-group col-sm-6">
-						<div>Username</div>
-						<input ng-model="form.account.username" class="form-control"
-							disabled="disabled">
+						<div>Id</div>
+						<input ng-model="form.id" class="form-control" disabled="disabled">
 					</div>
 					<div class="form-group col-sm-6">
-						<div>Date</div>
-						<input ng-model="form.createDate" class="form-control"
-							disabled="disabled">
+						<div>Name Discount</div>
+						<input ng-model="form.name" class="form-control">
 					</div>
 				</div>
 				<div class="row">
 					<div class="form-group col-sm-6">
-						<div>Address</div>
-						<input ng-model="form.address" class="form-control"
-							disabled="disabled">
+						<div>Start Date </div>
+						<input ng-model="form.startDate" class="form-control"
+						type="date">
 					</div>
 					<div class="form-group col-sm-6">
-						<div>To</div>
-						<input ng-model="form.nguoinhan" class="form-control"
-							disabled="disabled">
+						<div>Expiration Date</div>
+						<input ng-model="form.endDate" 
+							class="form-control"  type="date">
 					</div>
 				</div>
 				<div class="row">
 					<div class="form-group col-sm-6">
-						<div>Total</div>
-						<input ng-model="form.tongtien" type="text" class="form-control"
-							disabled="disabled">
+						<div>Percentage Product </div>
+						<input ng-model="form.percentage" class="form-control"
+						type="number">
 					</div>
 					<div class="form-group col-sm-6">
-						<div>Available?</div>
+						<div>Activate?</div>
 						<div class="form-control">
 							<label class="radio-inline"> <input
-								ng-model="form.available" ng-value="true" name="available"
+								ng-model="form.activate" ng-value="true" name="available"
 								type="radio">Yes
 							</label> <label class="radio-inline"> <input
-								ng-model="form.available" ng-value="false" name="available"
+								ng-model="form.activate" ng-value="false" name="available"
 								type="radio">No
 							</label>
 						</div>
 					</div>
 				</div>
+				
 			</div>
 		</div>
 	</div>

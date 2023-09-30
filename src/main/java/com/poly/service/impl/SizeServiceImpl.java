@@ -6,61 +6,62 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.poly.dao.DiscountSaleDAO;
-import com.poly.entity.Discount_Sale;
-import com.poly.service.DiscountSaleService;
+import com.poly.dao.SizeDAO;
+import com.poly.entity.Size;
+import com.poly.service.SizeService;
 
 @Service
-public class DiscountSaleServiceImpl implements DiscountSaleService {
+public class SizeServiceImpl  implements SizeService{
 	@Autowired
-	DiscountSaleDAO discountDAO;
-
+	SizeDAO sizeDAO;
+	
 	@Override
-	public List<Discount_Sale> findAll() {
+	public List<Size> findAll() {
 		// TODO Auto-generated method stub
-		return discountDAO.findAll();
+		return sizeDAO.findAll();
 	}
 
 	@Override
-	public Discount_Sale create(JsonNode Discount_Sale) {
+	public Size create(JsonNode sizeData) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Discount_Sale findById(Integer id) {
+	public Size findById(Integer id) {
 		// TODO Auto-generated method stub
-		return discountDAO.findById(id).get();
+		return sizeDAO.findById(id).get();
 	}
 
 	@Override
-	public Discount_Sale create(Discount_Sale discount_Sale) {
+	public Size create(Size size) {
 		// TODO Auto-generated method stub
-		return discountDAO.save(discount_Sale);
+		return sizeDAO.save(size);
 	}
 
 	@Override
-	public List<Discount_Sale> findByCode(Integer id) {
+	public List<Size> findByCode(Integer id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Discount_Sale update(Discount_Sale discount_Sale) {
+	public Size update(Size size) {
 		// TODO Auto-generated method stub
-		return discountDAO.save(discount_Sale);
+		return sizeDAO.save(size);
 	}
 
 	@Override
 	public void delete(Integer id) {
-		discountDAO.deleteById(id);
-
+		// TODO Auto-generated method stub
+		sizeDAO.deleteById(id);
 	}
 
 	@Override
 	public void deleteDiscountCode(Integer id) {
 		// TODO Auto-generated method stub
-
+		
+		
 	}
 
 }

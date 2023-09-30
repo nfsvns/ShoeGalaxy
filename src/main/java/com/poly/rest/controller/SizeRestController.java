@@ -13,40 +13,46 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.poly.entity.DiscountCode;
-import com.poly.entity.Discount_Sale;
 
+import com.poly.entity.Size;
 import com.poly.service.DiscountSaleService;
+import com.poly.service.SizeService;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/rest/discountSale")
-public class DiscountSaleRestController {
+@RequestMapping("/rest/sizeManager")
+public class SizeRestController {
 	@Autowired
 	DiscountSaleService discountSaleService;
 
+	@Autowired
+	SizeService sizeService;
+
 	@GetMapping
-	public List<Discount_Sale> getAll() {
-		return discountSaleService.findAll();
+	public List<Size> getAll() {
+		return sizeService.findAll();
 	}
+
 	@GetMapping("{id}")
-	public Discount_Sale getOne(@PathVariable("id") Integer id) {
-		
-		return discountSaleService.findById(id);
+	public Size getOne(@PathVariable("id") Integer id) {
+
+		return sizeService.findById(id);
 	}
-	
+
 	@PostMapping
-	public Discount_Sale post(@RequestBody Discount_Sale discount_Sale) {
-		discountSaleService.create(discount_Sale);
-		return discount_Sale;
+	public Size post(@RequestBody Size size) {
+		sizeService.create(size);
+		return size;
 	}
+
 	@PutMapping("{id}")
-	public Discount_Sale put(@PathVariable("id") Integer id, @RequestBody Discount_Sale discount_Sale) {
-		return discountSaleService.update(discount_Sale);
+	public Size put(@PathVariable("id") Integer id, @RequestBody Size size) {
+		return sizeService.update(size);
 	}
+
 	@DeleteMapping("{id}")
 	public void delete(@PathVariable("id") Integer id) {
-		discountSaleService.deleteDiscountCode(id);
-		discountSaleService.delete(id);
+		sizeService.deleteDiscountCode(id);
+		sizeService.delete(id);
 	}
 }
