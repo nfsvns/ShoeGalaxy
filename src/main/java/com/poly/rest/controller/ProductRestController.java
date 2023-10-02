@@ -1,8 +1,9 @@
-package com.poly.rest.controller;
+ package com.poly.rest.controller;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.poly.entity.Image;
 import com.poly.entity.Product;
+import com.poly.service.ImageService;
 import com.poly.service.ProductService;
 
 @CrossOrigin("*")
@@ -22,6 +25,8 @@ import com.poly.service.ProductService;
 public class ProductRestController {
 	@Autowired
 	ProductService productService;
+	@Autowired
+	ImageService imageService;
 	
 	@GetMapping
 	public List<Product> getAll() {
@@ -31,6 +36,11 @@ public class ProductRestController {
 	public Product getOne(@PathVariable("id") Integer id) {
 		return productService.findById(id);
 	}
+	@GetMapping("/{id}/images")
+    public List<Image> getProductImages(@PathVariable("id") Integer id) {
+        // Gọi service để lấy danh sách hình ảnh dựa trên ID sản phẩm
+        return imageService.getImageByProductId(id);
+    }
 	@PostMapping
 	public Product post(@RequestBody Product product) {
 		productService.create(product);

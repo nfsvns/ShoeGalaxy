@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	th:replace="~{/layout/layout.html::dynamic(~{::title}, ~{::body})}">
+
 <head>
 <title>Shoppers &mdash; Colorlib e-Commerce Template</title>
 <meta charset="utf-8">
@@ -21,29 +22,84 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-6">
-					<!-- <img src="../../images/${prod.image}" alt="Image" class="img-fluid"> -->
-					<img th:src="@{|/images/${prod.image}|}" alt="Image"
-						class="img-fluid" style="border-radius: 20px">
+					<!-- Carousel -->
+					<div id="demo" class="carousel slide" data-bs-ride="carousel">
+
+						<!-- Indicators/dots -->
+						<div class="carousel-indicators">
+							<ul class="carousel-indicators">
+								<li data-target="#demo" data-slide-to="0" class="active bg-dark"></li>
+								<li data-target="#demo" data-slide-to="1" class="bg-dark"></li>
+								<li data-target="#demo" data-slide-to="2" class="bg-dark"></li>
+							</ul>
+							<!-- <button type="button" data-bs-target="#demo" data-bs-slide-to="0"
+								class="active custom-button">
+								<div class="container" style="width: 100px; height: 100px">
+									<img th:if="${not #lists.isEmpty(prod.images)}"
+										th:src="@{|/images/${prod.images[0].image}|}"
+										alt="Thumbnail Image"
+										style="width: 100px; height: 100px">
+								</div>
+							</button>
+							<button type="button" data-bs-target="#demo" data-bs-slide-to="1"
+								class="custom-button">
+								<div class="container" style="width: 100px; height: 100px">
+									<img th:if="${not #lists.isEmpty(prod.images)}"
+										th:src="@{|/images/${prod.images[1].image}|}"
+										alt="Thumbnail Image" 
+										style="width: 100px; height: 100px">
+								</div>
+							</button>
+							<button type="button" data-bs-target="#demo" data-bs-slide-to="2"
+								class="custom-button">
+								<div class="container" style="width: 100px; height: 100px">
+									<img th:if="${not #lists.isEmpty(prod.images)}"
+										th:src="@{|/images/${prod.images[2].image}|}"
+										alt="Thumbnail Image" 
+										style="width: 100px; height: 100px">
+								</div>
+							</button> -->
+
+						</div>
+
+						<!-- The slideshow/carousel -->
+						<div class="carousel-inner">
+							<div class="carousel-item" th:each="i, iterStat : ${prod.images}"
+								th:classappend="${iterStat.index == 0} ? 'active' : ''">
+								<img th:src="@{|/images/${i.image}|}"
+									class="d-block w-100 img-fluid" >
+							</div>
+						</div>
+
+						<button class="carousel-control-prev" type="button"
+							data-target="#demo" data-slide="prev">
+							<span class="carousel-control-prev-icon"></span>
+						</button>
+						<button class="carousel-control-next" type="button"
+							data-target="#demo" data-slide="next">
+							<span class="carousel-control-next-icon"></span>
+						</button>
+					</div>
 				</div>
 				<div class="col-md-6">
 					<p th:text="${prod.name}"></p>
 					<div>
-					
-					
-					
+
+
+
 						<!-- Hiển thị giá gốc (nếu có) -->
 						<p th:if="${prod.discount_sale == null}" class="text-primary h4"
-							th:text="${'$' + prod.price}"  ng-model ='totalAmount'></p>
+							th:text="${'$' + prod.price}" ng-model='totalAmount'></p>
 
 
 						<!-- Hiển thị giá giảm giá (nếu có) -->
-						<p th:if="${prod.discount_sale != null}"
-							 class="text-primary h4"
-							th:text="${'$' + (prod.price - (prod.price * prod.discount_sale.percentage / 100))} "  ng-model ='totalAmount'></p>
+						<p th:if="${prod.discount_sale != null}" class="text-primary h4"
+							th:text="${'$' + (prod.price - (prod.price * prod.discount_sale.percentage / 100))} "
+							ng-model='totalAmount'></p>
 
 						<!-- Hiển thị giá gốc (nếu có) với gạch ngang -->
-						<p th:if="${prod.discount_sale != null}"
-							class="text-primary h4" style="text-decoration: line-through;"
+						<p th:if="${prod.discount_sale != null}" class="text-primary h4"
+							style="text-decoration: line-through;"
 							th:text="${'$' + prod.price}"></p>
 					</div>
 					<p>
@@ -58,11 +114,12 @@
 
 						<select ng-model="selectedSize" class="form-control">
 							<option value="" disabled selected>Chọn Size</option>
-							<option th:each="item : ${prodd}" th:value="${item.sizes}"
-								th:text="${item.sizes}"></option>
+							<option th:each="item : ${prodd}" th:if="${item.quantity > 0}"
+								th:value="${item.sizes}" th:text="${item.sizes}"></option>
 						</select> <a th:attr="ng-click=@{|cart.add(${prod.id})|}"
 							class="mt-5 buy-now btn btn-sm w-100 btn-primary"
-							style="color: white" ng-click="saveToLocalStorage()">Add To Cart</a>
+							style="color: white" ng-click="saveToLocalStorage()">Add To
+							Cart</a>
 					</p>
 
 					<p>
@@ -76,12 +133,62 @@
 			<!--  tab -->
 			<div style="border-bottom: groove;"></div>
 			<h1 style="text-align: center;">Mặt hàng liên quan</h1>
+
+			<div class="container">
+				<div id="productCarousel" class="carousel slide"
+					data-bs-ride="carousel">
+					<div class="carousel-inner">
+						<!-- Duyệt qua danh sách sản phẩm -->
+						<th:block th:each="group, groupIndex : ${productGroups}"
+							th:classappend="${groupIndex == 0} ? 'carousel-item active' : 'carousel-item'">
+							<div class="row">
+								<!-- Duyệt qua sản phẩm trong từng nhóm -->
+								<th:block th:each="product : ${group}" class="col-lg-3">
+									<div class="list-item wsk-cp-product">
+										<!-- Hiển thị thông tin sản phẩm -->
+										<div class="block-4-image wsk-cp-image">
+											<a th:href="@{|/shop-single.html/${product.id}|}"> <img
+												th:src="@{|/images/${product.image}|}" width="100%"
+												alt="Image placeholder" class="img-thumb">
+											</a>
+										</div>
+										<div class="item-details">
+											<h3 class="text-truncate" th:text="${product.name}"></h3>
+											<p class="price"
+												th:text="${'Giá: ' + product.price + ' VNĐ'}"></p>
+										</div>
+									</div>
+								</th:block>
+							</div>
+						</th:block>
+					</div>
+					<a class="carousel-control-prev" href="#productCarousel"
+						role="button" data-bs-slide="prev"> <span
+						class="carousel-control-prev-icon" aria-hidden="true"></span> <span
+						class="visually-hidden">Previous</span>
+					</a> <a class="carousel-control-next" href="#productCarousel"
+						role="button" data-bs-slide="next"> <span
+						class="carousel-control-next-icon" aria-hidden="true"></span> <span
+						class="visually-hidden">Next</span>
+					</a>
+				</div>
+			</div>
+
+			<!-- Bootstrap 5.3.1 JavaScript (Popper.js là một phần bắt buộc của Bootstrap) -->
+			<script
+				src="https://cdn.jsdelivr.net/npm/popper.js@2.11.6/dist/umd/popper.min.js"></script>
+			<script
+				src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
+
+
+			<hr>
 			<div class="row">
 				<div class="col-lg-3 " th:each="item : ${prod.category.products}">
 					<div class="list-item wsk-cp-product">
 						<div class="block-4-image wsk-cp-image">
 							<a th:href="@{|/shop-single.html/${item.id}|}"> <img
-								th:src="@{|/images/${item.image}|}" width="100%"
+								th:if="${not #lists.isEmpty(item.images)}"
+								th:src="@{|/images/${item.images[0].image}|}" width="100%"
 								alt="Image placeholder" class="img-thumb">
 							</a>
 						</div>

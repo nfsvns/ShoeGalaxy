@@ -28,13 +28,26 @@ app.config(function($routeProvider) {
 			templateUrl: "/assets/admin/authority/unauthorized.html",
 			controller: "authority-ctrl"
 		})
+
 		.when("/revenue", {
 			templateUrl: "/assets/admin/revenue/index.html",
 			controller: "revenue-ctrl"
 		})
-        .when("/chart", {
+		.when("/discount", {
+			templateUrl: "/assets/admin/discountCode/index.html",
+			controller: "discount-ctrl"
+		}).when("/discountsale", {
+			templateUrl: "/assets/admin/discountProduct/index.html",
+			controller: "discountProduct-ctrl"
+		}).when("/size", {
+			templateUrl: "/assets/admin/size/index.html",
+			controller: "size-ctrl"
+		})
+
+		.when("/chart", {
 			templateUrl: "/assets/admin/charts.html"
 		})
+
 		.otherwise({
 			template: "<h1 class='text-center'>Shoe Galaxy Administration</h1>"
 

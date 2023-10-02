@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.poly.dao.OrderDAO;
 import com.poly.dao.OrderDetailDAO;
 import com.poly.entity.Order;
+import com.poly.entity.OrderDetail;
 import com.poly.entity.Product;
 import com.poly.service.OrderService;
 
@@ -56,6 +57,12 @@ public class OrderServiceImpl implements OrderService{
 	public void deleteOrderDetailByOrderId(Long id) {
 		// TODO Auto-generated method stub
 		detaildao.deleteById(id);
+	}
+
+	@Override
+	public List<OrderDetail> getDetailDataById(Long id) {
+		// TODO Auto-generated method stub
+		return detaildao.findByOrderDetailId(id);
 	}
 
 }

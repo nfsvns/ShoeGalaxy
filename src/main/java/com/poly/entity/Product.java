@@ -25,7 +25,6 @@ public class Product implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String name;
-	private String image;
 	private Double price;
 	@JoinColumn(name = "size")
 	private Integer quantity;
@@ -34,8 +33,7 @@ public class Product implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "category_id")
 	private Category category;
-	
-	
+
 	@ManyToOne
 	@JoinColumn(name = "sale_id")
 	private Discount_Sale discount_sale; 
@@ -48,7 +46,7 @@ public class Product implements Serializable {
 	@OneToMany(mappedBy = "product")
 	private List<Size> sizes;
 	
-	
-	
-
+	@JsonIgnore
+	@OneToMany(mappedBy = "product")
+	private List<Image> images;
 }
