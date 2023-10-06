@@ -161,5 +161,7 @@ public class ProductController {
 		model.addAttribute("prodd", listS);
 		return "shop-single";
 	}
+	
+	
 
 }

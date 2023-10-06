@@ -81,13 +81,19 @@
 						<div th:each="p: ${products}" class="col-md-4 col-6 col-sm-4">
 							<div class="wsk-cp-product">
 								<div class="wsk-cp-img">
-									<a th:href="@{|/shop-single.html/${p.id}|}"> <img
-										class="product-image" th:src="@{|/images/${p.image}|}"
-										style="height: auto"> <!-- Hiển thị phần trăm giảm giá trực tiếp trên ảnh -->
+									
+									<a th:href="@{|/shop-single.html/${p.id}|}"> 
+										<!-- Kiểm trả xem sản phẩm có ảnh không -->
+										<img
+											th:if="${not #lists.isEmpty(p.images)}" 
+											class="product-image" th:src="@{|/images/${p.images[0].image}|}"
+											style="height: auto">
+										<!-- Hiển thị phần trăm giảm giá trực tiếp trên ảnh -->
 										<div class="discount-percentage"
-											th:if="${p.discount_sale != null}"
+											th:if="${p.discount_sale != null && p.discount_sale.activate == true}"
 											th:text="${p.discount_sale.percentage + '%'}"></div>
 									</a>
+									
 									<div style="text-align: center; font-size: 20px; top: 10px"
 										th:utext="${p.name}"></div>
 								</div>
@@ -97,16 +103,21 @@
 										<div style="text-align: center;">
 											<!-- Hiển thị giá gốc (nếu có) -->
 											<span class="original-price"
-												th:if="${p.discount_sale == null}"
+												th:if="${p.discount_sale == null  || p.discount_sale.activate == false}"
 												th:text="${'$' + p.price}"></span>
 											<!-- Hiển thị giá giảm giá (nếu có) -->
 											<span class="discounted-price"
-												th:if="${p.discount_sale != null}"
-												th:text="${'$' + (p.price - (p.price * p.discount_sale.percentage / 100))}"></span>
-												      <span class="original-price" th:if="${p.discount_sale != null}" style="text-decoration: line-through;" th:text="${'$' + p.price}"></span>
+												th:if="${p.discount_sale != null &&  p.discount_sale.activate == true }"
+												th:text="${'$' + (p.price - (p.price * p.discount_sale.percentage / 100))}">
+
+											</span> <span class="original-price"
+												th:if="${p.discount_sale != null && p.discount_sale.activate == true}"
+												style="text-decoration: line-through;"
+												th:text="${'$' + p.price}"></span>
 										</div>
 									</div>
-								</div>
+								</div> 
+
 							</div>
 						</div>
 					</div>

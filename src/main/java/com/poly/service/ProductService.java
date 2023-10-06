@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import com.poly.entity.Product;
 
 
-
 public interface ProductService {
 	public List<Product> findAll() ;
 	

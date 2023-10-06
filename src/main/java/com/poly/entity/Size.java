@@ -19,4 +19,10 @@ public class Size {
 	@Column(name = "size")
 	private Integer sizes;
 
+	
+
+    @Column(name = "quantity")
+    private Integer quantity;
+	
+
 }
