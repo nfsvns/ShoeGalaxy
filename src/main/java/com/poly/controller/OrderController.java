@@ -3,6 +3,7 @@ package com.poly.controller;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -59,8 +60,8 @@ public class OrderController {
 
 	@RequestMapping("/check")
 	public String checkout(Model model, @RequestParam(value = "totalAmount", required = false) String totalAmount) {
-		model.addAttribute("cartItems", shoppingCartDAO.getAll());
-		model.addAttribute("total", shoppingCartDAO.getAmount());
+//		model.addAttribute("cartItems", shoppingCartDAO.getAll());
+//		model.addAttribute("total", shoppingCartDAO.getAmount());
 		return "checkout.html";
 	}
 
@@ -109,12 +110,14 @@ public class OrderController {
 			@RequestParam(value = "productId", required = false) List<Integer> productID,
 			@RequestParam(value = "sizeId", required = false) List<Integer> size,
 			@RequestParam(value = "countProduct", required = false) List<Integer> count) {
+
 		boolean allProductsEnough = true; // Biến để theo dõi xem tất cả sản phẩm có đủ số lượng không
 
 		// Tạo một danh sách để lưu trạng thái kiểm tra số lượng của từng sản phẩm
 		List<Boolean> productStatus = new ArrayList<>();
-
+		System.out.println(productID.size());
 		for (int i = 0; i < productID.size(); i++) {
+
 			Integer id = productID.get(i);
 			Integer idSize = size.get(i);
 			Integer countedQuantity = count.get(i);
@@ -160,6 +163,7 @@ public class OrderController {
 			// Nếu ít nhất một sản phẩm không đủ số lượng, hiển thị thông báo hoặc xử lý lỗi
 			model.addAttribute("messages",
 					"Số lượng đơn giày của bạn muốn mua lớn hơn số lượng tồn kho cho ít nhất một sản phẩm!");
+			return "cart.html";
 		}
 
 		//// GỬI MAIL ////
@@ -176,7 +180,12 @@ public class OrderController {
 		// Tạo bảng với CSS
 		bodyBuilder.append("<table style=\"border-collapse: collapse;\">");
 		bodyBuilder.append(
-				"<tr><th style=\"border: 1px solid black; padding: 8px;\">Sản phẩm</th><th style=\"border: 1px solid black; padding: 8px;\">Số lượng</th><th style=\"border: 1px solid black; padding: 8px;\">Giá</th><th style=\"border: 1px solid black; padding: 8px;\">Tổng cộng</th></tr>");
+				"<tr>"
+				+ "<th style=\"border: 1px solid black; padding: 8px;\">Sản phẩm</th>"
+				+ "<th style=\"border: 1px solid black; padding: 8px;\">Số lượng</th>"
+				+ "<th style=\"border: 1px solid black; padding: 8px;\">Size</th>"
+				+ "<th style=\"border: 1px solid black; padding: 8px;\">Giá</th>"
+				+ "<th style=\"border: 1px solid black; padding: 8px;\">Tổng cộng</th></tr>");
 
 		// Lấy thông tin chi tiết của từng sản phẩm trong giỏ hàng và thêm vào bảng
 		for (int i = 0; i < productId.length; i++) {
@@ -188,8 +197,13 @@ public class OrderController {
 					.append(product.getName()).append("</td>");
 			bodyBuilder.append("<td style=\"border: 1px solid black; padding: 8px; text-align: center;\">")
 					.append(quantity).append("</td>");
+
+			bodyBuilder.append("<td style=\"border: 1px solid black; padding: 8px; text-align: center;\">")
+					.append(size.get(i)).append("</td>");
+
 			bodyBuilder.append("<td style=\"border: 1px solid black; padding: 8px; text-align: center;\">").append("$")
 					.append(product.getPrice()).append("</td>");
+
 			bodyBuilder.append("<td style=\"border: 1px solid black; padding: 8px; text-align: center;\">").append("$")
 					.append(product.getPrice() * quantity).append("</td>");
 			bodyBuilder.append("</tr>");
