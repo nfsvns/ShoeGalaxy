@@ -2,6 +2,8 @@ package com.poly.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.poly.entity.Product;
 
 
@@ -23,4 +25,6 @@ public interface ProductService {
 	
 	public List<Product> sortPriceLowToHight();
 	public List<Product> sortPriceHightToLow();
+    public Product deletu(Product product);
+	public Page<Product> findDelete();
 }
