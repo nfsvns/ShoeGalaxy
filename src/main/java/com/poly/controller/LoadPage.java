@@ -52,14 +52,9 @@ public class LoadPage {
 	}
 	
 	@RequestMapping({"/","index.html"})
-	public String index() {
+	public String index(Model model) {
 		sessionService.setAttribute("cartQuantity", shoppingCartDAO.getCount());
 		return "index";
 	}
-	
-
-	
-
-	
 
 }

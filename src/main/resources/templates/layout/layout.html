@@ -3,7 +3,7 @@
 	th:fragment="dynamic(title, view)">
 <head>
 <meta charset="UTF-8">
-<title th:replace="${title}"></title>
+<title th:replace="${title}">Shoe Galaxy</title>
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link rel="stylesheet"
@@ -86,22 +86,25 @@
 				role="navigation">
 				<div class="container">
 					<ul class="site-menu js-clone-nav d-none d-md-block">
-						<li><a href="/index.html">Home</a>
-						<li><a href="/about.html">About</a></li>
-						<li class="has-children"><a href="/shop.html">Shop</a>
+						<li><a href="/index.html" th:text="#{nav.home}">Home</a>
+						<li><a href="/about.html" th:text="#{nav.about}">About</a></li>
+						<li class="has-children"><a href="/shop.html"
+							th:text="#{nav.shop}">Shop</a>
 							<ul class="dropdown">
 								<li><a href="/shop.html/searchBrand?brand=Adidas">Adidas</a></li>
 								<li><a href="/shop.html/searchBrand?brand=MLB">MLB</a></li>
 								<li><a href="/shop.html/searchBrand?brand=Nike">Nike</a></li>
 							</ul></li>
-						<li><a href="#">New Arrivals</a></li>
-						<li><a href="/contact.html">Contact</a></li>
-						<li th:if="${#request.remoteUser != null}"><a href="/logout">Logout</a></li>
+						<li><a href="#" th:text="#{nav.newarrivals}">New Arrivals</a></li>
+						<li><a href="/contact.html" th:text="#{nav.contact}">Contact</a></li>
+						<li th:if="${#request.remoteUser != null}"><a href="/logout"
+							th:text="#{nav.logout}">Logout</a></li>
 						<li th:unless="${#request.remoteUser}" class="has-children"><a
-							href="/login">Login</a>
+							href="/login" th:text="#{nav.login}">Login</a>
 							<ul class="dropdown">
-								<li><a href="/register.html">Register</a></li>
+								<li><a href="/register.html" th:text="#{nav.register}">Register</a></li>
 							</ul></li>
+
 						<!--<li th:if="${#request.isUserInRole('DIRE') or #request.isUserInRole('STAF')}"
 							class="has-children"><a href="/account.html">Admin</a>
 							<ul class="dropdown">
@@ -117,8 +120,22 @@
 
 						<li
 							th:if="${#request.isUserInRole('DIRE') or #request.isUserInRole('STAF')}">
-							<a th:href="@{/admin/home/index}">Admin</a>
+							<a th:href="@{/admin/home/index}" th:text="#{nav.admin}">Admin</a>
 						</li>
+						<!-- <th:block th:with="showVietnamese=${false}">
+							<li th:if="${lang != 'en' && showVietnamese == true}"><a
+								href="?lang=vi" th:attr="onclick='|${showVietnamese} = false|'">Tiếng
+									Việt</a></li>
+							<li th:if="${lang != 'vi' && showVietnamese == false}"><a
+								href="?lang=en" th:attr="onclick='|${showVietnamese} = true|'">English</a>
+							</li>
+						</th:block> -->
+						<li class="has-children"><a
+							href="?lang=vi" >Tiếng Việt</a>
+							<ul class="dropdown">
+								<li><a href="?lang=en">English</a></li>
+							</ul></li>
+
 					</ul>
 				</div>
 			</nav>
@@ -132,28 +149,24 @@
 					<div class="col-lg-6 mb-5 mb-lg-0">
 						<div class="row">
 							<div class="col-md-12">
-								<h3 class="footer-heading mb-4">Navigations</h3>
+								<h3 class="footer-heading mb-4">SHOE GALAXY</h3>
 							</div>
 							<div class="col-md-6 col-lg-4">
 								<ul class="list-unstyled">
-									<li><a href="#">Sell online</a></li>
-									<li><a href="#">Features</a></li>
-									<li><a href="#">Shopping cart</a></li>
-									<li><a href="#">Store builder</a></li>
+									<li><a href="#"  th:text="#{footer.sell}">Sell online</a></li>
+									<li><a href="#" th:text="#{footer.features}">Features</a></li>
+									<li><a href="#" th:text="#{footer.cart}">Shopping cart</a></li>
 								</ul>
 							</div>
 							<div class="col-md-6 col-lg-4">
 								<ul class="list-unstyled">
-									<li><a href="#">Mobile commerce</a></li>
-									<li><a href="#">Dropshipping</a></li>
-									<li><a href="#">Website development</a></li>
+									<li><a href="#" th:text="#{footer.mobilecommerce}">Mobile commerce</a></li>
+									<li><a href="#" th:text="#{footer.dropshipping}">Dropshipping</a></li>
 								</ul>
 							</div>
 							<div class="col-md-6 col-lg-4">
 								<ul class="list-unstyled">
-									<li><a href="#">Point of sale</a></li>
-									<li><a href="#">Hardware</a></li>
-									<li><a href="#">Software</a></li>
+									<li><a href="#" th:text="#{footer.pointofsale}">Point of sale</a></li>
 								</ul>
 							</div>
 						</div>
@@ -163,14 +176,14 @@
 						<a href="#" class="block-6"> <img
 							th:src="@{../../images/a1.webp}" alt="Image placeholder"
 							class="img-fluid rounded mb-4">
-							<h3 class="font-weight-light  mb-0">Finding Your Perfect
+							<h3 class="font-weight-light  mb-0" th:text="#{footer.findingyourperfectshoes}">Finding Your Perfect
 								Shoes</h3>
 							<p>Promo from nuary 15 &mdash; 25, 2019</p>
 						</a>
 					</div>
 					<div class="col-md-6 col-lg-3">
 						<div class="block-5 mb-5">
-							<h3 class="footer-heading mb-4">Contact Info</h3>
+							<h3 class="footer-heading mb-4" th:text="#{nav.contact}">Contact Info</h3>
 							<ul class="list-unstyled">
 								<li class="address">Tòa nhà QTSC9 (toà T), đường Tô Ký,
 									phường Tân Chánh Hiệp, quận 12, TP HCM</li>
