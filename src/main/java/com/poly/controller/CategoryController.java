@@ -19,8 +19,9 @@ public class CategoryController {
 	@Autowired
 	CategoryDAO cateDAO;
     @RequestMapping("/categoryAdmin")
-    public String index(Model model){
+    public String index(Model model,Category cate){
         Category item = new Category();
+        
         model.addAttribute("item", item);
         model.addAttribute("categoryItems", cateDAO.findAll());
         return "categoryAdmin";

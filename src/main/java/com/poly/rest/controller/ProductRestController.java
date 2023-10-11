@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.poly.entity.Image;
 import com.poly.entity.Product;
 import com.poly.service.ImageService;
@@ -27,7 +28,6 @@ public class ProductRestController {
 	ProductService productService;
 	@Autowired
 	ImageService imageService;
-	
 	@GetMapping
 	public List<Product> getAll() {
 		return productService.findAll();

@@ -52,7 +52,9 @@ public class LoadPage {
 	}
 	
 	@RequestMapping({"/","index.html"})
-	public String index() {
+	public String index(Model model) {
+		List<Product> pro = productDAO.topProduct();
+		model.addAttribute("pro", pro);
 		sessionService.setAttribute("cartQuantity", shoppingCartDAO.getCount());
 		return "index";
 	}
