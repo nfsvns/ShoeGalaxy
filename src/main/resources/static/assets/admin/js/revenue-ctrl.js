@@ -45,12 +45,15 @@ app.controller("revenue-ctrl", function($scope, $http, $location) {
 					},
 					axisX: {
 						interval: 1, // Chỉ hiển thị giá trị nguyên trên trục x
-						prefix: "Tháng ", //prefix tiền tố, suffix hậu tố
+						prefix: "Tháng ",//prefix tiền tố, suffix hậu tố
+						minimum: 1,
+        				maximum: 12     
+						//valueFormatString: "M",
 
 					},
 					data: [{
 						type: "column", //change type to bar, line, area, pie, etc
-						indexLabel: "{y}", //Shows y value on all Data Points
+						indexLabel: "${y}", //Shows y value on all Data Points
 						indexLabelFontColor: "#5A5757", //màu
 						indexLabelFontSize: 16, //font
 						indexLabelPlacement: "outside", //Cho chữ ở đâu
