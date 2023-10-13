@@ -29,4 +29,6 @@ public interface OrderDAO extends JpaRepository<Order, Long> {
 	
 	@Query("SELECT o FROM Order o ORDER BY o.createDate DESC")
     List<Order> findAllOrderByCreateDateDesc();
+	
+	List<Order> findByAccountUsername(String username);
 }

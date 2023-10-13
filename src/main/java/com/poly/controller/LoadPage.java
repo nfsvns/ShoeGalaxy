@@ -38,7 +38,7 @@ public class LoadPage {
 	@Autowired
 	ProductDAO productDAO;
 
-	@GetMapping({  "/contact.html", "/about.html"})
+	@GetMapping({  "/contact.html", "/about.html","/ChangeInfomation.html","/TrangThai.html","/ChangePassword.html"})
 	public String loadPage(HttpServletRequest request) {
 		String path = request.getServletPath();
 
@@ -47,6 +47,15 @@ public class LoadPage {
 
 		} else if ("/about.html".equals(path)) {
 			return "about";
+		}
+	else if ("/ChangeInfomation.html".equals(path)) {
+		return "ChangeInfomation";
+		}
+	else if ("/TrangThai.html".equals(path)) {
+		return "TrangThai";
+		}
+	else if ("/ChangePassword.html".equals(path)) {
+		return "ChangePassword";
 		}
 		return "error";
 	}
@@ -65,8 +74,5 @@ public class LoadPage {
 
 	}
 
-	
-
-	
 
 
