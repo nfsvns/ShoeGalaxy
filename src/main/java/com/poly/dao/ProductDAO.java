@@ -53,6 +53,15 @@ public interface ProductDAO extends JpaRepository<Product, Integer> {
 	
 	@Query("SELECT COUNT(p) FROM Product p WHERE p.category.id = 'NK' and p.available = True")
 	Integer countNKProducts();
+
+	@Query(value = "SELECT * FROM Products ORDER BY NEWID()", nativeQuery = true)
+	List<Product> topProduct();
+
+	
+	@Query(value = "SELECT p.id, p.category_id,p.name,p.price,d.percentage from Products p\r\n"
+			+ "inner join discount_Sales d on d.id = p.sale_id",nativeQuery = true)
+	List<Product> findByDiscount();
+
 	
 	
 	@Query("SELECT p FROM Product p WHERE p.available = True")

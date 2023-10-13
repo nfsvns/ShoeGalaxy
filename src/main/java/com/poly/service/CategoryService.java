@@ -2,11 +2,13 @@ package com.poly.service;
 
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.poly.entity.Category;
 
 
 
-public interface CategoryService {
+public interface CategoryService { 
+	
 	public List<Category> findAll() ;
 
 	public Category findById(String id) ;
@@ -16,4 +18,6 @@ public interface CategoryService {
 	public Category update(Category category) ;
 
 	public void delete(String id) ;
+	
+	
 }

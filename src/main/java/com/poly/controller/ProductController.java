@@ -31,13 +31,13 @@ public class ProductController {
 	ProductDAO dao;
 	@Autowired
 	SizeDAO sizeDAO;
-
-
+    
+    
 
 	@Autowired
 	SessionService sessionService;
 
-	@RequestMapping("/shop.html")
+	@RequestMapping({"/shop.html"})
 	public String list(Model model, @RequestParam("p") Optional<Integer> p) {
 		Pageable pageable = PageRequest.of(p.orElse(0), 6);
 //		Page<Product> page = dao.findAll(pageable);

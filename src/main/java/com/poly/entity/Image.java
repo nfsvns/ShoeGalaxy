@@ -24,6 +24,7 @@ public class Image {
 	private Integer id;
 	private String image;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "productId")
 	private Product product;
