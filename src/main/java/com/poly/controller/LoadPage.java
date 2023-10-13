@@ -54,14 +54,19 @@ public class LoadPage {
 	@RequestMapping({"/","index.html"})
 	public String index(Model model) {
 		List<Product> pro = productDAO.topProduct();
+		
+		List<Product> proa = productDAO.findByDiscount();
 		model.addAttribute("pro", pro);
+		
+		model.addAttribute("proa", proa);
 		sessionService.setAttribute("cartQuantity", shoppingCartDAO.getCount());
 		return "index";
 	}
-	
+
+	}
 
 	
 
 	
 
-}
+
