@@ -30,6 +30,9 @@ public interface ProductDAO extends JpaRepository<Product, Integer> {
 			+ " GROUP BY o.category.name" + " ORDER BY sum(o.price) DESC")
 	List<Report> getInventoryByCategory();
 
+	@Query("SELECT p FROM Product p LEFT JOIN p.discountProduct dp")
+	Page<Product> findAllProductsAndDiscounts(Pageable pageable);
+
 	@Query("SELECT p FROM Product p WHERE p.category.id=?1")
 	List<Product> findByCategoryId(String cid);
 
@@ -47,10 +50,10 @@ public interface ProductDAO extends JpaRepository<Product, Integer> {
 
 	@Query("SELECT COUNT(p) FROM Product p WHERE p.category.id = 'M'")
 	Integer countMlBProducts();
-	
+
 	@Query("SELECT COUNT(p) FROM Product p WHERE p.category.id = 'AD'")
 	Integer countADProducts();
-	
+
 	@Query("SELECT COUNT(p) FROM Product p WHERE p.category.id = 'NK'")
 	Integer countNKProducts();
 

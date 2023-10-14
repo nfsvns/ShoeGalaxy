@@ -36,7 +36,7 @@ app.config(function($routeProvider) {
 		.when("/discount", {
 			templateUrl: "/assets/admin/discountCode/index.html",
 			controller: "discount-ctrl"
-		}).when("/discountsale", {
+		}).when("/discountProduct", {
 			templateUrl: "/assets/admin/discountProduct/index.html",
 			controller: "discountProduct-ctrl"
 		}).when("/size", {

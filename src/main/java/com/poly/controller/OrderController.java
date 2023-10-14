@@ -63,43 +63,53 @@ public class OrderController {
 		model.addAttribute("total", shoppingCartDAO.getAmount());
 		return "checkout.html";
 	}
-
 	@RequestMapping("/searchCodee")
 	public String searchDiscountCode(Model model, @RequestParam(value = "code", required = false) String code,
-			@RequestParam(value = "totalAmount", required = false) String totalAmount) {
-		List<DiscountCode> discountCodes = new ArrayList<>();
+	        @RequestParam(value = "totalAmount", required = false) String totalAmount,
+	        @RequestParam(value = "IdCode", required = false) Integer IdCode) {
+	    List<DiscountCode> discountCodes = new ArrayList<>();
 
-		if (code != null && !code.isEmpty()) {
-			discountCodes = dcDAO.findBykeyword(code);
+	    if (code != null && !code.isEmpty()) {
+	        discountCodes = dcDAO.findBykeyword(code);
 
-			// Kiểm tra ngày hết hạn
-			LocalDate currentDate = LocalDate.now();
-			discountCodes
-					.removeIf(dc -> dc.getExpirationDate() != null && dc.getExpirationDate().isBefore(currentDate));
+	        // Kiểm tra ngày hết hạn
+	        LocalDate currentDate = LocalDate.now();
+	        discountCodes.removeIf(dc -> (dc.getEnd_Date() != null && dc.getEnd_Date().isBefore(currentDate))
+	                || (dc.getStart_Date() != null && dc.getStart_Date().isAfter(currentDate)));
 
-			if (!discountCodes.isEmpty()) {
-				// Tìm thấy mã giảm giá, tính toán giá trị mới
+	        if (!discountCodes.isEmpty()) {
+	            // Tìm thấy mã giảm giá
+	            DiscountCode foundDiscountCode = discountCodes.get(0);
 
-				double cartAmount = Double.parseDouble(totalAmount); // Thay thế bằng giá trị thực tế từ HTML
-				double discountAmount = discountCodes.get(0).getDiscountAmount(); // Thay thế bằng phần trăm thực tế
+	            // Check if the quantity is 0
+	            if (foundDiscountCode.getQuantity() == 0) {
+	                model.addAttribute("messages", "Mã giảm giá này đã hết");
+	                return "checkout.html";
+	            }
 
-				// Tính toán giá trị mới
-				double calculatedValue = cartAmount - (cartAmount * (discountAmount / 100.0));
+	            // Tính toán giá trị mới
+	            double cartAmount = Double.parseDouble(totalAmount); // Thay thế bằng giá trị thực tế từ HTML
+	            double discountAmount = foundDiscountCode.getDiscountAmount(); // Thay thế bằng phần trăm thực tế
 
-				// Truyền giá trị mới vào view
-				model.addAttribute("calculatedValue", calculatedValue);
-				model.addAttribute("cartAmount", cartAmount);
-				model.addAttribute("messages", "Áp dụng mã giảm giá thành công!");
-			} else {
-				// Không tìm thấy mã giảm giá hoặc đã hết hạn
-				model.addAttribute("messages", "Mã giảm giá không hợp lệ hoặc đã hết hạn.");
-			}
-		}
+	            int idCode = foundDiscountCode.getId();
+	            double calculatedValue = cartAmount - (cartAmount * (discountAmount / 100.0));
 
-		model.addAttribute("code", code);
-		model.addAttribute("discountCodes", discountCodes);
-		return "checkout.html";
+	            // Truyền giá trị mới vào view
+	            model.addAttribute("calculatedValue", calculatedValue);
+	            model.addAttribute("cartAmount", cartAmount);
+	            model.addAttribute("idCode", idCode);
+	            model.addAttribute("messages", "Áp dụng mã giảm giá thành công!");
+	        } else {
+	            // Không tìm thấy mã giảm giá hoặc đã hết hạn
+	            model.addAttribute("messages", "Mã giảm giá không hợp lệ, chưa đến thời gian bắt đầu hoặc đã hết hạn");
+	        }
+	    }
+
+	    model.addAttribute("code", code);
+	    model.addAttribute("discountCodes", discountCodes);
+	    return "checkout.html";
 	}
+
 
 	@PostMapping("checkout.html")
 	public String checkout1(Model model, @RequestParam String address, @RequestParam String[] productId,
@@ -108,9 +118,10 @@ public class OrderController {
 
 			@RequestParam(value = "productId", required = false) List<Integer> productID,
 			@RequestParam(value = "sizeId", required = false) List<Integer> size,
-			@RequestParam(value = "countProduct", required = false) List<Integer> count) {
-		boolean allProductsEnough = true; // Biến để theo dõi xem tất cả sản phẩm có đủ số lượng không
+			@RequestParam(value = "countProduct", required = false) List<Integer> count,
+			@RequestParam(value = "IdCode", required = false) Integer IdCode) {
 
+		boolean allProductsEnough = true; // Biến để theo dõi xem tất cả sản phẩm có đủ số lượng không
 		// Tạo một danh sách để lưu trạng thái kiểm tra số lượng của từng sản phẩm
 		List<Boolean> productStatus = new ArrayList<>();
 
@@ -128,10 +139,12 @@ public class OrderController {
 				if (quantity >= countedQuantity) {
 					// Sản phẩm này đủ số lượng
 					productStatus.add(true);
+
 				} else {
 					// Sản phẩm này không đủ số lượng
 					productStatus.add(false);
 					allProductsEnough = false; // Đặt biến này thành false nếu ít nhất một sản phẩm không đủ
+
 				}
 			} else {
 				// Xử lý nếu không tìm thấy thông tin sản phẩm (ví dụ: throw một Exception hoặc
@@ -158,8 +171,102 @@ public class OrderController {
 			/* return "thankyou"; */ // Chuyển hướng đến trang thành công hoặc trang bạn muốn
 		} else {
 			// Nếu ít nhất một sản phẩm không đủ số lượng, hiển thị thông báo hoặc xử lý lỗi
-			model.addAttribute("messages",
-					"Số lượng đơn giày của bạn muốn mua lớn hơn số lượng tồn kho cho ít nhất một sản phẩm!");
+			model.addAttribute("messages", "Số lượng đơn giày của bạn muốn mua lớn hơn số lượng sản phẩm tồn kho!");
+			return "cart.html";
+		}
+		if (IdCode == null) {
+			// Create a new order
+			Order order = new Order();
+			Timestamp now = new Timestamp(new Date().getTime());
+			String username = request.getRemoteUser();
+			Account user = accountDAO.findById(username).orElse(null);
+
+			order.setCreateDate(now);
+			order.setAddress(address);
+
+			order.setDiscountCode(null); // May need a null check here for the discount object
+			order.setAccount(user);
+			order.setNguoinhan(fullname);
+			order.setTongtien(total);
+			Order newOrder = orderDAO.saveAndFlush(order);
+
+			// ADD OrderDetail
+			for (int i = 0; i < productId.length; i++) {
+				Product product = productDAO.findById(Integer.parseInt(productId[i])).orElse(null);
+				if (product != null) {
+					OrderDetail orderDetail = new OrderDetail();
+					orderDetail.setOrder(newOrder);
+					orderDetail.setProduct(product);
+					orderDetail.setSize(Integer.parseInt(sizeId[i]));
+					orderDetail.setPrice(product.getPrice());
+					orderDetail.setQuantity(Integer.parseInt(countProduct[i]));
+					orderDetailDAO.save(orderDetail);
+				}
+			}
+		} else {
+			DiscountCode quantityDiscountCode = dcDAO.findById(IdCode).orElse(null);
+			// Kiểm tra xem đối tượng có tồn tại không
+			if (quantityDiscountCode != null) {
+				try {
+					// Lấy giá trị hiện tại của trường quantity
+					int currentQuantity = quantityDiscountCode.getQuantity();
+					System.out.println(currentQuantity);
+					if (currentQuantity == 0) {
+						model.addAttribute("messages", "Mã giảm giá này đã hết");
+						return "checkout.html";
+					} else {
+						// Giảm giá trị quantity đi 1
+						int newQuantity = currentQuantity - 1;
+						System.out.println(newQuantity);
+						// Cập nhật trường quantity với giá trị mới
+						quantityDiscountCode.setQuantity(newQuantity);
+						// Lưu lại đối tượng đã cập nhật vào cơ sở dữ liệu
+						dcDAO.save(quantityDiscountCode);
+					
+					}
+				} catch (Exception e) {
+					System.out.println("Lỗi khi cập nhật trường quantity: " + e.getMessage());
+					e.printStackTrace();
+					// Xử lý lỗi ở đây, ví dụ trả về một trang thông báo lỗi
+					return "error.html";
+				}
+			} else {
+				System.out.println("Không tìm thấy đối tượng DiscountCode với IdCode: " + IdCode);
+				// Xử lý khi không tìm thấy đối tượng DiscountCode, ví dụ trả về trang giỏ hàng
+				// với thông báo lỗi
+				return "cart.html";
+			}
+
+			// Create a new order
+			Order order = new Order();
+			Timestamp now = new Timestamp(new Date().getTime());
+			String username = request.getRemoteUser();
+			Account user = accountDAO.findById(username).orElse(null);
+			// Update the discount code
+			DiscountCode discount = dcDAO.findById(IdCode).orElse(null);
+
+			order.setCreateDate(now);
+			order.setAddress(address);
+			order.setDiscountCode(discount);
+
+			order.setAccount(user);
+			order.setNguoinhan(fullname);
+			order.setTongtien(total);
+			Order newOrder = orderDAO.saveAndFlush(order);
+
+			// ADD OrderDetail
+			for (int i = 0; i < productId.length; i++) {
+				Product product = productDAO.findById(Integer.parseInt(productId[i])).orElse(null);
+				if (product != null) {
+					OrderDetail orderDetail = new OrderDetail();
+					orderDetail.setOrder(newOrder);
+					orderDetail.setProduct(product);
+					orderDetail.setSize(Integer.parseInt(sizeId[i]));
+					orderDetail.setPrice(product.getPrice());
+					orderDetail.setQuantity(Integer.parseInt(countProduct[i]));
+					orderDetailDAO.save(orderDetail);
+				}
+			}
 		}
 
 		//// GỬI MAIL ////
@@ -176,7 +283,12 @@ public class OrderController {
 		// Tạo bảng với CSS
 		bodyBuilder.append("<table style=\"border-collapse: collapse;\">");
 		bodyBuilder.append(
-				"<tr><th style=\"border: 1px solid black; padding: 8px;\">Sản phẩm</th><th style=\"border: 1px solid black; padding: 8px;\">Số lượng</th><th style=\"border: 1px solid black; padding: 8px;\">Giá</th><th style=\"border: 1px solid black; padding: 8px;\">Tổng cộng</th></tr>");
+				"<tr>"
+				+ "<th style=\"border: 1px solid black; padding: 8px;\">Sản phẩm</th>"
+				+ "<th style=\"border: 1px solid black; padding: 8px;\">Số lượng</th>"
+				+ "<th style=\"border: 1px solid black; padding: 8px;\">Size</th>"
+				+ "<th style=\"border: 1px solid black; padding: 8px;\">Giá</th>"
+				+ "<th style=\"border: 1px solid black; padding: 8px;\">Tổng cộng</th></tr>");
 
 		// Lấy thông tin chi tiết của từng sản phẩm trong giỏ hàng và thêm vào bảng
 		for (int i = 0; i < productId.length; i++) {
@@ -188,8 +300,13 @@ public class OrderController {
 					.append(product.getName()).append("</td>");
 			bodyBuilder.append("<td style=\"border: 1px solid black; padding: 8px; text-align: center;\">")
 					.append(quantity).append("</td>");
+
+			bodyBuilder.append("<td style=\"border: 1px solid black; padding: 8px; text-align: center;\">")
+					.append(size.get(i)).append("</td>");
+
 			bodyBuilder.append("<td style=\"border: 1px solid black; padding: 8px; text-align: center;\">").append("$")
 					.append(product.getPrice()).append("</td>");
+
 			bodyBuilder.append("<td style=\"border: 1px solid black; padding: 8px; text-align: center;\">").append("$")
 					.append(product.getPrice() * quantity).append("</td>");
 			bodyBuilder.append("</tr>");
@@ -199,30 +316,6 @@ public class OrderController {
 		mail.setBody(bodyBuilder.toString());
 
 		mailerService.queue(mail);
-
-		//// ADD Order ////
-		Order order = new Order();
-		Timestamp now = new Timestamp(new Date().getTime());
-		String username = request.getRemoteUser();
-		Account user = accountDAO.findById(username).orElse(null);
-		order.setCreateDate(now);
-		order.setAddress(address);
-		order.setAccount(user);
-		order.setNguoinhan(fullname);
-		order.setTongtien(total);
-		Order newOrder = orderDAO.saveAndFlush(order);
-
-		//// ADD OrderDetail ////
-		for (int i = 0; i < productId.length; i++) {
-			Product product = productDAO.findById(Integer.parseInt(productId[i])).get();
-			OrderDetail orderDetail = new OrderDetail();
-			orderDetail.setOrder(newOrder);
-			orderDetail.setProduct(product);
-			orderDetail.setSize(Integer.parseInt(sizeId[i]));
-			orderDetail.setPrice(product.getPrice());
-			orderDetail.setQuantity(Integer.parseInt(countProduct[i]));
-			orderDetailDAO.save(orderDetail);
-		}
 		request.getSession().removeAttribute("cart");
 
 		return "redirect:/thankyou.html";

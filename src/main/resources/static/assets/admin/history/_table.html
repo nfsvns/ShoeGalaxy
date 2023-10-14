@@ -11,9 +11,11 @@
                 <th>To</th>
                 <th>Total</th>
                 <!-- <th>Available?</th> -->
-                <th></th>
-                <th></th>
-                <th></th>
+                  <th>Discount Code</th>
+                <th>Activate</th>
+               
+                <th>Show Order Detail</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -24,6 +26,7 @@
                 <td>{{item.address}}</td>
                 <td>{{item.nguoinhan}}</td>
                 <td>{{item.tongtien}}</td>
+                 <td>{{item.discountCode.id}} {{item.discountCode.code}}</td>
                 <td>{{item.available?'Yes':'No'}}</td>
                 <td><button ng-click="getDetailData(item)" class="btn btn-primary">
                     {{item.showDetail ? 'Hide' : 'Show'}}

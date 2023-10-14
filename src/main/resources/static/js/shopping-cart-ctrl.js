@@ -16,6 +16,8 @@ app.controller("cart-ctrl", function($scope, $http) {
 
 
 
+
+
 	var $cart = $scope.cart = {
 		items: [],
 		add(id) {
@@ -24,35 +26,54 @@ app.controller("cart-ctrl", function($scope, $http) {
 				return;
 			}
 
-			// Lấy giá trị từ biến totalAmount và sử dụng nó khi thêm sản phẩm
+			// Check if the item with the same ID and size is already in the cart
 			var item = this.items.find(item => item.id == id && item.sizes == $scope.selectedSize);
 			if (item) {
-				item.qty++;
+				item.qty += $scope.quantity; // Increment the quantity if the item already exists in the cart
 				this.saveToLocalStorage();
 			} else {
+				// If the item doesn't exist in the cart, fetch product details
 				$http.get(`/rest/products/${id}`).then(resp => {
-					// Lấy danh sách hình ảnh từ API và chọn hình ảnh cụ thể (ví dụ: lấy hình ảnh đầu tiên)
+					// Fetch product images 
 					$http.get(`/rest/products/${id}/images`).then(imageResp => {
 						if (imageResp.data.length > 0) {
 							resp.data.image = imageResp.data[0].image;
 						} else {
-							// Nếu không có hình ảnh, bạn có thể gán một URL mặc định hoặc hiển thị thông báo lỗi
+							// Set a default image URL if no images are available
 							resp.data.image = 'url_to_default_image.jpg';
 						}
 
-						// Tiếp tục thêm sản phẩm vào giỏ hàng
-						/*productData.qty = 1;
-						productData.sizes = $scope.selectedSize;
-						this.items.push(productData);
-						this.saveToLocalStorage();*/
-						resp.data.qty = 1;
 
-						resp.data.sizes = $scope.selectedSize;
-						this.items.push(resp.data);
-						this.saveToLocalStorage();
+
+						$http.get(`/rest/products/${id}/price`).then(totalAmount => {
+							if (totalAmount.data.length > 0) {
+								resp.data.percentage = totalAmount.data[0].percentage;
+
+							} else {
+								resp.data.percetage = 1;
+							}
+
+
+
+
+
+							// Check stock quantity before adding to cart
+							$http.get(`/rest/sizeManager/checkQuantity/${id}/${$scope.selectedSize}`).then(stockResp => {
+								var availableStock = stockResp.data;
+
+								if (availableStock >= resp.data.qty) {
+									this.items.push(resp.data);
+									this.saveToLocalStorage();
+								} else {
+									alert('Số lượng vượt quá số lượng tồn kho.');
+								}
+							});
+							// Set the quantity and selected size based on user input
+							resp.data.qty = $scope.quantity;
+							resp.data.sizes = $scope.selectedSize;
+
+						});
 					});
-
-
 				});
 			}
 		},
@@ -66,10 +87,10 @@ app.controller("cart-ctrl", function($scope, $http) {
 			this.saveToLocalStorage();
 		},
 		price_product(item) {
-			if (item.discount_sale == null) {
-				return item.price
+			if (item.percentage == null || item.percentage === 0) {
+				return item.price;
 			} else {
-				return (item.price - (item.price * item.discount_sale.percentage / 100))
+				return item.price - (item.price * item.percentage / 100);
 			}
 		},
 

@@ -40,6 +40,10 @@ public class Order implements Serializable {
 	@JoinColumn(name = "username")
 	private Account account;
 	
+	@ManyToOne
+	@JoinColumn(name = "discountID")
+	private DiscountCode discountCode;
+	
 	@JsonIgnore
 	@OneToMany(mappedBy = "order")
 	List<OrderDetail> orderDetails;

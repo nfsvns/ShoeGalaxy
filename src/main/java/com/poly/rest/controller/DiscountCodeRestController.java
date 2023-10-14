@@ -45,7 +45,7 @@ public class DiscountCodeRestController {
 	}
 	@DeleteMapping("{id}")
 	public void delete(@PathVariable("id") Integer id) {
-		codeService.deleteDiscountCode(id);
+		/* codeService.deleteDiscountCode(id); */
 		codeService.delete(id);
 	}
 	
