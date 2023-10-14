@@ -27,7 +27,7 @@ public class PaypalService {
 	private APIContext apiContext;
 
 	public Payment createPayment(Double total, String currency, String method, String intent, String description,
-			String recipientName, String shippingAddressLine1, String cancelUrl, String successUrl)
+			String recipientName, String shippingAddressLine1, String city, String cancelUrl, String successUrl)
 			throws PayPalRESTException {
 		Amount amount = new Amount();
 		amount.setCurrency(currency);
@@ -41,9 +41,9 @@ public class PaypalService {
 		ShippingAddress shippingAddress = new ShippingAddress();
 		shippingAddress.setRecipientName(recipientName);
 		shippingAddress.setLine1(shippingAddressLine1);
-		shippingAddress.setCity("Hồ Chí Minh");
-		shippingAddress.setState("TP.HCM");
-		shippingAddress.setPostalCode("700000");
+		shippingAddress.setCity(city);
+//		shippingAddress.setState("TP.HCM");
+//		shippingAddress.setPostalCode("700000");
 		shippingAddress.setCountryCode("VN");
 		itemList.setShippingAddress(shippingAddress);
 

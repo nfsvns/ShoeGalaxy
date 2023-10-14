@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	th:replace="~{/layout/layout.html::dynamic(~{::title}, ~{::body})}">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{/layout/layout.html::dynamic(~{::title}, ~{::body})}">
+
 <head>
-<title>Shoe Galaxy</title>
-<meta charset="utf-8">
+	<title>Shoe Galaxy</title>
+	<meta charset="utf-8">
 </head>
+
 <body>
 	<div class="bg-light py-3">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-12 mb-0">
-					<a href="index.html">Home</a> <span class="mx-2 mb-0">/</span> <a
-						href="cart.html">Cart</a> <span class="mx-2 mb-0">/</span> <strong
-						class="text-black">Checkout</strong>
+					<a href="index.html">Home</a> <span class="mx-2 mb-0">/</span> <a href="cart.html">Cart</a> <span
+						class="mx-2 mb-0">/</span> <strong class="text-black">Checkout</strong>
 				</div>
 			</div>
 		</div>
@@ -47,17 +47,17 @@
 								</thead>
 								<tbody>
 									<tr ng-repeat="item in cart.items">
-										<td><input ng-model="item.id" type="text"
-											name="productId" style="width: 50%"></td>
+										<td><input ng-model="item.id" type="text" name="productId" style="width: 50%">
+										</td>
 
 										<td><img style="width: 50%" src="/images/{{item.image}}"></td>
 
-										<td><input ng-model="item.sizes" type="text"
-											name="sizeId" style="width: 100%"><br></td>
+										<td><input ng-model="item.sizes" type="text" name="sizeId"
+												style="width: 100%"><br></td>
 										<td>${{cart.price_product(item)}}</td>
-										<td><input ng-change="cart.saveToLocalStorage()"
-											name="countProduct" ng-model="item.qty" type="number" min="1"
-											style="width: 30px" class="border border-light" /></td>
+										<td><input ng-change="cart.saveToLocalStorage()" name="countProduct"
+												ng-model="item.qty" type="number" min="1" style="width: 30px"
+												class="border border-light" /></td>
 
 
 										<td>${{cart.amtt_of(item) | number : 2}}</td>
@@ -68,16 +68,16 @@
 										<td class="text-black font-weight-bold"><strong>Order
 												Total</strong></td>
 
-										<td><input
-											class="text-black font-weight-bold border border-light"
-											type="text" name="total"
-											th:value="${calculatedValue != null ?  + calculatedValue : '{{cart.amount | number : 2}}'}" />
+										<td><input class="text-black font-weight-bold border border-light" type="text"
+												name="total"
+												th:value="${calculatedValue != null ?  + calculatedValue : '{{cart.amount | number : 2}}'}" />
 
 											<input style="text-decoration: line-through;"
-											class="text-black font-weight-bold border border-light"
-											type="text" th:value="${{cartAmount}}" /></td>
-										<td><input type="hidden" id="inputAmount"
-											name="totalAmount" value="{{cart.amount}}" /></td>
+												class="text-black font-weight-bold border border-light" type="text"
+												th:value="${{cartAmount}}" />
+										</td>
+										<td><input type="hidden" id="inputAmount" name="totalAmount"
+												value="{{cart.amount}}" /></td>
 
 
 
@@ -86,21 +86,19 @@
 								</tbody>
 							</table>
 
-							<input class="text-black font-weight-bold border border-light"
-								type="text" th:value="${{idCode}}" name="IdCode" />
+							<input class="text-black font-weight-bold border border-light" type="text"
+								th:value="${{idCode}}" name="IdCode" />
 
-							<div class="btn-group btn-group-toggle d-flex flex-column mb-4"
-								data-toggle="buttons">
-								<label class="btn btn-secondary active"> <input
-									type="radio" name="options" id="option1" autocomplete="off"
-									checked> Thanh toán khi nhận hàng
-								</label> 
-								<label class="btn btn-secondary"> <input type="radio"
-									name="options" id="option2" autocomplete="off">
+							<div class="btn-group btn-group-toggle d-flex flex-column mb-4" data-toggle="buttons">
+								<label class="btn btn-secondary active"> <input type="radio" name="options" id="option1"
+										autocomplete="off" checked> Thanh toán khi nhận hàng
+								</label>
+								<label class="btn btn-secondary"> <input type="radio" name="options" id="option2"
+										autocomplete="off">
 									Paypal
-								</label> 
-								<label class="btn btn-secondary"> <input type="radio"
-									name="options" id="option3" autocomplete="off"> Thẻ
+								</label>
+								<label class="btn btn-secondary"> <input type="radio" name="options" id="option3"
+										autocomplete="off"> Thẻ
 									ngân hàng
 								</label>
 							</div>
@@ -110,9 +108,10 @@
 									Order</button>
 							</div>
 							<div class="form-group">
-								<button class="btn btn-primary btn-lg py-3 btn-block" formaction="/paypal" formmethod="post">Paypal</button>
+								<button class="btn btn-primary btn-lg py-3 btn-block" formaction="/paypal"
+									formmethod="post">Paypal</button>
 							</div>
-							
+
 						</div>
 					</div>
 
@@ -133,21 +132,41 @@
 												required>
 										</div>
 
+										<div class="col-md-12 mt-3">
+											<label for="c_fname"
+												class="text-black">Province/City<span class="text-danger">*</span>
+											</label>
+											<select class="form-select mb-3" name="provinceLabel" id="province">
+												<!--<option value="">chọn tỉnh/thành phố</option>-->
+											</select>
+											
+											<label for="c_fname"
+												class="text-black">District<span class="text-danger">*</span>
+											</label>
+											<select class="form-select mb-3" name="districtLabel" id="district">
+												<option value="">chọn quận</option>
+											</select>
+											
+											<label for="c_fname"
+												class="text-black">Ward<span class="text-danger">*</span>
+											</label>
+											<select class="form-select mb-3" name="wardLabel" id="ward">
+												<option value="">chọn phường</option>
+											</select>
 
-
-										<div class="col-md-12">
+										</div>
+										
+										<div class="col-md-12 ">
 											<label for="c_address" class="text-black">Address <span
-												class="text-danger">*</span></label> <input type="text"
-												class="form-control" id="address" name="address"
-												placeholder="Address" required>
+													class="text-danger">*</span></label> <input type="text"
+												class="form-control" id="address" name="address" placeholder="Address"
+												required>
 										</div>
 										<div class="col-md-12 pt-4">
 											<label for="c_email_address" class="text-black">Email
 												Address <span class="text-danger">*</span>
-											</label> <input type="text" class="form-control" id="email"
-												name="email"
-												th:value="${session.user != null ? session.user.email : ''}"
-												required>
+											</label> <input type="text" class="form-control" id="email" name="email"
+												th:value="${session.user != null ? session.user.email : ''}" required>
 										</div>
 									</div>
 
@@ -194,4 +213,5 @@
 		</div>
 	</div>
 </body>
+
 </html>
