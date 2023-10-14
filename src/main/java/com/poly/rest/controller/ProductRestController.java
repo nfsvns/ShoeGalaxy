@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,9 +18,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.poly.entity.DiscountProduct;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.poly.entity.Image;
 import com.poly.entity.Product;
 import com.poly.service.DiscountProductService;
@@ -90,5 +94,16 @@ public class ProductRestController {
 	@DeleteMapping("{id}")
 	public void delete(@PathVariable("id") Integer id) {
 		productService.delete(id);
+	@RequestMapping(value = "{id}", method = {RequestMethod.PUT, RequestMethod.DELETE})
+	public Product putOrDelete(@PathVariable("id") Integer id, @RequestBody Product product, 
+			HttpServletRequest request) {
+	    if (request.getMethod().equals(RequestMethod.DELETE.toString())) {
+	    	return productService.deletu(product);
+	}
+	    else if (request.getMethod().equals(RequestMethod.PUT.toString())) {
+	    	return productService.update(product);
+	}
+		return product;
+	    
 	}
 }

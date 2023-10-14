@@ -34,11 +34,11 @@ public class Product implements Serializable {
 	@JoinColumn(name = "category_id")
 	private Category category;
 
-
-
 	@JsonIgnore
 	@OneToMany(mappedBy = "product")
 	private List<OrderDetail> orderDetails;
+	
+	
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "product")
@@ -51,4 +51,12 @@ public class Product implements Serializable {
 	@JsonIgnore
 	@OneToMany(mappedBy = "product")
 	private List<DiscountProduct> discountProduct;
+	@Override
+	public String toString() {
+	    return "Product [id=" + id + ", name=" + name + ", price=" + price + ", quantity=" + quantity + ", available=" + available
+	            + ", category=" + category + ", discount_sale=" + discount_sale 
+	            + ", orderDetails size=" + (orderDetails != null ? orderDetails.size() : "null")
+	            + ", sizes size=" + (sizes != null ? sizes.size() : "null")
+	            + ", images size=" + (images != null ? images.size() : "null") + "]";
+	}
 }

@@ -3,6 +3,8 @@ package com.poly.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.poly.dao.AccountDAO;
@@ -25,5 +27,36 @@ public class AccountServiceImpl implements AccountService{
 
 	public List<Account> getAdministrators() {
 		return dao.getAdministrators();
+	}
+	@Override
+	public boolean changePassword(Account account, String oldPassword, String newPassword,String newPasswordAgain) {
+		if ((newPassword.equalsIgnoreCase(newPasswordAgain)) && (oldPassword.equals(account.getPassword()))) {
+            account.setPassword(newPassword);
+            dao.save(account);
+            return true;
+        }
+        return false;
+    }
+
+	@Override
+	public boolean updateProfile(String username, String newFullname, String newEmail, String photo) {
+		Account account = dao.findById(username).orElse(null);
+
+        if (account != null) {
+            // Cập nhật thông tin cá nhân
+            account.setFullname(newFullname);
+            account.setEmail(newEmail);
+            account.setPhoto(photo);
+            dao.save(account);
+            return true;
+        }
+
+        return false;
+    }
+	@Override
+	public Account getCurrentAccount() {
+		 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	        String username = authentication.getName();
+	        return dao.findByUsername(username);
 	}
 }

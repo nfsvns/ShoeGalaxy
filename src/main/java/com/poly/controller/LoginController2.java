@@ -73,9 +73,4 @@ public class LoginController2 {
 		return "register";
 	}
 
-	@RequestMapping("/oauth2/login/success")
-	public String success(OAuth2AuthenticationToken oauth2) {
-		userService.loginFromOAuth2(oauth2);
-		return "forward:/login/success";
-	}
 }

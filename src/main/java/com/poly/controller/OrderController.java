@@ -3,6 +3,7 @@ package com.poly.controller;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,6 +34,7 @@ import com.poly.entity.OrderDetail;
 import com.poly.entity.Product;
 import com.poly.entity.Size;
 import com.poly.service.MailerService;
+import com.poly.service.OrderService;
 import com.poly.service.SessionService;
 
 @Controller
@@ -53,14 +56,16 @@ public class OrderController {
 	AccountDAO accountDAO;
 	@Autowired
 	DiscountCodeDAO dcDAO;
+	@Autowired
+	OrderService orderService;
 
 	@Autowired
 	SizeDAO sizeDAO;
 
 	@RequestMapping("/check")
 	public String checkout(Model model, @RequestParam(value = "totalAmount", required = false) String totalAmount) {
-		model.addAttribute("cartItems", shoppingCartDAO.getAll());
-		model.addAttribute("total", shoppingCartDAO.getAmount());
+//		model.addAttribute("cartItems", shoppingCartDAO.getAll());
+//		model.addAttribute("total", shoppingCartDAO.getAmount());
 		return "checkout.html";
 	}
 	@RequestMapping("/searchCodee")
@@ -124,8 +129,9 @@ public class OrderController {
 		boolean allProductsEnough = true; // Biến để theo dõi xem tất cả sản phẩm có đủ số lượng không
 		// Tạo một danh sách để lưu trạng thái kiểm tra số lượng của từng sản phẩm
 		List<Boolean> productStatus = new ArrayList<>();
-
+		System.out.println(productID.size());
 		for (int i = 0; i < productID.size(); i++) {
+
 			Integer id = productID.get(i);
 			Integer idSize = size.get(i);
 			Integer countedQuantity = count.get(i);
@@ -328,4 +334,17 @@ public class OrderController {
 		sessionService.setAttribute("cartQuantity", shoppingCartDAO.getCount());
 		return "thankyou";
 	}
+	
+	
+	
+	/*
+	  @RequestMapping("/TrangThai") public String
+	  getOrderStatus(Model model) {
+	  
+	  boolean a = true; System.out.println(a); model.addAttribute("b", a);
+	  
+	  
+	  return "TrangThai"; }
+	 */
 }
+

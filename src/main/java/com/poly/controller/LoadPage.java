@@ -42,7 +42,7 @@ public class LoadPage {
 	@Autowired
 	DiscountProductDAO dpDAO;
 
-	@GetMapping({  "/contact.html", "/about.html"})
+	@GetMapping({  "/contact.html", "/about.html","/ChangeInfomation.html","/TrangThai.html","/ChangePassword.html"})
 	public String loadPage(HttpServletRequest request) {
 		String path = request.getServletPath();
 
@@ -52,11 +52,27 @@ public class LoadPage {
 		} else if ("/about.html".equals(path)) {
 			return "about";
 		}
+	else if ("/ChangeInfomation.html".equals(path)) {
+		return "ChangeInfomation";
+		}
+	else if ("/TrangThai.html".equals(path)) {
+		return "TrangThai";
+		}
+	else if ("/ChangePassword.html".equals(path)) {
+		return "ChangePassword";
+		}
 		return "error";
 	}
 	
 	@RequestMapping({"/","index.html"})
 	public String index(Model model) {
+
+		List<Product> pro = productDAO.topProduct();
+		
+		List<Product> proa = productDAO.findByDiscount();
+		model.addAttribute("pro", pro);
+		
+		model.addAttribute("proa", proa);
 		sessionService.setAttribute("cartQuantity", shoppingCartDAO.getCount());
 		List<Product> products = productDAO.findAll();
 		
@@ -67,10 +83,8 @@ public class LoadPage {
 		
 		return "index";
 	}
-	
 
-	
+	}
 
-	
 
-}
+

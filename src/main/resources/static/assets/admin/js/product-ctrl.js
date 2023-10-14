@@ -68,19 +68,22 @@ app.controller("product-ctrl", function($scope, $http){
 		});
 	}
 
-	$scope.delete = function(item){
-		if(confirm("Bạn muốn xóa sản phẩm này?")){
-			$http.delete(`/rest/products/${item.id}`).then(resp => {
-				var index = $scope.items.findIndex(p => p.id == item.id);
-				$scope.items.splice(index, 1);
+	$scope.delete = function(item){	
+		var item = angular.copy($scope.form);
+		item.available = false;
+		$http.put(`/rest/products/${item.id}`, item).then(resp => {
+			var index = $scope.items.findIndex(p => p.id == item.id);
+			$scope.items.splice(index, 1);
 				$scope.reset();
-				alert("Xóa sản phẩm thành công!");
-			}).catch(error => {
-				alert("Lỗi xóa sản phẩm!");
-				console.log("Error", error);
-			})
-		}
+			$scope.items[index] = item;
+			alert("Xóa sản phẩm thành công!");
+		})
+		.catch(error => {
+			alert("Lỗi xóa sản phẩm!");
+			console.log("Error", error);
+		});
 	}
+	
 	$scope.pager = {
 		page: 0,
 		size: 10,
