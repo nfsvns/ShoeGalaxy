@@ -69,10 +69,10 @@ public class LoadPage {
 
 		List<Product> pro = productDAO.topProduct();
 		
-		List<Product> proa = productDAO.findByDiscount();
+//		List<Product> proa = productDAO.findByDiscount();
 		model.addAttribute("pro", pro);
 		
-		model.addAttribute("proa", proa);
+//		model.addAttribute("proa", proa);
 		sessionService.setAttribute("cartQuantity", shoppingCartDAO.getCount());
 		List<Product> products = productDAO.findAll();
 		

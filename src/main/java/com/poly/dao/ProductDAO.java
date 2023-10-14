@@ -33,7 +33,7 @@ public interface ProductDAO extends JpaRepository<Product, Integer> {
 	@Query("SELECT p FROM Product p LEFT JOIN p.discountProduct dp")
 	Page<Product> findAllProductsAndDiscounts(Pageable pageable);
 
-	@Query("SELECT p FROM Product p WHERE p.category.id=?1")
+	
 	
 	@Query("SELECT p FROM Product p WHERE p.category.id=?1 and p.available = True")
 	List<Product> findByCategoryId(String cid);
@@ -63,9 +63,9 @@ public interface ProductDAO extends JpaRepository<Product, Integer> {
 	List<Product> topProduct();
 
 	
-	@Query(value = "SELECT p.id, p.category_id,p.name,p.price,d.percentage from Products p\r\n"
-			+ "inner join discount_Sales d on d.id = p.sale_id",nativeQuery = true)
-	List<Product> findByDiscount();
+//	@Query(value = "SELECT p.id, p.category_id,p.name,p.price,d.percentage from Products p\r\n"
+//			+ "inner join discount_Sales d on d.id = p.sale_id",nativeQuery = true)
+//	List<Product> findByDiscount();
 
 	
 	

@@ -54,7 +54,7 @@ public class Product implements Serializable {
 	@Override
 	public String toString() {
 	    return "Product [id=" + id + ", name=" + name + ", price=" + price + ", quantity=" + quantity + ", available=" + available
-	            + ", category=" + category + ", discount_sale=" + discount_sale 
+	            + ", category=" + category
 	            + ", orderDetails size=" + (orderDetails != null ? orderDetails.size() : "null")
 	            + ", sizes size=" + (sizes != null ? sizes.size() : "null")
 	            + ", images size=" + (images != null ? images.size() : "null") + "]";

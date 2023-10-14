@@ -94,6 +94,7 @@ public class ProductRestController {
 	@DeleteMapping("{id}")
 	public void delete(@PathVariable("id") Integer id) {
 		productService.delete(id);
+	}
 	@RequestMapping(value = "{id}", method = {RequestMethod.PUT, RequestMethod.DELETE})
 	public Product putOrDelete(@PathVariable("id") Integer id, @RequestBody Product product, 
 			HttpServletRequest request) {
