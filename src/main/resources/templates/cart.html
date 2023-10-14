@@ -17,10 +17,12 @@
 			</div>
 		</div>
 	</div>
-
 	<div class="site-section">
 		<div class="container">
 			<div class="row mb-5">
+				<div th:if="${messages != null}" class="alert alert-danger">
+					<p th:text="${messages}"></p>
+				</div>
 				<!-- <form class="col-md-12" action="/cart.html/update" method="post"> -->
 				<div class="site-blocks-table">
 					<div th:if="${messages != null}" class="alert alert-danger">
@@ -41,25 +43,25 @@
 						</thead>
 						<tbody>
 							<tr ng-repeat="item in cart.items">
-								<td>
-									<img src="/images/{{item.image}}" style="width: 50%">
+								<td><img src="/images/{{item.image}}" style="width: 50%">
 								</td>
 
 
 
 								<td>{{item.name}}</td>
 								<td>{{item.sizes}}</td>
-
 								<!-- <td>${{item.price | number : 2}}</td> -->
 								<td>${{cart.price_product(item)}}</td>
 
-								<td><input ng-change="cart.saveToLocalStorage()" name="count" ng-model="item.qty"
-										type="number" min="1" style="width: 60px;" /></td>
+								<td><input ng-change="cart.saveToLocalStorage()"
+									name="count" ng-model="item.qty" type="number" min="1"
+									style="width: 60px;" /></td>
 								<!-- <td>${{cart.amt_of(item) | number : 2}}</td> -->
 								<td>${{cart.amtt_of(item) | number : 2}}</td>
 								<td>
-									<button ng-click="cart.remove(item.id)" class="btn btn-sm btn-danger">
-										<i class="fas fa-trash"> X</i>
+									<button ng-click="cart.remove(item.id)"
+										class="btn btn-sm btn-danger">
+										<i class="fas fa-trash"> </i>
 									</button>
 								</td>
 

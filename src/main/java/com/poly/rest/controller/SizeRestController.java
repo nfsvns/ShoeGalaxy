@@ -15,15 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import com.poly.entity.Size;
-import com.poly.service.DiscountSaleService;
+
 import com.poly.service.SizeService;
 
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/rest/sizeManager")
 public class SizeRestController {
-	@Autowired
-	DiscountSaleService discountSaleService;
+
 
 	@Autowired
 	SizeService sizeService;
@@ -55,4 +54,15 @@ public class SizeRestController {
 		sizeService.deleteDiscountCode(id);
 		sizeService.delete(id);
 	}
+	
+	@GetMapping("/checkQuantity/{id}/{size}")
+	public Integer checkQuantity(
+	    @PathVariable("id") Integer id,
+	    @PathVariable("size")  Integer size
+	) {
+	    return sizeService.findQuantityByProductIdAndSize(id, size);
+	}
+
+	
+	
 }

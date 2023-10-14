@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.poly.dao.DiscountProductDAO;
 import com.poly.dao.ProductDAO;
 import com.poly.dao.ShoppingCartDAO;
+import com.poly.entity.DiscountProduct;
 import com.poly.entity.Product;
 
 import com.poly.service.SessionService;
@@ -37,6 +39,8 @@ public class LoadPage {
 	SessionService sessionService;
 	@Autowired
 	ProductDAO productDAO;
+	@Autowired
+	DiscountProductDAO dpDAO;
 
 	@GetMapping({  "/contact.html", "/about.html","/ChangeInfomation.html","/TrangThai.html","/ChangePassword.html"})
 	public String loadPage(HttpServletRequest request) {
@@ -62,6 +66,7 @@ public class LoadPage {
 	
 	@RequestMapping({"/","index.html"})
 	public String index(Model model) {
+
 		List<Product> pro = productDAO.topProduct();
 		
 		List<Product> proa = productDAO.findByDiscount();
@@ -69,6 +74,13 @@ public class LoadPage {
 		
 		model.addAttribute("proa", proa);
 		sessionService.setAttribute("cartQuantity", shoppingCartDAO.getCount());
+		List<Product> products = productDAO.findAll();
+		
+	    List<DiscountProduct> discountProducts = dpDAO.findAll();
+
+	    model.addAttribute("products", products);
+	    model.addAttribute("discountProducts", discountProducts);
+		
 		return "index";
 	}
 

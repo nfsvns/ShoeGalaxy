@@ -22,4 +22,6 @@ public interface SizeService {
 	public void delete(Integer id);
 
 	public void deleteDiscountCode(Integer id);
+	
+	public Integer findQuantityByProductIdAndSize(Integer id, Integer size);
 }

@@ -29,6 +29,11 @@ public interface ProductDAO extends JpaRepository<Product, Integer> {
 	@Query("SELECT new Report(o.category.name, sum(o.price), count(o) )" + " FROM Product o"
 			+ " GROUP BY o.category.name" + " ORDER BY sum(o.price) DESC")
 	List<Report> getInventoryByCategory();
+
+	@Query("SELECT p FROM Product p LEFT JOIN p.discountProduct dp")
+	Page<Product> findAllProductsAndDiscounts(Pageable pageable);
+
+	@Query("SELECT p FROM Product p WHERE p.category.id=?1")
 	
 	@Query("SELECT p FROM Product p WHERE p.category.id=?1 and p.available = True")
 	List<Product> findByCategoryId(String cid);

@@ -64,4 +64,10 @@ public class SizeServiceImpl  implements SizeService{
 		
 	}
 
+	@Override
+	public Integer findQuantityByProductIdAndSize(Integer id, Integer size) {
+		return sizeDAO.findQuantityByProductIdAndSize(id, size);
+		
+	}
+
 }

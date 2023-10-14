@@ -13,40 +13,41 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.poly.entity.DiscountCode;
-import com.poly.entity.Discount_Sale;
+import com.poly.entity.DiscountProduct;
 
-import com.poly.service.DiscountSaleService;
+import com.poly.service.DiscountProductService;
+
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/rest/discountSale")
-public class DiscountSaleRestController {
+@RequestMapping("/rest/discountProduct")
+public class DiscountProductRestController {
 	@Autowired
-	DiscountSaleService discountSaleService;
-
+	DiscountProductService discountProductService;
+	
+	
 	@GetMapping
-	public List<Discount_Sale> getAll() {
-		return discountSaleService.findAll();
+	public List<DiscountProduct> getAll() {
+		return discountProductService.findAll();
 	}
 	@GetMapping("{id}")
-	public Discount_Sale getOne(@PathVariable("id") Integer id) {
+	public DiscountProduct getOne(@PathVariable("id") Integer id) {
 		
-		return discountSaleService.findById(id);
+		return discountProductService.findById(id);
 	}
 	
 	@PostMapping
-	public Discount_Sale post(@RequestBody Discount_Sale discount_Sale) {
-		discountSaleService.create(discount_Sale);
-		return discount_Sale;
+	public DiscountProduct post(@RequestBody DiscountProduct discountProduct) {
+		discountProductService.create(discountProduct);
+		return discountProduct;
 	}
 	@PutMapping("{id}")
-	public Discount_Sale put(@PathVariable("id") Integer id, @RequestBody Discount_Sale discount_Sale) {
-		return discountSaleService.update(discount_Sale);
+	public DiscountProduct DiscountProduct (@PathVariable("id") Integer id, @RequestBody DiscountProduct discountProduct) {
+		return discountProductService.update(discountProduct);
 	}
 	@DeleteMapping("{id}")
 	public void delete(@PathVariable("id") Integer id) {
-		discountSaleService.deleteDiscountCode(id);
-		discountSaleService.delete(id);
+		discountProductService.deleteDiscountCode(id);
+		discountProductService.delete(id);
 	}
 }

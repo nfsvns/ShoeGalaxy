@@ -1,6 +1,9 @@
 package com.poly.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.poly.dao.CategoryDAO;
+import com.poly.dao.DiscountProductDAO;
 
-import com.poly.dao.DiscountSaleDAO;
 import com.poly.dao.ProductDAO;
 import com.poly.dao.SizeDAO;
+import com.poly.entity.DiscountProduct;
 import com.poly.entity.Product;
 import com.poly.entity.Size;
 import com.poly.service.SessionService;
@@ -31,29 +35,34 @@ public class ProductController {
 	ProductDAO dao;
 	@Autowired
 	SizeDAO sizeDAO;
-    
-    
+	@Autowired
+	DiscountProductDAO dpDAO;
 
 	@Autowired
 	SessionService sessionService;
-
-	@RequestMapping({"/shop.html"})
+	@RequestMapping("/shop.html")
 	public String list(Model model, @RequestParam("p") Optional<Integer> p) {
-		Pageable pageable = PageRequest.of(p.orElse(0), 6);
-//		Page<Product> page = dao.findAll(pageable);
-		Page<Product> page = dao.findDelete(pageable);
+	    Pageable pageable = PageRequest.of(p.orElse(0), 6);
+	    Page<Product> page = dao.findAll(pageable);
 
-		model.addAttribute("products", page);
-		
+	    // Lấy danh sách DiscountProduct
+	    List<DiscountProduct> discountProducts = dpDAO.findAll();
 
-		int count = dao.countMlBProducts();
-		model.addAttribute("count", count);
-		int countAD = dao.countADProducts();
-		model.addAttribute("countAD", countAD);
-		int countNK = dao.countNKProducts();
-		model.addAttribute("countNK", countNK);
-		return "shop";
+	    model.addAttribute("products", page);
+	    model.addAttribute("discountProducts", discountProducts);
+	    
+	    int count = dao.countMlBProducts();
+	    model.addAttribute("count", count);
+	    int countAD = dao.countADProducts();
+	    model.addAttribute("countAD", countAD);
+	    int countNK = dao.countNKProducts();
+	    model.addAttribute("countNK", countNK);
+
+	 
+	    return "shop";
 	}
+
+
 
 	@RequestMapping("/shop.html/search")
 	public String searchAndPage(Model model, @RequestParam("keywords") Optional<String> kw,
@@ -157,11 +166,11 @@ public class ProductController {
 	public String getProduct(Model model, @PathVariable("productId") int productId) {
 		Product list = dao.findById(productId).get();
 		List<Size> listS = sizeDAO.findByIdProduct(productId);
+	    List<DiscountProduct> discountProducts = dpDAO.findByIdProduct(productId);
+	    model.addAttribute("discountProducts", discountProducts);
 		model.addAttribute("prod", list);
 		model.addAttribute("prodd", listS);
 		return "shop-single";
 	}
-	
-	
 
 }
