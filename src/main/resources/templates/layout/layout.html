@@ -90,6 +90,8 @@
 						</li>
 						<li><a href="#" th:text="#{nav.newarrivals}">New Arrivals</a></li>
 						<li><a href="/contact.html" th:text="#{nav.contact}">Contact</a></li>
+						
+					
 						<li th:if="${#request.remoteUser != null}"><a href="/logout" th:text="#{nav.logout}">Logout</a>
 						</li>
 						<li th:unless="${#request.remoteUser}" class="has-children"><a href="/login"
@@ -127,6 +129,10 @@
 						<li th:if="${#request.isUserInRole('DIRE') or #request.isUserInRole('STAF')}">
 							<a th:href="@{/admin/home/index}" th:text="#{nav.admin}">Admin</a>
 						</li>
+						<li th:if="${#request.isUserInRole('DIRE') or #request.isUserInRole('STAF')}">
+							<a th:href="@{/admin2}">Admin2</a>
+						</li>
+							
 						<!-- <th:block th:with="showVietnamese=${false}">
 							<li th:if="${lang != 'en' && showVietnamese == true}"><a
 								href="?lang=vi" th:attr="onclick='|${showVietnamese} = false|'">Tiếng

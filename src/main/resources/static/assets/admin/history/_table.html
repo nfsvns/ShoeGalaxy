@@ -26,8 +26,8 @@
                 <td>{{item.address}}</td>
                 <td>{{item.nguoinhan}}</td>
                 <td>{{item.tongtien}}</td>
-                 <td>{{item.discountCode.id}} {{item.discountCode.code}}</td>
-                <td>{{item.available?'Yes':'No'}}</td>
+                <td>{{item.discountCode.id}} {{item.discountCode.code}}</td>
+                <td ng-class="{'btn-show':item.available,'btn-hide':!item.available}">{{item.available?'Đã giao hàng':'Chưa giao hàng'}}</td>
                 <td><button ng-click="getDetailData(item)" class="btn btn-primary">
                     {{item.showDetail ? 'Hide' : 'Show'}}
                     </button></td>
