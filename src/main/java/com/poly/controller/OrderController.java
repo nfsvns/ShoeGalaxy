@@ -120,6 +120,9 @@ public class OrderController {
 	public String checkout1(Model model, @RequestParam String address, @RequestParam String[] productId,
 			@RequestParam String[] sizeId, @RequestParam String[] countProduct, @RequestParam String email,
 			@RequestParam String fullname, @RequestParam double total, HttpServletRequest request,
+			 @RequestParam(value = "provinceLabel", required = false) String provinceLabel,
+             @RequestParam(value = "districtLabel", required = false) String districtLabel,
+             @RequestParam(value = "wardLabel", required = false) String wardLabel,
 
 			@RequestParam(value = "productId", required = false) List<Integer> productID,
 			@RequestParam(value = "sizeId", required = false) List<Integer> size,
@@ -192,7 +195,8 @@ public class OrderController {
 			Account user = accountDAO.findById(username).orElse(null);
 
 			order.setCreateDate(now);
-			order.setAddress(address);
+			order.setAddress(address + ", " + wardLabel + ", " +  districtLabel + ", " +  provinceLabel);
+			System.out.println(order.getAddress());
 
 			order.setDiscountCode(null); // May need a null check here for the discount object
 			order.setAccount(user);
@@ -257,7 +261,8 @@ public class OrderController {
 			DiscountCode discount = dcDAO.findById(IdCode).orElse(null);
 
 			order.setCreateDate(now);
-			order.setAddress(address);
+			order.setAddress(address + ", " + wardLabel + ", " +  districtLabel + ", " +  provinceLabel);
+			System.out.println(order.getAddress());
 			order.setDiscountCode(discount);
 
 			order.setAccount(user);
