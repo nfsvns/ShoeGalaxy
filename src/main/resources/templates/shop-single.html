@@ -56,16 +56,16 @@
 				</div>
 				<div class="col-md-6 mt-5">
 					<h3 th:text="${prod.name}" class="mb-3"></h3>
-					<span 
+					<span
 						th:if="${prod.discountProduct != null and not #lists.isEmpty(prod.discountProduct)}">
 						<span
 						th:if="${T(java.time.LocalDate).now().isAfter(prod.discountProduct[0].start_Date) and T(java.time.LocalDate).now().isBefore(prod.discountProduct[0].end_Date)}">
-							
+
 							<i class="fas fa-tag discount-icon"> <span
 								class="discount-text mb-3"
 								th:text="${prod.discountProduct[0].percentage + '% OFF'}"></span>
 						</i>
-					
+
 					</span>
 					</span>
 
@@ -76,28 +76,56 @@
 							th:if="${prod.discountProduct != null and not #lists.isEmpty(prod.discountProduct)}">
 							<span
 							th:if="${T(java.time.LocalDate).now().isAfter(prod.discountProduct[0].start_Date) and T(java.time.LocalDate).now().isBefore(prod.discountProduct[0].end_Date)}">
-								<del  th:text="${'$' + prod.price}" style="font-size:18px; color:red; font-weight: bold;"> </del> <span
+								<del th:text="${'$' + prod.price}"
+									style="font-size: 18px; color: red; font-weight: bold;">
+								</del> <span
 								th:text="${'$' + (prod.price - (prod.price * prod.discountProduct[0].percentage / 100))}"></span>
-								
+
 						</span> <span
 							th:unless="${T(java.time.LocalDate).now().isAfter(prod.discountProduct[0].start_Date) and T(java.time.LocalDate).now().isBefore(prod.discountProduct[0].end_Date)}">
-								<span th:text="${'$' + prod.price}" style="font-size:18px; color:red; font-weight: bold;"> p</span>
+								<span th:text="${'$' + prod.price}"
+								style="font-size: 18px; color: red; font-weight: bold;">
+									p</span>
 						</span>
 						</span> <span
 							th:unless="${prod.discountProduct != null and not #lists.isEmpty(prod.discountProduct)}">
-							<span th:text="${'$' + prod.price}" ></span>
+							<span th:text="${'$' + prod.price}"></span>
 						</span>
 					</div>
+					
+					
+					
+					
+							<div class="btn-group" role="group" aria-label="Chọn Size">
+								<th:block th:each="size : ${#numbers.sequence(36, 44)}">
+									<th:block th:if="${prodd.![sizes].contains(size)}">
+										<button type="button" class="btn btn-dark m-2" th:text="${size}"
+											ng-click="getSize($event)"></button>
+									</th:block>
+									<th:block th:unless="${prodd.![sizes].contains(size)} ">
+										<button type="button" class="btn btn-secondary disabled m-2"
+											th:text="${size}" ></button>
+									</th:block>
+								</th:block>
+							</div>
+							<br>
 
 
 
-					<select ng-model="selectedSize" class="form-control mb-2 mt-3">
+
+
+
+
+
+					<!-- <select ng-model="selectedSize" class="form-control mb-2 mt-3">
 						<option value="" disabled selected>Chọn Size</option>
 						<option th:each="item : ${prodd}" th:if="${item.quantity > 0}"
 							th:value="${item.sizes}" th:text="${item.sizes}"></option>
-					</select> <input name="count" class="mt-3" type="number" min="1" style="width: 60px;"
-						ng-model="quantity" ng-init="quantity = 1" /> <a
-						th:attr="ng-click=@{|cart.add(${prod.id})|}"
+					</select> -->
+					<span>Quantity : </span>
+					<input name="count" class="mt-3" type="number" min="1"
+						style="width: 60px;" ng-model="quantity" ng-init="quantity = 1" />
+					<a th:attr="ng-click=@{|cart.add(${prod.id})|}"
 						class="mt-3 mb-3 buy-now btn btn-sm w-100 btn-primary"
 						style="color: white" ng-click="saveToLocalStorage()">Add To
 						Cart</a>
@@ -184,6 +212,9 @@
 
 		</div>
 	</div>
+
+
+	
 </body>
 
 </html>

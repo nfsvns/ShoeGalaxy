@@ -128,8 +128,7 @@ public class OrderController {
 			@RequestParam(value = "priceTotal", required = false) List<Double> priceTotal) {
 		
 		
-		System.out.println(priceTotal);
-		System.out.println(productID);
+		
 
 		boolean allProductsEnough = true; // Biến để theo dõi xem tất cả sản phẩm có đủ số lượng không
 		// Tạo một danh sách để lưu trạng thái kiểm tra số lượng của từng sản phẩm
