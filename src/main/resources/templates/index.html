@@ -6,48 +6,167 @@
 <meta charset="utf-8">
 </head>
 <body>
-<!-- 	<div id="carouselExampleIndicators" class="carousel slide">
-  <div class="carousel-indicators">
-    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-  </div>
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-    <a href="/shop.html/searchBrand?brand=Adidas">
-     <figure class="image">
-       <img src="images/banner1.jpg" class="d-block w-100 h-50" alt="...">
-    </figure>
-    </a>
-   
-   
-    </div>
-    <div class="carousel-item">
-    <figure class="image">
-    <img src="images/banner2.jpg" class="d-block w-100" height="600px" alt="...">
-    </figure>
-      
-    </div>
-    <div class="carousel-item">
-      <img src="https://mlbstore.vn/wp-content/uploads/2023/06/slider_4-1.jpg" class="d-block"  alt="...">
-    </div>
-  </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
-</div> -->
-<div class="container">
-<div class="row justify-content-center">
-<div class="col-md-7 site-section-heading text-center pt-4">
-		<h2>Popular Shoe</h2>
+
+	<div id="carouselExampleIndicators"
+		class=" container-fluid col-sm-10 carousel slide">
+		<div class="carousel-indicators">
+			<button type="button" data-bs-target="#carouselExampleIndicators"
+				data-bs-slide-to="0" class="active" aria-current="true"
+				aria-label="Slide 1"></button>
+			<button type="button" data-bs-target="#carouselExampleIndicators"
+				data-bs-slide-to="1" aria-label="Slide 2"></button>
+			<button type="button" data-bs-target="#carouselExampleIndicators"
+				data-bs-slide-to="2" aria-label="Slide 3"></button>
+		</div>
+		<div class="carousel-inner">
+			<div class="carousel-item active">
+				<a href="/shop.html/searchBrand?brand=Adidas">
+					<figure class="image">
+						<img src="images/slide1.webp" class="d-block w-100"
+							style="height: 500px" alt="...">
+					</figure>
+				</a>
+
+
+			</div>
+			<div class="carousel-item">
+				<figure class="image">
+					<img src="images/slide2.jpg" class="d-block w-100 "
+						style="height: 500px" alt="...">
+				</figure>
+
+			</div>
+			<div class="carousel-item">
+				<img src="images/slide3.jpg" class="d-block w-100"
+					style="height: 500px" alt="...">
+			</div>
+		</div>
+		<button class="carousel-control-prev" type="button"
+			data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+			<span class="carousel-control-prev-icon" aria-hidden="true"></span> <span
+				class="visually-hidden">Previous</span>
+		</button>
+		<button class="carousel-control-next" type="button"
+			data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+			<span class="carousel-control-next-icon" aria-hidden="true"></span> <span
+				class="visually-hidden">Next</span>
+		</button>
 	</div>
-</div>
-	
+
+
+
+
+	<div class="container mt-5">
+		<div class="row justify-content-center">
+			<div class="col-md-7 site-section-heading text-center pt-2">
+				<h2>Big Sale</h2>
+			</div>
+		</div>
+		<div class="row">
+			<!-- Duyệt qua sản phẩm trong từng nhóm -->
+			<div th:each="discountProducts  : ${discountProducts}  "
+				th:if="${T(java.time.LocalDate).now().isAfter(discountProducts.start_Date) and T(java.time.LocalDate).now().isBefore(discountProducts.end_Date)}"
+				class="col-lg-3">
+				<div class="nft" th:each="discountProducts  : ${discountProducts}  "
+					th:if="${T(java.time.LocalDate).now().isAfter(discountProducts.start_Date) and T(java.time.LocalDate).now().isBefore(discountProducts.end_Date)}">
+					<div class='main'>
+						<a th:href="@{|/shop-single.html/${discountProducts.product.id}|}">
+							<!-- Lặp qua danh sách hình ảnh --> <span
+							th:if="${not #lists.isEmpty(images)}"> <span
+								th:each="pro : ${pro}"> <span
+									th:if="${pro.id == discountProducts.product.id}"> <!-- Hiển thị ảnh -->
+										<img th:if="${not #lists.isEmpty(pro.images)}"
+										class="tokenImage"
+										th:src="@{|/images/${pro.images[0].image}|}">
+
+								</span>
+							</span>
+						</span>
+
+						</a>
+
+
+						<div class="discount-percentage position-absolute">
+
+							<i class="fas fa-tag discount-icon"> <span
+								class="discount-text"
+								th:text="${discountProducts.percentage + '% OFF'}"></span>
+							</i>
+						</div>
+						<h3 class="text-truncate text-white"
+							th:text="${discountProducts.product.name}"></h3>
+
+						<div class='tokenInfo'>
+							<div class="price">
+
+								<p>
+									<del class="price"
+										th:text="${'$' + discountProducts.product.price}"></del>
+								</p>
+
+								<p class="price"
+									th:text="${'$'+ (discountProducts.product.price - (discountProducts.product.price * discountProducts.percentage/100)) }"></p>
+
+
+							</div>
+
+						</div>
+					</div>
+				</div>
+				<!--  -->
+			</div>
+		</div>
+
+
+		<div class="container mt-5">
+			<div class="row justify-content-center">
+				<div class="col-md-7 site-section-heading text-center pt-2">
+					<h2>Best Selling Products</h2>
+				</div>
+			</div>
+			<div class="row">
+				<!-- Loop through the list of order details -->
+				<div th:each="detail : ${orderDetails}" class="col-lg-3">
+
+					<div class="nft" >
+						<div class='main'>
+							<!-- Assuming you have a link to a single product page -->
+							<a th:href="@{|/shop-single.html/${detail[0]}|}"> <!-- Place your image here -->
+								<span th:if="${not #lists.isEmpty(images)}"> <span
+									th:each="pro : ${pro}"> <span
+										th:if="${pro.id == detail[0]}"> <!-- Hiển thị ảnh --> <img
+											th:if="${not #lists.isEmpty(pro.images)}" class="tokenImage"
+											th:src="@{|/images/${pro.images[0].image}|}">
+
+									</span>
+								</span>
+							</span>
+							</a>
+
+
+							<h3 class="text-truncate text-white" th:text="${detail[1]}"></h3>
+
+							<div class='tokenInfo'>
+								<div class="price">
+									<p th:text="${'$' + detail[2]}"></p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+
+
+		<div class="row justify-content-center">
+			<div class="col-md-7 site-section-heading text-center pt-4">
+				<h2>Popular Shoe</h2>
+			</div>
+		</div>
+
 		<div class="row">
 			<!-- Duyệt qua sản phẩm trong từng nhóm -->
 			<div th:each="pro, iterStat : ${pro}" class="col-lg-3"
@@ -55,8 +174,7 @@
 				<div class="nft">
 					<div class='main'>
 						<a th:href="@{|/shop-single.html/${pro.id}|}"> <img
-							th:if="${not #lists.isEmpty(pro.images)}"
-							class="tokenImage"
+							th:if="${not #lists.isEmpty(pro.images)}" class="tokenImage"
 							th:src="@{|/images/${pro.images[0].image}|}">
 
 						</a>
@@ -64,10 +182,12 @@
 
 						<div class='tokenInfo'>
 							<div class="price">
-								<p><p class="price" th:text="${'Giá: ' + pro.price + ' VNĐ'}"></p></p>
+								<p>
+								<p class="price" th:text="${'Giá: ' + pro.price + ' VNĐ'}"></p>
+								</p>
 
 							</div>
-						
+
 						</div>
 					</div>
 				</div>
@@ -159,94 +279,94 @@
 		</div>
 		  
 	</div>-->
-	
-	
-	
-	
-	
-	
-			<div class="row">
-				<div class="col-md-12">
-					<div class="nonloop-block-3 owl-carousel">
-						<div class="item">
-							<div class="block-4 text-center">
-								<figure class="block-4-image">
-									<img src="images/b5.webp" alt="Image placeholder"
-										class="img-fluid">
-								</figure>
-								<div class="block-4-text p-4">
-									<h3>
-										<a href="#">ADIDAS</a>
-									</h3>
-									<p class="mb-0">ADIDAS ZX 1K BOOST 'WHITE BLACK'</p>
-									<p class="text-primary font-weight-bold">$50</p>
-								</div>
-							</div>
+
+
+
+
+
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="nonloop-block-3 owl-carousel">
+				<div class="item">
+					<div class="block-4 text-center">
+						<figure class="block-4-image">
+							<img src="images/b5.webp" alt="Image placeholder"
+								class="img-fluid">
+						</figure>
+						<div class="block-4-text p-4">
+							<h3>
+								<a href="#">ADIDAS</a>
+							</h3>
+							<p class="mb-0">ADIDAS ZX 1K BOOST 'WHITE BLACK'</p>
+							<p class="text-primary font-weight-bold">$50</p>
 						</div>
-						<div class="item">
-							<div class="block-4 text-center">
-								<figure class="block-4-image">
-									<img src="images/b6.webp" alt="Image placeholder"
-										class="img-fluid">
-								</figure>
-								<div class="block-4-text p-4">
-									<h3>
-										<a href="#">Converse</a>
-									</h3>
-									<p class="mb-0">CONVERSE CHUCK TAYLOR ALL STAR</p>
-									<p class="text-primary font-weight-bold">$70</p>
-								</div>
-							</div>
+					</div>
+				</div>
+				<div class="item">
+					<div class="block-4 text-center">
+						<figure class="block-4-image">
+							<img src="images/b6.webp" alt="Image placeholder"
+								class="img-fluid">
+						</figure>
+						<div class="block-4-text p-4">
+							<h3>
+								<a href="#">Converse</a>
+							</h3>
+							<p class="mb-0">CONVERSE CHUCK TAYLOR ALL STAR</p>
+							<p class="text-primary font-weight-bold">$70</p>
 						</div>
-						<div class="item">
-							<div class="block-4 text-center">
-								<figure class="block-4-image">
-									<img src="images/b7.webp" alt="Image placeholder"
-										class="img-fluid">
-								</figure>
-								<div class="block-4-text p-4">
-									<h3>
-										<a href="#">FILA</a>
-									</h3>
-									<p class="mb-0">FILA RAY TRACER</p>
-									<p class="text-primary font-weight-bold">$60</p>
-								</div>
-							</div>
+					</div>
+				</div>
+				<div class="item">
+					<div class="block-4 text-center">
+						<figure class="block-4-image">
+							<img src="images/b7.webp" alt="Image placeholder"
+								class="img-fluid">
+						</figure>
+						<div class="block-4-text p-4">
+							<h3>
+								<a href="#">FILA</a>
+							</h3>
+							<p class="mb-0">FILA RAY TRACER</p>
+							<p class="text-primary font-weight-bold">$60</p>
 						</div>
-						<div class="item">
-							<div class="block-4 text-center">
-								<figure class="block-4-image">
-									<img src="images/b8.webp" alt="Image placeholder"
-										class="img-fluid">
-								</figure>
-								<div class="block-4-text p-4">
-									<h3>
-										<a href="#">FILA</a>
-									</h3>
-									<p class="mb-0">FILA WOMEN'S DISRUPTOR 2 PREMIUM</p>
-									<p class="text-primary font-weight-bold">$50</p>
-								</div>
-							</div>
+					</div>
+				</div>
+				<div class="item">
+					<div class="block-4 text-center">
+						<figure class="block-4-image">
+							<img src="images/b8.webp" alt="Image placeholder"
+								class="img-fluid">
+						</figure>
+						<div class="block-4-text p-4">
+							<h3>
+								<a href="#">FILA</a>
+							</h3>
+							<p class="mb-0">FILA WOMEN'S DISRUPTOR 2 PREMIUM</p>
+							<p class="text-primary font-weight-bold">$50</p>
 						</div>
-						<div class="item">
-							<div class="block-4 text-center">
-								<figure class="block-4-image">
-									<img src="images/b9.webp" alt="Image placeholder"
-										class="img-fluid">
-								</figure>
-								<div class="block-4-text p-4">
-									<h3>
-										<a href="#">Fila</a>
-									</h3>
-									<p class="mb-0">FILA RAY TRACER</p>
-									<p class="text-primary font-weight-bold">$80</p>
-								</div>
-							</div>
+					</div>
+				</div>
+				<div class="item">
+					<div class="block-4 text-center">
+						<figure class="block-4-image">
+							<img src="images/b9.webp" alt="Image placeholder"
+								class="img-fluid">
+						</figure>
+						<div class="block-4-text p-4">
+							<h3>
+								<a href="#">Fila</a>
+							</h3>
+							<p class="mb-0">FILA RAY TRACER</p>
+							<p class="text-primary font-weight-bold">$80</p>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+	</div>
+	</div>
 	</div>
 
 	<div class="site-section block-8">

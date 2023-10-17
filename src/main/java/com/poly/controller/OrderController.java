@@ -124,7 +124,11 @@ public class OrderController {
 			@RequestParam(value = "productId", required = false) List<Integer> productID,
 			@RequestParam(value = "sizeId", required = false) List<Integer> size,
 			@RequestParam(value = "countProduct", required = false) List<Integer> count,
-			@RequestParam(value = "IdCode", required = false) Integer IdCode) {
+			@RequestParam(value = "IdCode", required = false) Integer IdCode,
+			@RequestParam(value = "priceTotal", required = false) List<Double> priceTotal) {
+		
+		
+		
 
 		boolean allProductsEnough = true; // Biến để theo dõi xem tất cả sản phẩm có đủ số lượng không
 		// Tạo một danh sách để lưu trạng thái kiểm tra số lượng của từng sản phẩm
@@ -198,13 +202,14 @@ public class OrderController {
 
 			// ADD OrderDetail
 			for (int i = 0; i < productId.length; i++) {
-				Product product = productDAO.findById(Integer.parseInt(productId[i])).orElse(null);
+			    Product product = productDAO.findById(Integer.parseInt(productId[i])).orElse(null);
+
 				if (product != null) {
 					OrderDetail orderDetail = new OrderDetail();
 					orderDetail.setOrder(newOrder);
 					orderDetail.setProduct(product);
 					orderDetail.setSize(Integer.parseInt(sizeId[i]));
-					orderDetail.setPrice(product.getPrice());
+				       orderDetail.setPrice(priceTotal.get(i));
 					orderDetail.setQuantity(Integer.parseInt(countProduct[i]));
 					orderDetailDAO.save(orderDetail);
 				}
@@ -260,6 +265,8 @@ public class OrderController {
 			order.setTongtien(total);
 			Order newOrder = orderDAO.saveAndFlush(order);
 
+			
+		
 			// ADD OrderDetail
 			for (int i = 0; i < productId.length; i++) {
 				Product product = productDAO.findById(Integer.parseInt(productId[i])).orElse(null);
@@ -268,7 +275,7 @@ public class OrderController {
 					orderDetail.setOrder(newOrder);
 					orderDetail.setProduct(product);
 					orderDetail.setSize(Integer.parseInt(sizeId[i]));
-					orderDetail.setPrice(product.getPrice());
+				       orderDetail.setPrice(priceTotal.get(i));
 					orderDetail.setQuantity(Integer.parseInt(countProduct[i]));
 					orderDetailDAO.save(orderDetail);
 				}

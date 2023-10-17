@@ -10,10 +10,33 @@ app.controller("cart-ctrl", function($scope, $http) {
 		{ size: '42' },
 		// ... Thêm dữ liệu size giày vào đây
 	];*/
-
-	$scope.selectedSize = ''; // Ban đầu không có size nào được chọn
+	// Ban đầu không có size nào được chọn
 	$scope.cart = [];
 
+
+	$scope.selectedSize = '';
+
+	$scope.getSize = function(event) {
+		var size = event.target.innerText;
+		$scope.selectedSize = size.trim();
+		
+		
+		
+		var buttons = document.getElementsByClassName('btn');
+		var size = event.target.innerText.trim();
+
+		for (var i = 0; i < buttons.length; i++) {
+			if (buttons[i].innerText.trim() === size) {
+				buttons[i].classList.remove('btn-dark');
+				buttons[i].classList.add('btn-primary'); // Chọn màu sắc mong muốn cho button được chọn
+			} else {
+				buttons[i].classList.remove('btn-primary'); // Chọn màu sắc mặc định cho các button không được chọn
+				buttons[i].classList.add('btn-dark');
+			}
+		}
+		
+
+	}
 
 
 
