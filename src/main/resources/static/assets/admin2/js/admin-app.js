@@ -14,6 +14,10 @@ app.config(function($routeProvider) {
 			templateUrl: "/assets/admin2/pages/billing.html",
 			
 		})
+		.when("/history", {
+			templateUrl: "/assets/admin2/pages/history.html",
+			controller: "history-ctrl"
+		})
 		.otherwise({
 			redirectTo: "/dashboard"
 

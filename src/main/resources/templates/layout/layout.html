@@ -52,11 +52,26 @@
 							<div class="site-top-icons">
 								<ul>
 
-									<li><a href="/login" style="text-decoration: none"
-											th:if="${#request.remoteUser != null}"> <span
-												th:text="${#request.remoteUser}"></span> <span
-												class="icon icon-person text-truncate"></span>
-										</a></li>
+										<li><div style="text-decoration: none" class="dropdown"
+										th:if="${#request.remoteUser != null}"> <span
+											 th:text="${#request.remoteUser}"></span>
+											 <span class="icon icon-person text-truncate" data-bs-toggle="dropdown"></span>
+											 <ul class="dropdown-menu">
+													<li
+														th:if="${#request.isUserInRole('DIRE') or #request.isUserInRole('STAF')}">
+														<a class="dropdown-item" th:href="@{/admin2}">Admin</a>
+													</li>
+													<li><a class="dropdown-item" href="/ChangeInfomation">Thông tin cá
+															nhân</a></li>
+													<li><a class="dropdown-item" href="/TrangThai">Trạng thái đơn hàng</a></li>
+													<li><a class="dropdown-item" href="/ChangePassword.html">Thay đổi mật
+															khẩu</a></li>
+															<li th:if="${#request.remoteUser != null}"><a class="dropdown-item" href="/logout" th:text="#{nav.logout}">Logout</a>
+						</li>
+
+												</ul>
+												 
+									</div></li>
 									<li><a href="/login" style="text-decoration: none"
 											th:unless="${#request.remoteUser != null}"> <span
 												class="icon icon-person"></span>
@@ -92,27 +107,14 @@
 						<li><a href="/contact.html" th:text="#{nav.contact}">Contact</a></li>
 						
 					
-						<li th:if="${#request.remoteUser != null}"><a href="/logout" th:text="#{nav.logout}">Logout</a>
-						</li>
+						
 						<li th:unless="${#request.remoteUser}" class="has-children"><a href="/login"
 								th:text="#{nav.login}">Login</a>
 							<ul class="dropdown">
 								<li><a href="/register.html" th:text="#{nav.register}">Register</a></li>
 							</ul>
 						</li>
-						<li class="has-children">
-							<i class="fa-solid fa-gear"></i>
 
-
-							<ul class="dropdown">
-								<li th:if="${#request.isUserInRole('DIRE') or #request.isUserInRole('STAF')}">
-									<a th:href="@{/admin/home/index}">Admin</a>
-								</li>
-								<li><a href="/ChangeInfomation.html">Thông tin cá nhân</a></li>
-								<li><a href="/TrangThai">Trạng thái đơn hàng</a></li>
-								<li><a href="/ChangePassword.html">Thay đổi mật khẩu</a></li>
-
-							</ul>
 							<!--<li th:if="${#request.isUserInRole('DIRE') or #request.isUserInRole('STAF')}"
 							class="has-children"><a href="/account.html">Admin</a>
 							<ul class="dropdown">
@@ -125,13 +127,6 @@
 								<li><a href="/report">Report</a></li>
 							</ul>
 						</li>-->
-
-						<li th:if="${#request.isUserInRole('DIRE') or #request.isUserInRole('STAF')}">
-							<a th:href="@{/admin/home/index}" th:text="#{nav.admin}">Admin</a>
-						</li>
-						<li th:if="${#request.isUserInRole('DIRE') or #request.isUserInRole('STAF')}">
-							<a th:href="@{/admin2}">Admin2</a>
-						</li>
 							
 						<!-- <th:block th:with="showVietnamese=${false}">
 							<li th:if="${lang != 'en' && showVietnamese == true}"><a
