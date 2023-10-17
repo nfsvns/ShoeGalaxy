@@ -8,7 +8,7 @@
 	<link rel="icon" type="image/png" href="img/favicon.png">
 
 	<title>
-		Argon Dashboard 2 by Creative Tim
+		Shoe Galaxy
 	</title>
 	<!--     Fonts and icons     -->
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -17,6 +17,7 @@
 	<link href="../admin2/css/nucleo-svg.css" rel="stylesheet" />
 	<!-- Font Awesome Icons -->
 	<script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
 	<link href="../admin2/css/nucleo-svg.css" rel="stylesheet" />
 	<!-- CSS Files -->
 	<link id="pagestyle" href="../admin2/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
@@ -34,7 +35,7 @@
 		<div class="sidenav-header">
 			<i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
 				aria-hidden="true" id="iconSidenav"></i>
-			<a class="navbar-brand m-0" href="/index.html" >
+			<a class="navbar-brand m-0" href="/index.html">
 				<img src="img/logo-ct-dark.png" class="navbar-brand-img h-100" alt="main_logo">
 				<span class="ms-1 font-weight-bold">ShoeGalaxy</span>
 			</a>
@@ -242,7 +243,11 @@
 	<script src="../admin2/js/core/bootstrap.min.js"></script>
 	<script src="../admin2/js/plugins/perfect-scrollbar.min.js"></script>
 	<script src="../admin2/js/plugins/smooth-scrollbar.min.js"></script>
+	<!-- Chart with index label -->
+	<script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
 	<script src="../admin2/js/plugins/chartjs.min.js"></script>
+
+	
 	<script>
 		window.onload = function () {
 			var ctx1 = document.getElementById("chart-line").getContext("2d");
@@ -343,12 +348,12 @@
 	<script async defer src="https://buttons.github.io/buttons.js"></script>
 	<!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
 	<script src="../admin2/js/argon-dashboard.min.js?v=2.0.4"></script>
-	
-	
+
+
 	<!--add more code-->
 	<script src="../admin2/js/admin-app.js"></script>
 	<script src="../admin2/js/dashboard.js"></script>
-	
+
 
 </body>
 
