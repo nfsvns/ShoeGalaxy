@@ -164,13 +164,14 @@ public class ProductController {
 
 	@RequestMapping("/shop-single.html/{productId}")
 	public String getProduct(Model model, @PathVariable("productId") int productId) {
-		Product list = dao.findById(productId).get();
-		List<Size> listS = sizeDAO.findByIdProduct(productId);
+	    Product list = dao.findById(productId).get();
+	    List<Size> listS = sizeDAO.findByIdProduct(productId);
 	    List<DiscountProduct> discountProducts = dpDAO.findByIdProduct(productId);
 	    model.addAttribute("discountProducts", discountProducts);
-		model.addAttribute("prod", list);
-		model.addAttribute("prodd", listS);
-		return "shop-single";
+	    model.addAttribute("prod", list);
+	    model.addAttribute("prodd", listS); // Chắc chắn rằng listS chứa thông tin về số lượng của size
+	    return "shop-single";
 	}
+
 
 }

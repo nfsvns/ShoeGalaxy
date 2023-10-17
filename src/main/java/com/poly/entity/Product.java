@@ -26,7 +26,7 @@ public class Product implements Serializable {
 	private Integer id;
 	private String name;
 	private Double price;
-	@JoinColumn(name = "size")
+	private String image; 
 	private Integer quantity;
 	private Boolean available;
 
