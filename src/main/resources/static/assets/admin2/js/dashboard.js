@@ -16,6 +16,22 @@ app.controller("dashboard-ctrl", function($scope, $http, $location) {
 			.catch(function(error) {
 				console.error('Error fetching daily revenue data:', error);
 			});
+		// Gọi API để lấy  tổng số lượng sản phẩm bán ra trong tháng
+		$http.get("/rest/revenue/saleVolume")
+			.then(function(response) {
+				$scope.saleVolume = response.data; // Gán tổng doanh thu trong ngày vào biến $scope.dailyRevenue
+			})
+			.catch(function(error) {
+				console.error('Error fetching daily revenue data:', error);
+			});
+		// Gọi API để lấy AOV (tổng doanh thu/ tổng đơn) trong tháng
+		$http.get("/rest/revenue/averageOrderValue")
+			.then(function(response) {
+				$scope.averageOrderValue = response.data; // Gán tổng doanh thu trong ngày vào biến $scope.dailyRevenue
+			})
+			.catch(function(error) {
+				console.error('Error fetching daily revenue data:', error);
+			});
 	}
 
 	$scope.getRevenueByYear = function() {

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.poly.dao.OrderDAO;
+import com.poly.dao.OrderDetailDAO;
 import com.poly.entity.Account;
 import com.poly.entity.Order;
 import com.poly.entity.Product;
@@ -25,6 +26,8 @@ import com.poly.service.AccountService;
 public class RevenueRestController {
 	@Autowired
 	OrderDAO dao;
+	@Autowired
+	OrderDetailDAO orderDetailDAO;
 	
 	@GetMapping
 	public List<Integer> getAllYear() {
@@ -38,7 +41,14 @@ public class RevenueRestController {
 	
 	@GetMapping("/today")
 	public Double getDailyRevenue() {
-	   
 	    return dao.getTotalRevenueToday(); 
+	}
+	@GetMapping("/saleVolume")
+	public Integer getsaleVolume() {
+	    return orderDetailDAO.getTotalQuantitySoldThisMonth(); 
+	}
+	@GetMapping("/averageOrderValue")
+	public Double AverageOrderValue() {
+	    return dao.AverageOrderValue(); 
 	}
 }

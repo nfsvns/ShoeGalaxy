@@ -26,7 +26,15 @@ public interface OrderDAO extends JpaRepository<Order, Long> {
 
 	List<Order> findByAccountUsername(String username);
 
-//	@Query("SELECT SUM(o.tongtien) FROM Order o WHERE DATE(o.createDate) = DATE(NOW())")
 	@Query("SELECT SUM(o.tongtien) FROM Order o WHERE CONVERT(date, o.createDate) = CONVERT(date, CURRENT_TIMESTAMP)")
 	Double getTotalRevenueToday();
+
+	 @Query(value = "SELECT ROUND( CASE " +
+             "    WHEN COUNT(*) > 0 THEN SUM(tongtien) / COUNT(*) " +
+             "    ELSE 0 " +
+             "END, 2)" +
+             "FROM Orders o " +
+             "WHERE o.create_date >= DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0) " +
+             "    AND o.create_date < DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()) + 1, 0)", nativeQuery = true)
+	 Double AverageOrderValue();
 }
