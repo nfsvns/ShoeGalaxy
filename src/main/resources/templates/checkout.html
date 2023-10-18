@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{/layout/layout.html::dynamic(~{::title}, ~{::body})}">
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <head>
 	<title>Shoe Galaxy</title>
 	<meta charset="utf-8">
@@ -123,51 +123,83 @@
 								<div class="p-3 p-lg-5 border">
 
 									<div class="form-group row">
-										<div class="col-md-12">
-											<label th:text="${message}"></label> <label for="c_fname"
-												class="text-black">Name<span class="text-danger">*</span>
-											</label> <input type="text" class="form-control" id="fullname"
-												name="fullname"
-												th:value="${session.user != null ? session.user.fullname : ''}"
-												required>
-										</div>
+								
+									<div class="col-md-9">
+    <label for="selectedAddress" class="text-black">Choose the address <span class="text-danger">*</span></label>
+    <select class="form-select mb-3" name="selectedAddress" id="selectedAddress" onchange="getAddressDetails()">
+        <option value="">Select an address</option>
+        <th:block th:each="address : ${addresses}">
+            <option th:value="${address.id}" th:text="${address.account.fullname + ', ' + address.address + ', ' + address.province + ', ' + address.district + ', ' + address.ward}"></option>
+        </th:block>
+    </select>
+</div>		
+</div>
+								
+				                 
+										
 
-										<div class="col-md-12 mt-3">
+										 <div class="col-md-12 mt-3">
 											<label for="c_fname"
 												class="text-black">Province/City<span class="text-danger">*</span>
 											</label>
 											<select class="form-select mb-3" name="provinceLabel" id="province">
-												<!--<option value="">chọn tỉnh/thành phố</option>-->
+												<option value="">chọn tỉnh/thành phố</option>
 											</select>
 											
+											<label for="selectedAddress" class="text-black">Fullname <span class="text-danger">*</span></label>
+											  <input class="form-select mb-3" name="fullname" id="fullname">
+											  <label for="selectedAddress" class="text-black">District <span class="text-danger">*</span></label>
+												 <input class="form-select mb-3" name="districtLabel" id="district">
+												 <label for="selectedAddress" class="text-black">Ward <span class="text-danger">*</span></label>
+												<input class="form-select mb-3" name="districtLabel" id="ward">
+										
+												
+												
+										
+											<!--
+											<div class="col-md-12 mt-3">
+											<label for="c_fname"
+												class="text-black">Province/City<span class="text-danger">*</span>
+											</label>
+											<select class="form-select mb-3" name="provinceLabel" id="province">
+												<option value="">chọn tỉnh/thành phố</option>
+											</select>
 											<label for="c_fname"
 												class="text-black">District<span class="text-danger">*</span>
 											</label>
 											<select class="form-select mb-3" name="districtLabel" id="district">
-												<option value="">chọn quận</option>
+												<option value="">Chọn quận</option>
 											</select>
 											
 											<label for="c_fname"
 												class="text-black">Ward<span class="text-danger">*</span>
 											</label>
 											<select class="form-select mb-3" name="wardLabel" id="ward">
-												<option value="">chọn phường</option>
+												<option value="">Chọn phường</option>
 											</select>
 
-										</div>
+										</div> -->
 										
-										<div class="col-md-12 ">
-											<label for="c_address" class="text-black">Address <span
-													class="text-danger">*</span></label> <input type="text"
-												class="form-control" id="address" name="address" placeholder="Address"
-												required>
-										</div>
-										<div class="col-md-12 pt-4">
-											<label for="c_email_address" class="text-black">Email
-												Address <span class="text-danger">*</span>
-											</label> <input type="text" class="form-control" id="email" name="email"
-												th:value="${session.user != null ? session.user.email : ''}" required>
-										</div>
+										<label for="selectedAddress" class="text-black">Address <span class="text-danger">*</span></label>
+											  <input class="form-select mb-3" name="address" id="address">
+											  
+											  <label for="selectedAddress" class="text-black">Email <span class="text-danger">*</span></label>
+											  <input class="form-select mb-3" name="email" id="email">
+										
+										
+									
+												
+												
+												
+												
+												
+												
+												
+												
+												
+												
+										
+										
 									</div>
 
 								</div>
@@ -212,6 +244,44 @@
 			</form>
 		</div>
 	</div>
+	
+	
+
+
+
+	
+<script>
+    // Lắng nghe sự kiện khi người dùng chọn một địa chỉ
+    function getAddressDetails() {
+        var selectedAddressId = $("#selectedAddress").val();
+        $.ajax({
+            url: '/rest/address/getAddressDetails',
+            type: 'GET',
+            data: { selectedAddress: selectedAddressId },
+            success: function (data) {
+                if (data.province && data.district && data.ward) {
+                    // Lấy thông tin từ dữ liệu và điền vào các trường
+                    $("#fullname").val(data.fullname);
+                    $("#province").val(data.province);
+                    $("#district").val(data.district);
+                    $("#ward").val(data.ward);
+                    $("#address").val(data.address);
+                    $("#email").val(data.email);
+                } else {
+                    // Nếu không tìm thấy thông tin, bạn có thể xử lý theo ý muốn, ví dụ: thông báo lỗi
+                    alert("Không tìm thấy thông tin địa chỉ.");
+                }
+            },
+            error: function () {
+                // Xử lý lỗi nếu có
+                alert("Có lỗi xảy ra khi lấy thông tin địa chỉ.");
+            }
+        });
+    }
+</script>
+
+
+
 </body>
 
 </html>

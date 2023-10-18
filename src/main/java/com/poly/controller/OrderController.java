@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.poly.dao.AccountDAO;
+import com.poly.dao.AddressDAO;
 import com.poly.dao.DiscountCodeDAO;
 import com.poly.dao.OrderDAO;
 import com.poly.dao.OrderDetailDAO;
@@ -27,12 +29,14 @@ import com.poly.dao.ProductDAO;
 import com.poly.dao.ShoppingCartDAO;
 import com.poly.dao.SizeDAO;
 import com.poly.entity.Account;
+import com.poly.entity.Address;
 import com.poly.entity.DiscountCode;
 import com.poly.entity.MailInfo;
 import com.poly.entity.Order;
 import com.poly.entity.OrderDetail;
 import com.poly.entity.Product;
 import com.poly.entity.Size;
+import com.poly.service.AddressService;
 import com.poly.service.MailerService;
 import com.poly.service.OrderService;
 import com.poly.service.SessionService;
@@ -61,7 +65,24 @@ public class OrderController {
 
 	@Autowired
 	SizeDAO sizeDAO;
-
+	
+	@Autowired
+	AccountDAO accountdao;
+	@Autowired
+	AddressService addressservice;
+	
+	
+	@GetMapping("/check")
+	public String getAddresses(Model model) {
+	    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+	    List<Address> addresses = addressservice.getAddressesByUsername(username);
+	    model.addAttribute("addresses", addresses);  
+	    return "checkout.html"; // Trả về trang checkout.html
+	    
+	}
+	
+	
+	
 	@RequestMapping("/check")
 	public String checkout(Model model, @RequestParam(value = "totalAmount", required = false) String totalAmount) {
 //		model.addAttribute("cartItems", shoppingCartDAO.getAll());
@@ -131,6 +152,7 @@ public class OrderController {
 
 		boolean allProductsEnough = true; // Biến để theo dõi xem tất cả sản phẩm có đủ số lượng không
 		// Tạo một danh sách để lưu trạng thái kiểm tra số lượng của từng sản phẩm
+		
 		List<Boolean> productStatus = new ArrayList<>();
 		System.out.println(productID.size());
 		for (int i = 0; i < productID.size(); i++) {
