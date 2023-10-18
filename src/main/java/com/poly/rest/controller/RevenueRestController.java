@@ -39,6 +39,7 @@ public class RevenueRestController {
 		return dao.findByDoanhThuNam(year);
 	}
 	
+	// 4 bảng trong admin
 	@GetMapping("/today")
 	public Double getDailyRevenue() {
 	    return dao.getTotalRevenueToday(); 
@@ -50,5 +51,9 @@ public class RevenueRestController {
 	@GetMapping("/averageOrderValue")
 	public Double AverageOrderValue() {
 	    return dao.AverageOrderValue(); 
+	}
+	@GetMapping("/revenueYear")
+	public Double getRevenueYear() {
+	    return dao.getTotalRevenueThisYear(); 
 	}
 }

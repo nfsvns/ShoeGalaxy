@@ -32,6 +32,15 @@ app.controller("dashboard-ctrl", function($scope, $http, $location) {
 			.catch(function(error) {
 				console.error('Error fetching daily revenue data:', error);
 			});
+
+		// Gọi API để lấy tổng doanh thu trong năm nnay
+		$http.get("/rest/revenue/revenueYear")
+			.then(function(response) {
+				$scope.revenueYear = response.data; // Gán tổng doanh thu trong ngày vào biến $scope.dailyRevenue
+			})
+			.catch(function(error) {
+				console.error('Error fetching daily revenue data:', error);
+			});
 	}
 
 	$scope.getRevenueByYear = function() {
