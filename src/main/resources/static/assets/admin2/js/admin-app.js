@@ -17,6 +17,17 @@ app.config(function($routeProvider) {
 		.when("/history", {
 			templateUrl: "/assets/admin2/pages/history.html",
 			controller: "history-ctrl"
+
+		.when("/discount", {
+			templateUrl: "/assets/admin2/pages/discountCode/index.html",
+			controller: "discount-ctrl"
+		}).when("/discountProduct", {
+			templateUrl: "/assets/admin2/pages/discountProduct/index.html",
+			controller: "discountProduct-ctrl"
+		}).when("/size", {
+			templateUrl: "/assets/admin2/pages/size/index.html",
+			controller: "size-ctrl"
+
 		})
 		.otherwise({
 			redirectTo: "/dashboard"
