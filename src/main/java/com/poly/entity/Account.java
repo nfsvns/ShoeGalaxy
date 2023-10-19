@@ -36,4 +36,12 @@ public class Account implements Serializable {
 	@JsonIgnore
 	 @OneToMany(mappedBy = "account")
 	    List<Address> addresses;
+	public String getUsername() {
+	    return username;
+	}
+
+	public void setUsername(String username) {
+	    this.username = username;
+	}
+	
 }

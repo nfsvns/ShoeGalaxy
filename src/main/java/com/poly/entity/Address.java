@@ -38,4 +38,8 @@ public class Address  implements Serializable{
 	    private String address;
 	    private String email;
 	    private Boolean activate;
+	    
+	    public Boolean isActivate() {
+	        return this.activate;
+	    }
 	}

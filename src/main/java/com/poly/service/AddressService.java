@@ -16,5 +16,5 @@ public interface AddressService {
 	public String getProvinceByAddress(String address);
 	public List<Address> findAll() ;
 	public Address findById(Integer selectedAddress);
-
+	public Address findDefaultAddress();
 }

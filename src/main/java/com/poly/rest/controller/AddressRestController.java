@@ -31,7 +31,7 @@ public class AddressRestController {
 		return addressservice.findAll();
 	}
 	
-	@GetMapping("/getAddressDetails")
+	  @GetMapping("/getAddressDetails")
 	public ResponseEntity<Map<String, String>> getAddressDetails(@RequestParam("selectedAddress") Integer selectedAddress) {
 	    Map<String, String> details = new HashMap<>();
 	    
@@ -57,6 +57,9 @@ public class AddressRestController {
 	    
 	    return new ResponseEntity<>(details, HttpStatus.OK);
 	}
+	
+	
+	
 	
 	
 	}

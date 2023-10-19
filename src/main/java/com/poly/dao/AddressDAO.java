@@ -14,5 +14,5 @@ import com.poly.entity.OrderDetail;
 public interface AddressDAO extends JpaRepository<Address, Integer> {
 	 List<Address> findByAccountUsername(String username);
 	 String findProvinceByAddress(String address);
-	
+	 Address findByActivate(boolean activate);
 }

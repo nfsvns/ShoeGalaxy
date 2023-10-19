@@ -51,12 +51,12 @@ public class PaypalController {
 	public static final String CANCEL_URL = "pay/cancel";
 
 	@PostMapping("/paypal")
-	public String payment(Model model, @RequestParam double total, @RequestParam String address,
-			@RequestParam String fullname, @RequestParam(value = "productId", required = false) List<Integer> productID,
+	public String payment(Model model, @RequestParam double total, @RequestParam(value="addressa") String address,
+			@RequestParam (value="fullnamee") String fullname, @RequestParam(value = "productId", required = false) List<Integer> productID,
 			@RequestParam(value = "sizeId", required = false) List<Integer> size,
-			@RequestParam(value = "provinceLabel", required = false) String provinceLabel,
-			@RequestParam(value = "districtLabel", required = false) String districtLabel,
-			@RequestParam(value = "wardLabel", required = false) String wardLabel,
+			@RequestParam(value = "provincee", required = false) String provinceLabel,
+			@RequestParam(value = "districtt", required = false) String districtLabel,
+			@RequestParam(value = "wardd", required = false) String wardLabel,
 			@RequestParam(value = "countProduct", required = false) List<Integer> count, HttpServletRequest request) {
 		// Lưu thuộc tính vào session để khi truyển qua thanh toán thành công còn lấy dc
 		request.getSession().setAttribute("productID", productID);

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,6 +37,7 @@ import com.poly.entity.Order;
 import com.poly.entity.OrderDetail;
 import com.poly.entity.Product;
 import com.poly.entity.Size;
+import com.poly.service.AccountService;
 import com.poly.service.AddressService;
 import com.poly.service.MailerService;
 import com.poly.service.OrderService;
@@ -70,8 +72,11 @@ public class OrderController {
 	AccountDAO accountdao;
 	@Autowired
 	AddressService addressservice;
+	@Autowired
+	AddressDAO addressdao;
 	
 	
+	/*
 	@GetMapping("/check")
 	public String getAddresses(Model model) {
 	    String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -79,8 +84,45 @@ public class OrderController {
 	    model.addAttribute("addresses", addresses);  
 	    return "checkout.html"; // Trả về trang checkout.html
 	    
-	}
+	}*/
 	
+
+	@GetMapping("/check")
+	public String userProfileForm(Model model) {
+	    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+	    List<Address> addresses = addressservice.getAddressesByUsername(username);
+
+	    // Tạo danh sách cho các địa chỉ có activate == true và activate == false
+	    List<Address> activeAddresses = new ArrayList<>();
+	    List<Address> inactiveAddresses = new ArrayList<>();
+
+	    if (addresses != null) {
+	        for (Address address : addresses) {
+	            if (address.isActivate()) {
+	                activeAddresses.add(address); // Thêm địa chỉ vào danh sách nếu activate == true
+	            } else {
+	                inactiveAddresses.add(address); // Thêm địa chỉ vào danh sách nếu activate == false
+	            }
+	        }
+
+	        if (activeAddresses.isEmpty()) {
+	            model.addAttribute("addresses", inactiveAddresses);
+	        } else {
+	            model.addAttribute("addresses", activeAddresses);
+	        }
+
+	        model.addAttribute("addresses", addresses);
+	    } else {
+	        // Nếu không tìm thấy địa chỉ nào, truyền danh sách rỗng
+	        model.addAttribute("addresses", new ArrayList<Address>());
+	        model.addAttribute("inactiveAddresses", new ArrayList<Address>());
+	    }
+
+	    return "checkout.html";
+	}
+
+	
+
 	
 	
 	@RequestMapping("/check")
@@ -135,24 +177,77 @@ public class OrderController {
 	    model.addAttribute("discountCodes", discountCodes);
 	    return "checkout.html";
 	}
+	
+	
+	
+	/*
+	@PostMapping("/checkout.html")
+	public String saveAddress(@RequestParam String provincee,
+	                          @RequestParam String fullnamee,
+	                          @RequestParam String districtt,
+	                          @RequestParam String wardd,
+	                          @RequestParam String addressa,
+	                          @RequestParam String emaill) {
 
+	   
+		 String usernamee = SecurityContextHolder.getContext().getAuthentication().getName();
+		 if (usernamee != null) {
+		       
+		        Address addressEntity = new Address();
+		        addressEntity.setProvince(provincee);
+		        addressEntity.setDistrict(districtt);
+		        addressEntity.setWard(wardd);
+		        addressEntity.setAddress(addressa);
+		        addressEntity.setEmail(emaill);
+		        addressEntity.setActivate(false); // Thiết lập trường activate
+
+		      
+		        Account user = accountdao.findByUsername(usernamee);
+		        if (user != null) {
+		           
+		            addressEntity.setAccount(user);
+		            
+		          
+		            addressdao.save(addressEntity);
+
+		      
+		            return "redirect:/thankyou.html";
+		        } else {
+		         
+		        	return "redirect:/error.html"; // Điều hướng đến trang lỗi
+		        }
+		    } else {
+		 
+		        return "redirect:/error.html"; // Điều hướng đến trang lỗi
+		    }
+	}*/
+
+	
 
 	@PostMapping("checkout.html")
-	public String checkout1(Model model, @RequestParam String address, @RequestParam String[] productId,
-			@RequestParam String[] sizeId, @RequestParam String[] countProduct, @RequestParam String email,
-			@RequestParam String fullname, @RequestParam double total, HttpServletRequest request,
-			 @RequestParam(value = "provinceLabel", required = false) String provinceLabel,
-             @RequestParam(value = "districtLabel", required = false) String districtLabel,
-             @RequestParam(value = "wardLabel", required = false) String wardLabel,
+	public String checkout1(Model model, @RequestParam(value="addressa") String address, @RequestParam String[] productId,
+			@RequestParam String[] sizeId, @RequestParam String[] countProduct, @RequestParam(value="emaill") String email,
+			@RequestParam (value="fullnamee")String fullname, @RequestParam double total, HttpServletRequest request,
+			 @RequestParam(value = "provincee", required = false) String provinceLabel,
+             @RequestParam(value = "districtt", required = false) String districtLabel,
+             @RequestParam(value = "wardd", required = false) String wardLabel,
 
 			@RequestParam(value = "productId", required = false) List<Integer> productID,
 			@RequestParam(value = "sizeId", required = false) List<Integer> size,
 			@RequestParam(value = "countProduct", required = false) List<Integer> count,
-			@RequestParam(value = "IdCode", required = false) Integer IdCode) {
+			@RequestParam(value = "IdCode", required = false) Integer IdCode)
+			
+	        
+	       
+	                          
+	                          
+	                          
+			 {
 
 		boolean allProductsEnough = true; // Biến để theo dõi xem tất cả sản phẩm có đủ số lượng không
 		// Tạo một danh sách để lưu trạng thái kiểm tra số lượng của từng sản phẩm
 		
+		 
 		List<Boolean> productStatus = new ArrayList<>();
 		System.out.println(productID.size());
 		for (int i = 0; i < productID.size(); i++) {
@@ -199,14 +294,14 @@ public class OrderController {
 				// Cập nhật số lượng mới vào bảng Size
 				sizeDAO.updateQuantityByProductIdAndSize(id, idSize, remainingQuantity);
 			}
-			/* return "thankyou"; */ // Chuyển hướng đến trang thành công hoặc trang bạn muốn
+			
 		} else {
 			// Nếu ít nhất một sản phẩm không đủ số lượng, hiển thị thông báo hoặc xử lý lỗi
 			model.addAttribute("messages", "Số lượng đơn giày của bạn muốn mua lớn hơn số lượng sản phẩm tồn kho!");
 			return "cart.html";
 		}
 		if (IdCode == null) {
-			// Create a new order
+			
 			Order order = new Order();
 			Timestamp now = new Timestamp(new Date().getTime());
 			String username = request.getRemoteUser();
@@ -350,11 +445,53 @@ public class OrderController {
 
 		mailerService.queue(mail);
 		request.getSession().removeAttribute("cart");
+		
 
-		return "redirect:/thankyou.html";
+	
+		 String usernamee = SecurityContextHolder.getContext().getAuthentication().getName();
+		 if (usernamee != null) {
+		      
+		        Address addressEntity = new Address();
+		        addressEntity.setProvince(provinceLabel);
+		        addressEntity.setDistrict(districtLabel);
+		        addressEntity.setWard(wardLabel);
+		        addressEntity.setAddress(address);
+		        addressEntity.setEmail(email);
+		        addressEntity.setActivate(false); 
 
+		        
+		        Account userr = accountdao.findByUsername(usernamee);
+		        if (userr != null) {
+		            
+		            addressEntity.setAccount(userr);
+		            
+		          
+		            addressdao.save(addressEntity);
+
+		            
+		            return "redirect:/thankyou.html";
+		        } else {
+		           
+		        	return "redirect:/error.html"; 
+		        }
+		    } else {
+		        
+		        return "redirect:/error.html";
+		    }
+		
+		
+		
+		
+		
+
+		  
+		
 	}
-
+	
+	 
+	 
+	 
+ 
 	///// THANKYOU /////
 	@RequestMapping("thankyou.html")
 	public String thankyou() {
@@ -372,6 +509,6 @@ public class OrderController {
 	  
 	  
 	  return "TrangThai"; }
-	 */
+	*/
 }
 

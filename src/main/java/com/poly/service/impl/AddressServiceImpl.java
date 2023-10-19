@@ -40,4 +40,11 @@ public class AddressServiceImpl implements AddressService{
         return addressOptional.orElse(null);
     }
 	
+	
+	@Override
+	 public Address findDefaultAddress() {
+        // Thực hiện truy vấn cơ sở dữ liệu để tìm địa chỉ có thuộc tính activate = true
+        return dao.findByActivate(true);
+    }
+	
 }
