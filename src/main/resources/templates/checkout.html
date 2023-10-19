@@ -127,7 +127,7 @@
 								
 									<div class="col-md-9">
     <label for="selectedAddress" class="text-black">Choose the address <span class="text-danger">*</span></label>
-     <select class="form-select mb-3" name="selectedAddress" id="selectedAddress" onchange="getAddressDetails()">
+     <select class="form-select form-select-md mb-3" name="selectedAddress" id="selectedAddress" onchange="getAddressDetails()">
         <option value="">Select an address</option>
         <th:block th:each="address : ${addresses}">
             <option th:value="${address.id}" th:text="${address.account.fullname + ', ' + address.province + ', ' + address.district + ', ' + address.ward}"></option>
@@ -138,6 +138,30 @@
 
 <th:block th:each="address : ${addresses}">
     <th:block th:if="${address.activate}">
+           <th:block th:if="${address.activate}">
+            <label for="selectedAddress" class="text-black">Fullname <span class="text-danger">*</span></label>
+        <input class="form-select mb-3" name="fullnamee" id="fullnamee" th:value="${address.account.fullname}">
+        
+        <label for="selectedAddress" class="text-black">Province/City <span class="text-danger">*</span></label>
+        <input class="form-select mb-3" name="provincee" id="provincee" th:value="${address.province}">
+        
+       
+        
+        <label for="selectedAddress" class="text-black">District <span class="text-danger">*</span></label>
+        <input class="form-select mb-3" name="districtt" id="districtt" th:value="${address.district}">
+        
+        <label for="selectedAddress" class="text-black">Ward <span class="text-danger">*</span></label>
+        <input class="form-select mb-3" name="wardd" id="wardd" th:value="${address.ward}">
+        
+        <label for="selectedAddress" class="text-black">Address detail <span class="text-danger">*</span></label>
+        <input class="form-select mb-3" name="addressa" id="addressa" th:value="${address.address}">
+        
+        <label for="selectedAddress" class="text-black">Email <span class="text-danger">*</span></label>
+        <input class="form-select mb-3" name="emaill" id="emaill" th:value="${address.email}">
+    </th:block>
+
+    <th:block th:unless="${address.activate}">
+        <!-- Hiển thị thông tin khi activate là false -->
         <label for="selectedAddress" class="text-black">Province/City <span class="text-danger">*</span></label>
         <input class="form-select mb-3" name="provincee" id="provincee" th:value="${address.province}">
         
@@ -150,7 +174,7 @@
         <label for="selectedAddress" class="text-black">Ward <span class="text-danger">*</span></label>
         <input class="form-select mb-3" name="wardd" id="wardd" th:value="${address.ward}">
         
-        <label for="selectedAddress" class="text-black">Address detail <span class="text-danger">*</span></label>
+        <label for="selectedAddress" class="text-black">Address details <span class="text-danger">*</span></label>
         <input class="form-select mb-3" name="addressa" id="addressa" th:value="${address.address}">
         
         <label for="selectedAddress" class="text-black">Email <span class="text-danger">*</span></label>
@@ -250,8 +274,8 @@
             }
         },
         error: function () {
-            // Xử lý lỗi nếu có
-            alert("Có lỗi xảy ra khi lấy thông tin địa chỉ.");
+            
+            
         }
     });
 }
