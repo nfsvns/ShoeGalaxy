@@ -8,11 +8,9 @@ app.config(function($routeProvider) {
 		})
 		.when("/table", {
 			templateUrl: "/assets/admin2/pages/tables.html",
-			
 		})
 		.when("/billing", {
-			templateUrl: "/assets/admin2/pages/billing.html",
-			
+			templateUrl: "/assets/admin2/pages/billing.html",			
 		})
 		.when("/discount", {
 			templateUrl: "/assets/admin2/pages/discountCode/index.html",
@@ -23,6 +21,8 @@ app.config(function($routeProvider) {
 		}).when("/size", {
 			templateUrl: "/assets/admin2/pages/size/index.html",
 			controller: "size-ctrl"
+		}).when("/profile", {
+			templateUrl: "/assets/admin2/pages/profile.html",		
 		})
 		.otherwise({
 			redirectTo: "/dashboard"
