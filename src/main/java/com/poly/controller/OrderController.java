@@ -215,6 +215,7 @@ public class OrderController {
 					orderDetail.setSize(Integer.parseInt(sizeId[i]));
 				       orderDetail.setPrice(priceTotal.get(i));
 					orderDetail.setQuantity(Integer.parseInt(countProduct[i]));
+					order.setCity(provinceLabel);
 					orderDetailDAO.save(orderDetail);
 				}
 			}
@@ -268,6 +269,7 @@ public class OrderController {
 			order.setAccount(user);
 			order.setNguoinhan(fullname);
 			order.setTongtien(total);
+			order.setCity(provinceLabel);
 			Order newOrder = orderDAO.saveAndFlush(order);
 
 			

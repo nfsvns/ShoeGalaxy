@@ -157,8 +157,10 @@ public class PaypalController {
 			SimpleDateFormat paypalDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 			Date date = paypalDateFormat.parse(paypalDateString);
 			Timestamp timestamp = new Timestamp(date.getTime());
+			
 			// LẤY THÔNG TIN
 			String address = payment.getPayer().getPayerInfo().getShippingAddress().getLine1();
+			String city = payment.getPayer().getPayerInfo().getShippingAddress().getCity();
 			String recipientName = payment.getPayer().getPayerInfo().getShippingAddress().getRecipientName();
 			String totalAmountString = payment.getTransactions().get(0).getAmount().getTotal();
 
@@ -171,6 +173,7 @@ public class PaypalController {
 				order.setAddress(address);
 				order.setAccount(user);
 				order.setNguoinhan(recipientName);
+				order.setCity(city);
 				order.setAvailable(true);
 				try {
 					double totalAmountDouble = Double.parseDouble(totalAmountString);
@@ -190,8 +193,8 @@ public class PaypalController {
 					orderDetail.setQuantity(count.get(i));
 					orderDetailDAO.save(orderDetail);
 				}
-
-				return "thankyou";
+				return "redirect:/thankyou.html";
+//				return "thankyou";
 			}
 		} catch (PayPalRESTException e) {
 			System.out.println(e.getMessage());
