@@ -13,11 +13,10 @@ app.config(function($routeProvider) {
 		.when("/billing", {
 			templateUrl: "/assets/admin2/pages/billing.html",
 			
-		})
-		.when("/history", {
+		}).when("/history", {
 			templateUrl: "/assets/admin2/pages/history.html",
 			controller: "history-ctrl"
-		.when("/discount", {
+		}).when("/discount", {
 			templateUrl: "/assets/admin2/pages/discountCode/index.html",
 			controller: "discount-ctrl"
 		}).when("/discountProduct", {
@@ -27,8 +26,7 @@ app.config(function($routeProvider) {
 			templateUrl: "/assets/admin2/pages/size/index.html",
 			controller: "size-ctrl"
 
-		})
-		.otherwise({
+		}).otherwise({
 			redirectTo: "/dashboard"
 
 		});
