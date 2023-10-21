@@ -127,6 +127,13 @@
 
 									<div class="form-group row">
 										<div class="col-md-12">
+											<h4>Thông tin:
+											<span
+												th:text="${user.fullname}"></span>
+											 </h4>
+										</div>
+										
+										<div class="col-md-12">
 											<label th:text="${message}"></label> <label for="c_fname"
 												class="text-black">Name<span class="text-danger">*</span>
 											</label> <input type="text" class="form-control" id="fullname"

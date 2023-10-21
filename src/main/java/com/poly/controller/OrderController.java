@@ -63,9 +63,11 @@ public class OrderController {
 	SizeDAO sizeDAO;
 
 	@RequestMapping("/check")
-	public String checkout(Model model, @RequestParam(value = "totalAmount", required = false) String totalAmount) {
-//		model.addAttribute("cartItems", shoppingCartDAO.getAll());
-//		model.addAttribute("total", shoppingCartDAO.getAmount());
+	public String checkout(Model model, @RequestParam(value = "totalAmount", required = false) String totalAmount, HttpServletRequest request) {
+
+		String username = request.getRemoteUser();
+		Account user = accountDAO.findById(username).orElse(null);
+		model.addAttribute("user",user);
 		return "checkout.html";
 	}
 	@RequestMapping("/searchCodee")
