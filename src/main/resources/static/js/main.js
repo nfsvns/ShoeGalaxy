@@ -1,3 +1,28 @@
+// Đảm bảo rằng bạn đã bao gồm thư viện jQuery trước khi sử dụng đoạn mã sau
+$('#demo .carousel-item').on('mousemove', function (e) {
+    var imgWidth = $(this).find('img').width();
+    var imgHeight = $(this).find('img').height();
+    var offsetX = e.pageX - $(this).offset().left;
+    var offsetY = e.pageY - $(this).offset().top;
+    var scaleX = 2; // Tăng tỷ lệ theo nhu cầu
+    var scaleY = 2; // Tăng tỷ lệ theo nhu cầu
+
+    var transformOriginX = (offsetX / imgWidth) * 100 + '%';
+    var transformOriginY = (offsetY / imgHeight) * 100 + '%';
+
+    $(this).find('img').css({
+        'transform-origin': transformOriginX + ' ' + transformOriginY,
+        'transform': 'scale(' + scaleX + ',' + scaleY + ')',
+    });
+});
+
+$('#demo .carousel-item').on('mouseleave', function () {
+    $(this).find('img').css({
+        'transform-origin': 'center center',
+        'transform': 'scale(1, 1)',
+    });
+});
+
  AOS.init({
  	duration: 800,
  	easing: 'slide',
