@@ -1,4 +1,23 @@
-/* @import url('https://fonts.googleapis.com/css?family=Muli:400,400i,700,700i'); */
+/* @import url('https://fonts.googleapis.com/css?family=Muli:400,400i,700,700i'); */* /
+/* Footer */ 
+.f{
+	text-decoration: none;
+}
+/*  */
+.c:hover{
+	font-size: 1.5rem;
+    margin-right: 3px;
+}
+.cart{
+	font-size: 15px;
+	
+}
+#demo{
+	width: 100%;
+	left:20px;
+	padding-top: 10px;
+	padding-right: 10px;
+}
 .nft{
   user-select:none;
   max-width: 300px;
