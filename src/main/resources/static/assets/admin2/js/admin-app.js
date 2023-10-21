@@ -17,7 +17,6 @@ app.config(function($routeProvider) {
 		.when("/history", {
 			templateUrl: "/assets/admin2/pages/history.html",
 			controller: "history-ctrl"
-
 		.when("/discount", {
 			templateUrl: "/assets/admin2/pages/discountCode/index.html",
 			controller: "discount-ctrl"

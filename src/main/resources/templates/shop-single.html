@@ -26,20 +26,22 @@
 					<!-- Carousel -->
 					<div id="demo" class="carousel slide" data-bs-ride="carousel">
 						<!-- Indicators/dots -->
-						<ol class="carousel-indicators">
+						<ol class="carousel-indicators align-item-center">
 							<li th:each="i, iterStat : ${prod.images}" data-target="#demo"
 								data-slide-to="[[${iterStat.index}]]"
 								th:classappend="${iterStat.index == 0} ? 'active' : ''"><img
 								th:src="@{|/images/${i.image}|}"
-								class="d-block w-100  img-thumbnail"
-								style="height: 50px; width: 200px"></li>
+
+								class="d-block w-100  img-thumbnail" width="100%" 
+							></li>
+
 						</ol>
 
 						<!-- The slideshow/carousel -->
-						<div class="carousel-inner">
+						<div class="carousel-inner" style="align-items: center;">
 							<div class="carousel-item" th:each="i, iterStat : ${prod.images}"
-								th:classappend="${iterStat.index == 0} ? 'active' : ''">
-								<img th:src="@{|/images/${i.image}|}" class="d-block w-100">
+								th:classappend="${iterStat.index == 0} ? 'active' : ''" >
+								<img th:src="@{|/images/${i.image}|}" class="d-block w-100"style="border-radius: 50px;">
 							</div>
 						</div>
 
@@ -201,7 +203,7 @@
 						</div>
 						<div class="item-details">
 							<h3 class="text-truncate" th:text="${item.name}"></h3>
-							<p class="price" th:text="${'Giá: ' + item.price + ' VNĐ'}"></p>
+							<p class="price" th:text="${item.price + '$'}"></p>
 						</div>
 					</div>
 				</div>
