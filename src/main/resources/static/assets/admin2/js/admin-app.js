@@ -26,6 +26,7 @@ app.config(function($routeProvider) {
 		}).when("/size", {
 			templateUrl: "/assets/admin2/pages/size/index.html",
 			controller: "size-ctrl"
+
 		})
 		.otherwise({
 			redirectTo: "/dashboard"

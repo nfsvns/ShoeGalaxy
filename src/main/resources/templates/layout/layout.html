@@ -54,7 +54,9 @@
 										<li><div style="text-decoration: none" class="dropdown"
 										th:if="${#request.remoteUser != null}"> <span
 											 th:text="${#request.remoteUser}"></span>
+
 											 <span data-bs-toggle="dropdown"><i class="fa-solid fa-user c"></i></span>
+
 											 <ul class="dropdown-menu">
 													<li
 														th:if="${#request.isUserInRole('DIRE') or #request.isUserInRole('STAF')}">
