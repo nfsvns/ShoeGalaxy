@@ -31,12 +31,23 @@ public interface OrderDAO extends JpaRepository<Order, Long> {
 	Double getTotalRevenueToday();
 
 	//AOV
-	@Query(value = "SELECT ROUND( CASE " + "    WHEN COUNT(*) > 0 THEN SUM(tongtien) / COUNT(*) " + "    ELSE 0 "
-			+ "END, 2)" + "FROM Orders o " + "WHERE o.create_date >= DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0) "
+	@Query(value = "SELECT ROUND( CASE " 
+			+ "    WHEN COUNT(*) > 0 THEN SUM(tongtien) / COUNT(*) " 
+			+ "    ELSE 0 "
+			+ "END, 2)" 
+			+ "FROM Orders o " 
+			+ "WHERE o.create_date >= DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0) "
 			+ "    AND o.create_date < DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()) + 1, 0)", nativeQuery = true)
 	Double AverageOrderValue();
 
 	// Tổng doannh thu năm nay
 	@Query(value = "SELECT ROUND( SUM(tongtien), 2) FROM Orders WHERE YEAR(create_date) = YEAR(GETDATE())", nativeQuery = true)
 	Double getTotalRevenueThisYear();
+	
+	//Phan tich city
+	@Query(value = "SELECT o.city AS cityName, SUM(o.tongtien) AS totalSales, COUNT(o.id) AS orderCount, SUM(o.tongtien)/COUNT(o.id) AS aov " +
+            "FROM Orders o " +
+            "WHERE o.city IS NOT NULL " +
+            "GROUP BY o.city", nativeQuery = true)
+	List<Object[]> getCityOrderStatistics();
 }

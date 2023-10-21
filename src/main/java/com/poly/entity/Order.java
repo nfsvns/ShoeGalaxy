@@ -35,6 +35,7 @@ public class Order implements Serializable {
 	private String nguoinhan;
 	private Double tongtien;
 	private Boolean available;
+	private String city;
 
 	@ManyToOne
 	@JoinColumn(name = "username")
