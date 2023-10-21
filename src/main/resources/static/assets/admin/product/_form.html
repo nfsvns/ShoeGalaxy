@@ -33,11 +33,6 @@
 					</div>
 				</div>
 				<div class="row">
-					<!--<div class="form-group col-sm-6">
-						<div>Size</div>
-						<input ng-model="form.size" type="text" class="form-control">
-					</div>-->
-					
 					<div class="form-group col-sm-6">
 							<div>Sale ID</div>
 							<select ng-model="form.discount_sale.id" class="form-control">
@@ -45,15 +40,6 @@
 								<option ng-repeat="d in discountSale" ng-value="d.id">{{d.name}}</option>
 							</select>
 						</div>
-				<!-- 	<div class="form-group col-sm-6">
-						 <label for="sizeSelect">Size</label> <select ng-model="form.size"
-							id="sizeSelect" class="form-control">
-							<option value="" disabled selected>Chọn size</option>
-							<option
-								ng-repeat="size in [36, 37, 38, 39, 40, 41, 42, 43, 44, 45]">{{
-								size }}</option>
-						</select> 
-					</div> -->
 					<div class="form-group col-sm-6">
 						<div>Available?</div>
 						<div class="form-control">
@@ -66,21 +52,6 @@
 							</label>
 						</div>
 					</div>
-					<div class="row">
-					
-						
-					</div>
-
-					<!-- <div class="form-group col-sm-6">
-							<label for="product">Product:</label> <select class="form-control"
-					id="product" name="product" th:field="${item.product.id}"
-					required="required">
-					<option value="">Select Product</option>
-					<option th:each="product : ${products}" th:value="${product.id}"
-						th:text="${product.name}"
-						th:selected="${product.id == item.product.id}"></option>
-				</select>
-					</div> -->
 				</div>
 			</div>
 		</div>
