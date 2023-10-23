@@ -1,5 +1,6 @@
 package com.poly.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "Sizes")
-public class Size {
+public class Size implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;

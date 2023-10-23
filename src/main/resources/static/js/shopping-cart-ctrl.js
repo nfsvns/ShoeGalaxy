@@ -1,3 +1,5 @@
+
+
 const app = angular.module("app", [])
 app.controller("cart-ctrl", function($scope, $http) {
 	// quản lý giỏ hàng
@@ -12,16 +14,30 @@ app.controller("cart-ctrl", function($scope, $http) {
 	];*/
 	// Ban đầu không có size nào được chọn
 	$scope.cart = [];
-
-
 	$scope.selectedSize = '';
+
+
+	function displayModal() {
+		var modal = document.getElementById('myModal');
+		modal.classList.add('show');
+		modal.style.display = 'block';
+		setTimeout(function() {
+			var modal = document.getElementById('myModal');
+			modal.classList.remove('show');
+			modal.style.display = 'none';
+			var modalBackdrop = document.querySelector('.modal-backdrop');
+			modalBackdrop.parentNode.removeChild(modalBackdrop);
+		}, 3000);
+	}
+
+
 
 	$scope.getSize = function(event) {
 		var size = event.target.innerText;
 		$scope.selectedSize = size.trim();
-		
-		
-		
+
+
+
 		var buttons = document.getElementsByClassName('btn');
 		var size = event.target.innerText.trim();
 
@@ -34,7 +50,7 @@ app.controller("cart-ctrl", function($scope, $http) {
 				buttons[i].classList.add('btn-dark');
 			}
 		}
-		
+
 
 	}
 
@@ -54,6 +70,7 @@ app.controller("cart-ctrl", function($scope, $http) {
 			if (item) {
 				item.qty += $scope.quantity; // Increment the quantity if the item already exists in the cart
 				this.saveToLocalStorage();
+				displayModal();
 			} else {
 				// If the item doesn't exist in the cart, fetch product details
 				$http.get(`/rest/products/${id}`).then(resp => {
@@ -65,38 +82,36 @@ app.controller("cart-ctrl", function($scope, $http) {
 							// Set a default image URL if no images are available
 							resp.data.image = 'url_to_default_image.jpg';
 						}
-
-
-
-						$http.get(`/rest/products/${id}/price`).then(totalAmount => {
-							if (totalAmount.data.length > 0) {
-								resp.data.percentage = totalAmount.data[0].percentage;
-
-							} else {
-								resp.data.percetage = 1;
-							}
-
-
-
-
-
-							// Check stock quantity before adding to cart
-							$http.get(`/rest/sizeManager/checkQuantity/${id}/${$scope.selectedSize}`).then(stockResp => {
-								var availableStock = stockResp.data;
-
-								if (availableStock >= resp.data.qty) {
-									this.items.push(resp.data);
-									this.saveToLocalStorage();
-								} else {
-									alert('Số lượng vượt quá số lượng tồn kho.');
-								}
-							});
-							// Set the quantity and selected size based on user input
-							resp.data.qty = $scope.quantity;
-							resp.data.sizes = $scope.selectedSize;
-
-						});
 					});
+					$http.get(`/rest/products/${id}/price`).then(totalAmount => {
+						if (totalAmount.data.length > 0) {
+							resp.data.percentage = totalAmount.data[0].percentage;
+
+						} else {
+							resp.data.percetage = 1;
+						}
+
+					});
+					resp.data.qty = $scope.quantity;
+					resp.data.sizes = $scope.selectedSize;
+					// Check stock quantity before adding to cart
+					$http.get(`/rest/sizeManager/checkQuantity/${id}/${$scope.selectedSize}`).then(stockResp => {
+						var availableStock = stockResp.data;
+
+						if (availableStock >= resp.data.qty) {
+							this.items.push(resp.data);
+							this.saveToLocalStorage();
+							displayModal();
+						} else {
+							alert('Số lượng vượt quá số lượng tồn kho.');
+							return; // Stop execution if the stock quantity is insufficient
+						}
+					});
+					// Set the quantity and selected size based on user input
+
+
+
+
 				});
 			}
 		},
@@ -182,43 +197,43 @@ app.controller("cart-ctrl", function($scope, $http) {
 
 const host = "https://provinces.open-api.vn/api/";
 var callAPI = (api) => {
-    return axios.get(api)
-        .then((response) => {
-            renderData(response.data, "province");
-        });
+	return axios.get(api)
+		.then((response) => {
+			renderData(response.data, "province");
+		});
 }
 callAPI('https://provinces.open-api.vn/api/?depth=1');
 var callApiDistrict = (api) => {
-    return axios.get(api)
-        .then((response) => {
-            renderData(response.data.districts, "district");
-        });
+	return axios.get(api)
+		.then((response) => {
+			renderData(response.data.districts, "district");
+		});
 }
 var callApiWard = (api) => {
-    return axios.get(api)
-        .then((response) => {
-            renderData(response.data.wards, "ward");
-        });
+	return axios.get(api)
+		.then((response) => {
+			renderData(response.data.wards, "ward");
+		});
 }
 
 var renderData = (array, select) => {
-    let row = ' <option disable value="">chọn</option>';
-    array.forEach(element => {
-        row += `<option data-code="${element.code}" value="${element.name}">${element.name}</option>`
-    });
-    document.querySelector("#" + select).innerHTML = row
+	let row = ' <option disable value="">chọn</option>';
+	array.forEach(element => {
+		row += `<option data-code="${element.code}" value="${element.name}">${element.name}</option>`
+	});
+	document.querySelector("#" + select).innerHTML = row
 }
 
 $("#province").change(() => {
-    let selectedCode = $("#province option:selected").data("code");
-    callApiDistrict(host + "p/" + selectedCode + "?depth=2");
-    // printResult();
+	let selectedCode = $("#province option:selected").data("code");
+	callApiDistrict(host + "p/" + selectedCode + "?depth=2");
+	// printResult();
 });
 $("#district").change(() => {
-    let selectedCode = $("#district option:selected").data("code");
-    callApiWard(host + "d/" + selectedCode + "?depth=2");
-    // printResult();
+	let selectedCode = $("#district option:selected").data("code");
+	callApiWard(host + "d/" + selectedCode + "?depth=2");
+	// printResult();
 });
 $("#ward").change(() => {
-    // printResult();
+	// printResult();
 })

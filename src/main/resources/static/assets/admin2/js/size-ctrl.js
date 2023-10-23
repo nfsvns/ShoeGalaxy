@@ -11,44 +11,43 @@ app.controller("size-ctrl", function($scope, $http) {
 		});
 		$scope.reset(); //để có hình mây lyc1 mới đầu
 	}
+
+
+
 	$scope.create = function() {
 		var item = angular.copy($scope.form);
 
-		// Kiểm tra nếu một mục với cùng productid và size đã tồn tại trong $scope.items
+		// Search for an item with the same `productId` and `size`
 		var existingItem = $scope.items.find(function(existing) {
-			return existing.productid === item.productid && existing.size === item.size;
+			return existing.product.id === item.product.id && existing.sizes === item.sizes;
 		});
 
 		if (existingItem) {
-			// Nếu đã tồn tại một mục với cùng productid và size, tăng thêm quantity
-			existingItem.quantity = parseInt(existingItem.quantity) + parseInt(item.quantity);;
-
-			// Thực hiện cập nhật trên mục đã tồn tại
-			$http.put(`/rest/sizeManager/${existingItem.id}`, existingItem).then(function(resp) {
-				alert("Thêm số lượng thành công!");
-			}).catch(function(error) {
-				alert("Lỗi thêm số lượng!");
-				console.log("Lỗi", error);
-			});
+			// If a matching item is found, update its quantity
+			existingItem.quantity = parseInt(existingItem.quantity) + parseInt(item.quantity);
+			// Perform an update on the existing item
+			$http.put(`/rest/sizeManager/${existingItem.id}`, existingItem)
+				.then(function(resp) {
+					alert("Quantity updated successfully!");
+				})
+				.catch(function(error) {
+					alert("Error updating quantity!");
+					console.log("Error", error);
+				});
 		} else {
-			// Nếu không tìm thấy mục phù hợp, tạo một mục mới
-			$http.post(`/rest/sizeManager`, item).then(function(resp) {
-				$scope.items.push(resp.data);
-				$scope.reset();
-				alert("Thêm mới size thành công!");
-			}).catch(function(error) {
-				alert("Lỗi thêm mới size!");
-				console.log("Lỗi", error);
-			});
+			// If no matching item is found, create a new item
+			$http.post(`/rest/sizeManager`, item)
+				.then(function(resp) {
+					$scope.items.push(resp.data);
+					$scope.reset();
+					alert("New size added successfully!");
+				})
+				.catch(function(error) {
+					alert("Error adding new size!");
+					console.log("Error", error);
+				});
 		}
-	}
-
-
-
-
-
-
-
+	};
 
 
 	$scope.edit = function(item) {
