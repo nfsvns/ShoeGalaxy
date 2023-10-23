@@ -30,6 +30,12 @@ public class LoginController2 {
 		model.addAttribute("message", "Đăng nhập thành công!");
 		return "forward:/login";
 	}
+	
+	@RequestMapping("/oauth2/login/success")
+	public String success(OAuth2AuthenticationToken oauthh2) {
+		userService.loginFromOAuth2(oauthh2);
+		return "forward:/login/success";
+	}
 
 	@RequestMapping("/login/error")
 	public String error(Model model) {
@@ -52,7 +58,6 @@ public class LoginController2 {
 
 	@RequestMapping("/register.html")
 	public String register() {
-
 		return "register";
 	}
 

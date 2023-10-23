@@ -13,6 +13,7 @@ import com.poly.service.CategoryService;
 
 @Component
 public class GlobalInterceptor implements HandlerInterceptor {
+
 	@Autowired
 	CategoryService categoryService;
 	@Override
