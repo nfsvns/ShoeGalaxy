@@ -52,15 +52,17 @@
 							<div class="site-top-icons">
 								<ul>
 
-									<li><a href="/login" style="text-decoration: none"
-											th:if="${#request.remoteUser != null}"> <span
-												th:text="${#request.remoteUser}"></span> <span
-												class="icon icon-person text-truncate"></span>
-										</a></li>
-									<li><a href="/login" style="text-decoration: none"
-											th:unless="${#request.remoteUser != null}"> <span
-												class="icon icon-person"></span>
-										</a></li>
+									<li>
+										<a href="/login" style="text-decoration: none" th:if="${#request.remoteUser != null}"> 
+											<span th:text="${#request.remoteUser}" id="remoteU"></span> 
+											<span class="icon icon-person text-truncate"></span>
+										</a>
+									</li>
+									<li>
+										<a href="/login" style="text-decoration: none" th:unless="${#request.remoteUser != null}"> 
+											<span class="icon icon-person"></span>
+										</a>
+									</li>
 									<li><a href="#" style="text-decoration: none"><span
 												class="icon icon-heart-o"></span></a></li>
 									<li><a style="text-decoration: none" href="/cart.html" class="site-cart"> <span

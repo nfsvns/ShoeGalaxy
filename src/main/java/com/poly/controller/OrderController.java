@@ -24,7 +24,6 @@ import com.poly.dao.DiscountCodeDAO;
 import com.poly.dao.OrderDAO;
 import com.poly.dao.OrderDetailDAO;
 import com.poly.dao.ProductDAO;
-import com.poly.dao.ShoppingCartDAO;
 import com.poly.dao.SizeDAO;
 import com.poly.entity.Account;
 import com.poly.entity.DiscountCode;
@@ -43,8 +42,6 @@ public class OrderController {
 	MailerService mailerService;
 	@Autowired
 	SessionService sessionService;
-	@Autowired
-	ShoppingCartDAO shoppingCartDAO;
 	@Autowired
 	OrderDAO orderDAO;
 	@Autowired
@@ -343,7 +340,7 @@ public class OrderController {
 	///// THANKYOU /////
 	@RequestMapping("thankyou.html")
 	public String thankyou() {
-		sessionService.setAttribute("cartQuantity", shoppingCartDAO.getCount());
+		sessionService.setAttribute("cartQuantity", 0);
 		return "thankyou";
 	}
 	

@@ -26,7 +26,6 @@ public class Product implements Serializable {
 	private Integer id;
 	private String name;
 	private Double price;
-	private String image; 
 	private Integer quantity;
 	private Boolean available;
 
@@ -51,6 +50,11 @@ public class Product implements Serializable {
 	@JsonIgnore
 	@OneToMany(mappedBy = "product")
 	private List<DiscountProduct> discountProduct;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "product")
+	private List<ShoppingCart> shoppingCarts;
+	
 	@Override
 	public String toString() {
 	    return "Product [id=" + id + ", name=" + name + ", price=" + price + ", quantity=" + quantity + ", available=" + available

@@ -23,7 +23,6 @@ import com.poly.dao.ImageDAO;
 import com.poly.dao.OrderDAO;
 import com.poly.dao.OrderDetailDAO;
 import com.poly.dao.ProductDAO;
-import com.poly.dao.ShoppingCartDAO;
 import com.poly.entity.DiscountProduct;
 import com.poly.entity.Image;
 import com.poly.entity.OrderDetail;
@@ -36,8 +35,6 @@ public class LoadPage {
 
 	@Autowired
 	HttpServletRequest request;
-	@Autowired
-	private ShoppingCartDAO shoppingCartDAO;
 	@Autowired
 	SessionService sessionService;
 	@Autowired
@@ -71,7 +68,6 @@ public class LoadPage {
 
 	@RequestMapping({ "/", "index.html" })
 	public String index(Model model) {
-		sessionService.setAttribute("cartQuantity", shoppingCartDAO.getCount());
 		List<Product> pro = productDAO.topProduct();
 		List<Image> images = imageDAO.findAll();
 		List<Product> products = productDAO.findAll();
