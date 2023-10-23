@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Comment Form</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .comment {
+            margin-bottom: 20px;
+        }
+
+        .replyForm {
+            margin-left: 30px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div id="comments">
+            <!-- Existing comments will be displayed here -->
+        </div>
+
+        <div class="mt-5">
+            <h3>Add a Comment</h3>
+            <div class="input-group mb-3">
+                <input type="text" id="commentInput" class="form-control" placeholder="Your comment">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="button" onclick="addComment(document.getElementById('commentInput').value)">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        let comments = [];
+
+        function displayComments() {
+            let commentSection = document.getElementById('comments');
+            commentSection.innerHTML = '';
+            comments.forEach((comment, index) => {
+                let commentDiv = document.createElement('div');
+                commentDiv.classList.add('comment', 'bg-light', 'p-3');
+                commentDiv.innerHTML = `
+                    <p>${comment.text}</p>
+                    <button class="btn btn-sm btn-secondary" onclick="toggleReplyForm(${index})">Reply</button>
+                    <div id="replyForm${index}" class="replyForm" style="display: none;">
+                        <input type="text" id="replyInput${index}" class="form-control mt-2" placeholder="Your reply">
+                        <button class="btn btn-sm btn-primary mt-2" onclick="addReply(${index})">Submit Reply</button>
+                    </div>
+                    <div class="replies mt-3">
+                        <!-- Replies will be displayed here -->
+                    </div>
+                `;
+                if (comment.replies.length > 0) {
+                    let replySection = commentDiv.querySelector('.replies');
+                    comment.replies.forEach(reply => {
+                        let replyDiv = document.createElement('div');
+                        replyDiv.classList.add('bg-light', 'p-2', 'mt-2');
+                        replyDiv.innerHTML = `<p>${reply.text}</p>`;
+                        replySection.appendChild(replyDiv);
+                    });
+                }
+                commentSection.appendChild(commentDiv);
+            });
+        }
+
+        function addComment(comment) {
+            let newComment = {
+                text: comment,
+                replies: []
+            };
+            comments.push(newComment);
+            displayComments();
+            document.getElementById('commentInput').value = '';
+        }
+
+        function toggleReplyForm(commentIndex) {
+            let replyForm = document.getElementById(`replyForm${commentIndex}`);
+            if (replyForm.style.display === 'none') {
+                replyForm.style.display = 'block';
+            } else {
+                replyForm.style.display = 'none';
+            }
+        }
+
+        function addReply(commentIndex) {
+            let replyInput = document.getElementById(`replyInput${commentIndex}`).value;
+            if (replyInput === '') {
+                alert('Please enter a reply');
+                return;
+            }
+            let newReply = {
+                text: replyInput
+            };
+            comments[commentIndex].replies.push(newReply);
+            displayComments();
+            document.getElementById(`replyInput${commentIndex}`).value = '';
+            document.getElementById(`replyForm${commentIndex}`).style.display = 'none';
+        }
+    </script>
+
+</body>
+</html>

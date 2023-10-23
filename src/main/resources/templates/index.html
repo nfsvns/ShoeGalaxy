@@ -31,7 +31,7 @@
 			</div>
 			<div class="carousel-item">
 				<figure class="image">
-					<img src="images/slide2.jpg" class="d-block w-100 "
+					<img src="images/bannershoe2.webp" class="d-block w-100 "
 						style="height: 500px" alt="...">
 				</figure>
 
@@ -56,229 +56,335 @@
 
 
 
-	<div class="container mt-5">
+	<div class="container">
 		<div class="row justify-content-center">
 			<div class="col-md-7 site-section-heading text-center pt-2">
 				<h2>Big Sale</h2>
 			</div>
 		</div>
-		<div class="row">
+		<div class="row " >
 			<!-- Duyệt qua sản phẩm trong từng nhóm -->
-			<div th:each="discountProducts  : ${discountProducts}  "
-				th:if="${T(java.time.LocalDate).now().isAfter(discountProducts.start_Date) and T(java.time.LocalDate).now().isBefore(discountProducts.end_Date)}"
-				class="col-lg-3">
-				<div class="nft" th:each="discountProducts  : ${discountProducts}  "
-					th:if="${T(java.time.LocalDate).now().isAfter(discountProducts.start_Date) and T(java.time.LocalDate).now().isBefore(discountProducts.end_Date)}">
+			<div th:each="discountProduct : ${discountProducts}"
+				th:if="${T(java.time.LocalDate).now().isAfter(discountProduct.start_Date) and T(java.time.LocalDate).now().isBefore(discountProduct.end_Date) or 
+                    T(java.time.LocalDate).now() == discountProduct.start_Date or T(java.time.LocalDate).now() == discountProduct.end_Date}"
+				class="col-lg-3 ">
+				<div class="nft">
 					<div class='main'>
-						<a th:href="@{|/shop-single.html/${discountProducts.product.id}|}">
-							<!-- Lặp qua danh sách hình ảnh --> <span
-							th:if="${not #lists.isEmpty(images)}"> <span
+						<a th:href="@{|/shop-single.html/${discountProduct.product.id}|}">
+							<span th:if="${not #lists.isEmpty(images)}"> <span
 								th:each="pro : ${pro}"> <span
-									th:if="${pro.id == discountProducts.product.id}"> <!-- Hiển thị ảnh -->
-										<img th:if="${not #lists.isEmpty(pro.images)}"
-										class="tokenImage"
+									th:if="${pro.id == discountProduct.product.id}"> <img
+										th:if="${not #lists.isEmpty(pro.images)}" class="tokenImage"
 										th:src="@{|/images/${pro.images[0].image}|}">
-
 								</span>
 							</span>
 						</span>
-
 						</a>
-
-
 						<div class="discount-percentage position-absolute">
-
 							<i class="fas fa-tag discount-icon"> <span
 								class="discount-text"
-								th:text="${discountProducts.percentage + '% OFF'}"></span>
+								th:text="${discountProduct.percentage + '% OFF'}"></span>
 							</i>
 						</div>
 						<h3 class="text-truncate text-white"
-							th:text="${discountProducts.product.name}"></h3>
-
+							th:text="${discountProduct.product.name}"></h3>
 						<div class='tokenInfo'>
 							<div class="price">
-
 								<p>
 									<del class="price"
-										th:text="${'$' + discountProducts.product.price}"></del>
+										th:text="${'$' + discountProduct.product.price}"></del>
 								</p>
-
 								<p class="price"
-									th:text="${'$'+ (discountProducts.product.price - (discountProducts.product.price * discountProducts.percentage/100)) }"></p>
-
-
-							</div>
-
-						</div>
-					</div>
-				</div>
-				<!--  -->
-			</div>
-		</div>
-
-
-		<div class="container mt-5">
-			<div class="row justify-content-center">
-				<div class="col-md-7 site-section-heading text-center pt-2">
-					<h2>Best Selling Products</h2>
-				</div>
-			</div>
-			<div class="row">
-				<!-- Loop through the list of order details -->
-				<div th:each="detail : ${orderDetails}" class="col-lg-3">
-
-					<div class="nft" >
-						<div class='main'>
-							<!-- Assuming you have a link to a single product page -->
-							<a th:href="@{|/shop-single.html/${detail[0]}|}"> <!-- Place your image here -->
-								<span th:if="${not #lists.isEmpty(images)}"> <span
-									th:each="pro : ${pro}"> <span
-										th:if="${pro.id == detail[0]}"> <!-- Hiển thị ảnh --> <img
-											th:if="${not #lists.isEmpty(pro.images)}" class="tokenImage"
-											th:src="@{|/images/${pro.images[0].image}|}">
-
-									</span>
-								</span>
-							</span>
-							</a>
-
-
-							<h3 class="text-truncate text-white" th:text="${detail[1]}"></h3>
-
-							<div class='tokenInfo'>
-								<div class="price">
-									<p th:text="${'$' + detail[2]}"></p>
-								</div>
+									th:text="${'$'+ (discountProduct.product.price - (discountProduct.product.price * discountProduct.percentage/100)) }"></p>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+	</div>
 
 
 
+	<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-7 site-section-heading text-center pt-4">
+            <h2>Popular Shoe</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Duyệt qua sản phẩm trong từng nhóm -->
+        <div th:each="pro, iterStart : ${pro}" class="col-lg-3" th:if="${iterStart.index < 4}">
+            <div class="nft">
+                <div class='main'>
+                    <a th:href="@{|/shop-single.html/${pro.id}|}">
+                        <img th:if="${not #lists.isEmpty(pro.images)}" class="tokenImage"
+                            th:src="@{|/images/${pro.images[0].image}|}">
+                    </a>
+                    <div class="discount-percentage position-absolute"
+                        th:if="${pro.discountProduct != null and not #lists.isEmpty(pro.discountProduct) and T(java.time.LocalDate).now().isAfter(pro.discountProduct[0].start_Date) and (T(java.time.LocalDate).now().isBefore(pro.discountProduct[0].end_Date) or T(java.time.LocalDate).now().isEqual(pro.discountProduct[0].end_Date))}">
+                        <i class="fas fa-tag discount-icon"> <span class="discount-text"
+                                th:text="${pro.discountProduct[0].percentage + '% OFF'}"></span>
+                        </i>
+                    </div>
+                    <h3 class="text-truncate text-white" th:text="${pro.name}"></h3>
+                    <div class='tokenInfo'>
+                        <div class="product-price price">
+                            <span th:if="${pro.discountProduct != null and not #lists.isEmpty(pro.discountProduct) and T(java.time.LocalDate).now().isAfter(pro.discountProduct[0].start_Date) and (T(java.time.LocalDate).now().isBefore(pro.discountProduct[0].end_Date) or T(java.time.LocalDate).now().isEqual(pro.discountProduct[0].end_Date))}">
+                                <span th:if="${T(java.time.LocalDate).now().isAfter(pro.discountProduct[0].start_Date) and (T(java.time.LocalDate).now().isBefore(pro.discountProduct[0].end_Date) or T(java.time.LocalDate).now().isEqual(pro.discountProduct[0].end_Date))}">
+                                    <del th:text="${'$' + pro.price}"></del> <strong> <span
+                                            th:text="${'$' + (pro.price - (pro.price * pro.discountProduct[0].percentage / 100))}"></span>
+                                </strong>
+                            </span>
+                            <span th:unless="${T(java.time.LocalDate).now().isAfter(pro.discountProduct[0].start_Date) and (T(java.time.LocalDate).now().isBefore(pro.discountProduct[0].end_Date) or T(java.time.LocalDate).now().isEqual(pro.discountProduct[0].end_Date))}">
+                                <strong> <span th:text="${'$' + pro.price}"></span>
+                                </strong>
+                            </span>
+                            </span> <span th:unless="${pro.discountProduct != null and not #lists.isEmpty(pro.discountProduct)}">
+                                <strong> <span th:text="${'$' + pro.price}"></span>
+                                </strong>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
+
+	
+
+
+
+	<div class="container-fluid">
+		<img src="images/banner5.jpg" style="height: 350px; width: 100%"
+			alt="...">
+	</div>
+
+	<div class="container mt-3">
 		<div class="row justify-content-center">
 			<div class="col-md-7 site-section-heading text-center pt-4">
-				<h2>Popular Shoe</h2>
+				<h2>New Products</h2>
 			</div>
 		</div>
 
 		<div class="row">
 			<!-- Duyệt qua sản phẩm trong từng nhóm -->
-			<div th:each="pro, iterStat : ${pro}" class="col-lg-3"
-				th:if="${iterStat.index < 4}">
+			<div th:each="newProduct : ${newProduct}" class="col-lg-3">
 				<div class="nft">
 					<div class='main'>
-						<a th:href="@{|/shop-single.html/${pro.id}|}"> <img
-							th:if="${not #lists.isEmpty(pro.images)}" class="tokenImage"
-							th:src="@{|/images/${pro.images[0].image}|}">
-
-						</a>
-						<h3 class="text-truncate text-white" th:text="${pro.name}"></h3>
-
-						<div class='tokenInfo'>
-							<div class="price">
-								<p>
-								<p class="price" th:text="${'Giá: ' + pro.price + ' VNĐ'}"></p>
-								</p>
-
-							</div>
-
-						</div>
-					</div>
-				</div>
-				<!--  -->
-			</div>
-		</div>
-		<!--  -->
-	</div>
-
-
-
-	<div class="site-section site-blocks-2">
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-6 col-md-6 col-lg-4 mb-4 mb-lg-0" data-aos="fade"
-					data-aos-delay="">
-					<a class="block-2-item" href="/shop.html?brand=MLB">
-						<figure class="image">
-							<img src="images/m1.webp" alt="" class="img-fluid">
-						</figure>
-						<div class="text">
-							<span class="text-uppercase">Collections</span>
-							<h3>MLB</h3>
-						</div>
-					</a>
-				</div>
-				<div class="col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0" data-aos="fade"
-					data-aos-delay="100">
-					<a class="block-2-item" href="/shop.html?brand=Adidas">
-						<figure class="image">
-							<img src="images/a5.webp" alt="" class="img-fluid">
-						</figure>
-						<div class="text">
-							<span class="text-uppercase">Collections</span>
-							<h3>Adidas</h3>
-						</div>
-					</a>
-				</div>
-				<div class="col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0" data-aos="fade"
-					data-aos-delay="200">
-					<a class="block-2-item" href="/shop.html?brand=Nike">
-						<figure class="image">
-							<img src="images/n4.webp" alt="" class="img-fluid">
-						</figure>
-						<div class="text">
-							<span class="text-uppercase">Collections</span>
-							<h3>Nike</h3>
-						</div>
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!--<div class="site-section block-3 site-blocks-2 bg-light">
-		<div class="container">
-			<div class="row justify-content-center">
-				<div class="col-md-7 site-section-heading text-center pt-4">
-					<h2>Sale Products</h2>
-				</div>
-			</div>
-			<div class="row">
-			 Duyệt qua sản phẩm trong từng nhóm 
-			<div th:each="pro, iterStat : ${proa}" class="col-lg-3"
-				th:if="${iterStat.index < 4}">
-			
-				<div class="nft">
-					<div class='main'>
-					
-						<a th:href="@{|/shop-single.html/${pro.id}|}"> <img
-							th:if="${not #lists.isEmpty(pro.images)}"
+						<a th:href="@{|/shop-single.html/${newProduct.id}|}"> <img
+							th:if="${not #lists.isEmpty(newProduct.images)}"
 							class="tokenImage"
-							th:src="@{|/images/${pro.images[0].image}|}">
-
+							th:src="@{|/images/${newProduct.images[0].image}|}">
 						</a>
-						<h3 class="text-truncate text-white" th:text="${pro.name}"></h3>
-
+						<div class="discount-percentage position-absolute">
+						     <i class="text-danger">NEW</i>
+							<i class="text-danger"
+								th:if="${newProduct.discountProduct != null and not #lists.isEmpty(newProduct.discountProduct) and (T(java.time.LocalDate).now().isEqual(newProduct.discountProduct[0].start_Date) or T(java.time.LocalDate).now().isEqual(newProduct.discountProduct[0].end_Date) 
+								or (T(java.time.LocalDate).now().isAfter(newProduct.discountProduct[0].start_Date) and T(java.time.LocalDate).now().isBefore(newProduct.discountProduct[0].end_Date)) )}"></i>
+							<i class="fas fa-tag discount-icon"
+								th:if="${newProduct.discountProduct != null and not #lists.isEmpty(newProduct.discountProduct) and (T(java.time.LocalDate).now().isEqual(newProduct.discountProduct[0].start_Date) or T(java.time.LocalDate).now().isEqual(newProduct.discountProduct[0].end_Date) or (T(java.time.LocalDate).now().isAfter(newProduct.discountProduct[0].start_Date) and T(java.time.LocalDate).now().isBefore(newProduct.discountProduct[0].end_Date)) )}">
+								<span class="discount-text"
+								th:text="${newProduct.discountProduct[0].percentage + '% OFF'}"></span>
+							</i>
+							
+						</div>
+						<h3 class="text-truncate text-white" th:text="${newProduct.name}"></h3>
 						<div class='tokenInfo'>
-							<div class="price">
-								<p><p class="price" th:text="${'Giá: ' + pro.price + ' VNĐ'}"></p></p>
-
+							<div class="product-price price">
+								<span
+									th:if="${newProduct.discountProduct != null and not #lists.isEmpty(newProduct.discountProduct) and (T(java.time.LocalDate).now().isEqual(newProduct.discountProduct[0].start_Date) or T(java.time.LocalDate).now().isEqual(newProduct.discountProduct[0].end_Date) or (T(java.time.LocalDate).now().isAfter(newProduct.discountProduct[0].start_Date) and T(java.time.LocalDate).now().isBefore(newProduct.discountProduct[0].end_Date)) )}">
+									<span
+									th:if="${T(java.time.LocalDate).now().isEqual(newProduct.discountProduct[0].start_Date) or T(java.time.LocalDate).now().isEqual(newProduct.discountProduct[0].end_Date) or (T(java.time.LocalDate).now().isAfter(newProduct.discountProduct[0].start_Date) and T(java.time.LocalDate).now().isBefore(newProduct.discountProduct[0].end_Date)) }">
+										<del th:text="${'$' + newProduct.price}"></del> <strong>
+											<span
+											th:text="${'$' + (newProduct.price - (newProduct.price * newProduct.discountProduct[0].percentage / 100))}"></span>
+									</strong>
+								</span> <span
+									th:unless="${T(java.time.LocalDate).now().isEqual(newProduct.discountProduct[0].start_Date) or T(java.time.LocalDate).now().isEqual(newProduct.discountProduct[0].end_Date) or (T(java.time.LocalDate).now().isAfter(newProduct.discountProduct[0].start_Date) and T(java.time.LocalDate).now().isBefore(newProduct.discountProduct[0].end_Date)) }">
+										<strong> <span th:text="${'$' + newProduct.price}"></span>
+									</strong>
+								</span>
+								</span> <span
+									th:unless="${newProduct.discountProduct != null and not #lists.isEmpty(newProduct.discountProduct)}">
+									<strong> <span th:text="${'$' + newProduct.price}"></span>
+								</strong>
+								</span>
 							</div>
-						
 						</div>
 					</div>
 				</div>
-				  
 			</div>
 		</div>
-		  
-	</div>-->
+	</div>
+
+
+
+	<div id="carouselExampleControls" class="carousel slide"
+		data-ride="carousel">
+
+		<div class="row justify-content-center">
+			<div class="col-md-7 site-section-heading text-center pt-4">
+				<h2>Local Collections</h2>
+			</div>
+		</div>
+		<div class="carousel-inner">
+			<div class="carousel-item active">
+				<div class="site-section site-blocks-2">
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-6 col-md-6 col-lg-4 mb-4 mb-lg-0"
+								data-aos="fade" data-aos-delay="">
+								<a class="block-2-item" href="/shop.html?brand=MLB">
+									<figure class="image">
+										<img src="images/m1.webp" alt="" class="img-fluid">
+									</figure>
+									<div class="text">
+										<span class="text-uppercase">Collections</span>
+										<h3>MLB</h3>
+									</div>
+								</a>
+							</div>
+							<div class="col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0"
+								data-aos="fade" data-aos-delay="100">
+								<a class="block-2-item" href="/shop.html?brand=Adidas">
+									<figure class="image">
+										<img src="images/a5.webp" alt="" class="img-fluid">
+									</figure>
+									<div class="text">
+										<span class="text-uppercase">Collections</span>
+										<h3>Adidas</h3>
+									</div>
+								</a>
+							</div>
+							<div class="col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0"
+								data-aos="fade" data-aos-delay="200">
+								<a class="block-2-item" href="/shop.html?brand=Nike">
+									<figure class="image">
+										<img src="images/n4.webp" alt="" class="img-fluid">
+									</figure>
+									<div class="text">
+										<span class="text-uppercase">Collections</span>
+										<h3>Nike</h3>
+									</div>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="carousel-item">
+				<div class="site-section site-blocks-2">
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-6 col-md-6 col-lg-4 mb-4 mb-lg-0"
+								data-aos="fade" data-aos-delay="">
+								<a class="block-2-item" href="/shop.html?brand=MLB">
+									<figure class="image">
+										<img src="images/converse.jpg" alt="" class="img-fluid">
+									</figure>
+									<div class="text">
+										<span class="text-uppercase">Collections</span>
+										<h3>Converse</h3>
+									</div>
+								</a>
+							</div>
+							<div class="col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0"
+								data-aos="fade" data-aos-delay="100">
+								<a class="block-2-item" href="/shop.html?brand=Adidas">
+									<figure class="image">
+										<img src="images/vans.jpg" alt="" class="img-fluid">
+									</figure>
+									<div class="text">
+										<span class="text-uppercase">Collections</span>
+										<h3>Vans</h3>
+									</div>
+								</a>
+							</div>
+							<div class="col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0"
+								data-aos="fade" data-aos-delay="200">
+								<a class="block-2-item" href="/shop.html?brand=Nike">
+									<figure class="image">
+										<img src="images/puma.jpg" alt="" class="img-fluid">
+									</figure>
+									<div class="text">
+										<span class="text-uppercase">Collections</span>
+										<h3>Puma</h3>
+									</div>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="carousel-item">
+				<div class="site-section site-blocks-2">
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-6 col-md-6 col-lg-4 mb-4 mb-lg-0"
+								data-aos="fade" data-aos-delay="">
+								<a class="block-2-item" href="/shop.html?brand=MLB">
+									<figure class="image">
+										<img src="images/Alexander McQueen.jpg" alt=""
+											class="img-fluid">
+									</figure>
+									<div class="text">
+										<span class="text-uppercase">Collections</span>
+										<h3>Alexander McQueen</h3>
+									</div>
+								</a>
+							</div>
+							<div class="col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0"
+								data-aos="fade" data-aos-delay="100">
+								<a class="block-2-item" href="/shop.html?brand=Adidas">
+									<figure class="image">
+										<img src="images/Balenciaga.jpg" alt="" class="img-fluid">
+									</figure>
+									<div class="text">
+										<span class="text-uppercase">Collections</span>
+										<h3>Balenciaga</h3>
+									</div>
+								</a>
+							</div>
+							<div class="col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0"
+								data-aos="fade" data-aos-delay="200">
+								<a class="block-2-item" href="/shop.html?brand=Nike">
+									<figure class="image">
+										<img src="images/NewBalance.jpg" alt="" class="img-fluid">
+									</figure>
+									<div class="text">
+										<span class="text-uppercase">Collections</span>
+										<h3>NewBalance</h3>
+									</div>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<a class="carousel-control-prev" href="#carouselExampleControls"
+			role="button" data-slide="prev"> <span
+			class="carousel-control-prev-icon" aria-hidden="true"></span> <span
+			class="sr-only">Previous</span>
+		</a> <a class="carousel-control-next" href="#carouselExampleControls"
+			role="button" data-slide="next"> <span
+			class="carousel-control-next-icon" aria-hidden="true"></span> <span
+			class="sr-only">Next</span>
+		</a>
+	</div>
+
+
+
+
+
+
+
+
 
 
 
@@ -362,39 +468,6 @@
 							<p class="text-primary font-weight-bold">$80</p>
 						</div>
 					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	</div>
-	</div>
-
-	<div class="site-section block-8">
-		<div class="container">
-			<div class="row justify-content-center  mb-5">
-				<div class="col-md-7 site-section-heading text-center pt-4">
-					<h2>Big Sale!</h2>
-				</div>
-			</div>
-			<div class="row align-items-center">
-				<div class="col-md-12 col-lg-7 mb-5">
-					<a href="#"><img src="images/b10.webp" alt="Image placeholder"
-						class="img-fluid rounded"></a>
-				</div>
-				<div class="col-md-12 col-lg-5 text-center pl-md-5">
-					<h2>
-						<a href="#">50% less in all items</a>
-					</h2>
-					<p class="post-meta mb-4">
-						By <a href="#">Carl Smith</a> <span class="block-8-sep">&bullet;</span>
-						September 3, 2018
-					</p>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-						Quisquam iste dolor accusantium facere corporis ipsum animi
-						deleniti fugiat. Ex, veniam?</p>
-					<p>
-						<a href="#" class="btn btn-primary btn-sm">Shop Now</a>
-					</p>
 				</div>
 			</div>
 		</div>
