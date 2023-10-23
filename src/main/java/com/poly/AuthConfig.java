@@ -48,6 +48,7 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
 //			"/categoryAdmin", "/report").hasAnyRole("DIRE", "STAF")
 		.antMatchers("/assets/**").hasAnyRole("STAF", "DIRE")
 		.antMatchers("/check/**").authenticated()
+		.antMatchers("/shop.html/addComments/**").authenticated()
 		.antMatchers("/rest/authorities", "/rest/revenue").hasRole("DIRE")
 		.anyRequest().permitAll(); // anonymous
 

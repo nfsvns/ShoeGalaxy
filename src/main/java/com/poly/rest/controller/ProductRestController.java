@@ -58,27 +58,26 @@ public class ProductRestController {
 
 	@GetMapping("/{id}/price")
 	public List<DiscountProduct> getProductPrice(@PathVariable("id") Integer id) {
-		List<DiscountProduct> allDiscountProducts = dcService.findByIdProductDiscount(id);
-		Date currentDate = new Date();
+	    List<DiscountProduct> allDiscountProducts = dcService.findByIdProductDiscount(id);
+	    LocalDate currentDate = LocalDate.now();
 
-		List<DiscountProduct> validDiscountProducts = allDiscountProducts.stream().filter(discountProduct -> {
-			LocalDate discountStartDate = discountProduct.getStart_Date();
-			LocalDate discountEndDate = discountProduct.getEnd_Date();
+	    List<DiscountProduct> validDiscountProducts = allDiscountProducts.stream().filter(discountProduct -> {
+	        LocalDate discountStartDate = discountProduct.getStart_Date();
+	        LocalDate discountEndDate = discountProduct.getEnd_Date();
 
-			// Chuyển đổi LocalDate sang Date
-			Date start_Date = Date.from(discountStartDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-			Date end_Date = Date.from(discountEndDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+	        boolean isStartToday = currentDate.isEqual(discountStartDate);
+	        boolean isEndToday = currentDate.isEqual(discountEndDate);
 
-			return currentDate.compareTo(start_Date) >= 0 && currentDate.compareTo(end_Date) <= 0;
-		}).collect(Collectors.toList());
+	        return isStartToday || isEndToday || (currentDate.isAfter(discountStartDate) && currentDate.isBefore(discountEndDate));
+	    }).collect(Collectors.toList());
 
-		for (DiscountProduct validDiscountProduct : validDiscountProducts) {
-			validDiscountProduct.setPercentage(validDiscountProduct.getPercentage());
-		}
-		
-
-		return validDiscountProducts;
+	    for (DiscountProduct validDiscountProduct : validDiscountProducts) {
+	        validDiscountProduct.setPercentage(validDiscountProduct.getPercentage());
+	    }
+	    return validDiscountProducts;
 	}
+
+
 
 	@PostMapping
 	public Product post(@RequestBody Product product) {

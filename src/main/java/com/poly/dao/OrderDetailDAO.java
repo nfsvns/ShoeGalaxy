@@ -16,4 +16,5 @@ public interface OrderDetailDAO extends JpaRepository<OrderDetail, Long> {
 	@Query("SELECT o.product.id, o.product.name, o.product.price, SUM(o.quantity) FROM OrderDetail o GROUP BY o.product.id,o.product.name, o.product.price ORDER BY SUM(o.quantity) DESC")
 	List<Object[]> findByAllTopProductOrderDetail();
 
+
 }

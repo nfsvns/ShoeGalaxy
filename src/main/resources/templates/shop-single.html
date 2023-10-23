@@ -2,11 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	th:replace="~{/layout/layout.html::dynamic(~{::title}, ~{::body})}">
 
+
 <head>
 <title>Shoe Galaxy</title>
+
 <meta charset="utf-8">
 </head>
 <body>
+
+
+
 	<div class="bg-light">
 		<div class="container">
 			<div class="row">
@@ -59,7 +64,8 @@
 					<span
 						th:if="${prod.discountProduct != null and not #lists.isEmpty(prod.discountProduct)}">
 						<span
-						th:if="${T(java.time.LocalDate).now().isAfter(prod.discountProduct[0].start_Date) and T(java.time.LocalDate).now().isBefore(prod.discountProduct[0].end_Date)}">
+						th:if="${T(java.time.LocalDate).now().isAfter(prod.discountProduct[0].start_Date) and T(java.time.LocalDate).now().isBefore(prod.discountProduct[0].end_Date)
+						or  T(java.time.LocalDate).now() == prod.discountProduct[0].start_Date or T(java.time.LocalDate).now() == prod.discountProduct[0].end_Date}">
 
 							<i class="fas fa-tag discount-icon"> <span
 								class="discount-text mb-3"
@@ -75,14 +81,17 @@
 						<span
 							th:if="${prod.discountProduct != null and not #lists.isEmpty(prod.discountProduct)}">
 							<span
-							th:if="${T(java.time.LocalDate).now().isAfter(prod.discountProduct[0].start_Date) and T(java.time.LocalDate).now().isBefore(prod.discountProduct[0].end_Date)}">
+							th:if="${T(java.time.LocalDate).now().isAfter(prod.discountProduct[0].start_Date) and T(java.time.LocalDate).now().isBefore(prod.discountProduct[0].end_Date)
+							or  T(java.time.LocalDate).now() == prod.discountProduct[0].start_Date or T(java.time.LocalDate).now() == prod.discountProduct[0].end_Date
+							}">
 								<del th:text="${'$' + prod.price}"
 									style="font-size: 18px; color: red; font-weight: bold;">
 								</del> <span
 								th:text="${'$' + (prod.price - (prod.price * prod.discountProduct[0].percentage / 100))}"></span>
 
 						</span> <span
-							th:unless="${T(java.time.LocalDate).now().isAfter(prod.discountProduct[0].start_Date) and T(java.time.LocalDate).now().isBefore(prod.discountProduct[0].end_Date)}">
+							th:unless="${T(java.time.LocalDate).now().isAfter(prod.discountProduct[0].start_Date) and T(java.time.LocalDate).now().isBefore(prod.discountProduct[0].end_Date) 
+							or  T(java.time.LocalDate).now() == prod.discountProduct[0].start_Date or T(java.time.LocalDate).now() == prod.discountProduct[0].end_Date}">
 								<span th:text="${'$' + prod.price}"
 								style="font-size: 18px; color: red; font-weight: bold;">
 									p</span>
@@ -92,28 +101,39 @@
 							<span th:text="${'$' + prod.price}"></span>
 						</span>
 					</div>
-					
-					
-					
-					
-							<div class="btn-group" role="group" aria-label="Chọn Size">
-								<th:block th:each="size : ${#numbers.sequence(36, 44)}">
-									<th:block th:if="${prodd.![sizes].contains(size)}">
-										<button type="button" class="btn btn-dark m-2" th:text="${size}"
-											ng-click="getSize($event)"></button>
+
+
+
+
+					<div class="btn-group" role="group" aria-label="Chọn Size">
+						<th:block th:each="size : ${#numbers.sequence(36, 44)}">
+
+							<th:block th:if="${prodd.![sizes].contains(size)}">
+								<th:block th:each="item : ${prodd}">
+									<th:block th:if="${item.sizes == size}">
+										<th:block th:with="isInDatabase=true">
+											<th:block th:if="${item.quantity > 0}">
+												<button type="button" class="btn btn-dark m-2"
+													th:text="${size}" ng-click="getSize($event)"></button>
+											</th:block>
+											<th:block th:if="${item.quantity == 0}">
+												<button type="button" class="btn btn-secondary disabled m-2"
+													th:text="${size}"></button>
+											</th:block>
+										</th:block>
 									</th:block>
-									<th:block th:unless="${prodd.![sizes].contains(size)} ">
-										<button type="button" class="btn btn-secondary disabled m-2"
-											th:text="${size}" ></button>
-									</th:block>
+
 								</th:block>
-							</div>
-							<br>
+							</th:block>
+							<th:block th:unless="${prodd.![sizes].contains(size)}">
+								<button type="button" class="btn btn-secondary disabled m-2"
+									th:text="${size}"></button>
+							</th:block>
 
-
-
-
-
+						</th:block>
+						</th:block>
+					</div>
+					<br>
 
 
 
@@ -122,10 +142,10 @@
 						<option th:each="item : ${prodd}" th:if="${item.quantity > 0}"
 							th:value="${item.sizes}" th:text="${item.sizes}"></option>
 					</select> -->
-					<span>Quantity : </span>
-					<input name="count" class="mt-3" type="number" min="1"
-						style="width: 60px;" ng-model="quantity" ng-init="quantity = 1" />
-					<a th:attr="ng-click=@{|cart.add(${prod.id})|}"
+					<span>Quantity : </span> <input name="count" class="mt-3"
+						type="number" min="1" style="width: 60px;" ng-model="quantity"
+						ng-init="quantity = 1" /> <a
+						th:attr="ng-click=@{|cart.add(${prod.id})|}"
 						class="mt-3 mb-3 buy-now btn btn-sm w-100 btn-primary"
 						style="color: white" ng-click="saveToLocalStorage()">Add To
 						Cart</a>
@@ -138,7 +158,111 @@
 
 				</div>
 
+
+
 			</div>
+			<div style="border-bottom: groove;" class="mt-5"></div>
+			<div class="container my-5">
+				<h2>Comments</h2>
+				<form action="/shop.html/addComments" method="post">
+					<input type="hidden" name="productId" th:value="${prod.id}"
+						class="form-control mb-3" />
+					<div class="form-group">
+						<label for="comment">Comment:</label>
+						<textarea class="form-control" id="comment" name="description"
+							rows="4" required></textarea>
+					</div>
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+
+				<!-- Display comment section -->
+				<div id="comments-container">
+					<div th:each="cmt, iterStat : ${comment}" class="card my-3"
+						th:if="${iterStat.index < 20}">
+						<div class="card-body">
+							<div class="row">
+								<div class="col-md-1">
+									<img th:src="@{|/images/${cmt.account.photo}|}"
+										class="img-fluid rounded-circle" style="width: 50%" alt="User">
+								</div>
+								<div class="col-md-11">
+									<h5 th:text="${cmt.account.fullname}"></h5>
+									<p th:text="${#dates.format(cmt.create_Date, 'dd-MM-yyyy')}"></p>
+									<p th:text="${cmt.description}"></p>
+									<button class="btn btn-secondary btn-sm mt-2"
+										onclick="toggleReplyForm(event, 'replyForm-${cmt.id}', '${cmt.id}')">Reply</button>
+									<div class="reply-form" id="replyForm-${cmt.id}"
+										style="display: none;">
+										<form action="/shop.html/replyComments" method="post">
+											<input type="text" name="productIdReply"
+												th:value="${prod.id}" class="form-control mb-3" /> <input
+												type="hidden" name="parentId" th:value="${cmt.id}"
+												class="form-control mb-3" />
+											<div class="form-group">
+												<label for="comment">Comment:</label>
+												<textarea class="form-control" name="descriptionReply"
+													rows="4" required></textarea>
+											</div>
+											<button type="submit" class="btn btn-primary">Submit</button>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="container">
+
+				<!-- The Modal -->
+				<div class="modal" id="myModal">
+					<div class="modal-dialog"
+						style="margin-left: auto; margin-right: 0; margin-top: 200px;">
+						<div class="modal-content">
+
+							<!-- Modal body -->
+							<div class="modal-body">
+								<table class="table table-bordered" style="width: 100%;">
+									<thead>
+										<tr>
+											<th class="product-name" style="font-weight: bold;">Product</th>
+											<th class="product-size" style="font-weight: bold;">Size</th>
+											<th class="product-price" style="font-weight: bold;">Price</th>
+											<th class="product-quantity" style="font-weight: bold;">Quantity</th>
+											<th class="product-total" style="font-weight: bold;">Total</th>
+
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="item in cart.items">
+											<td class="text-truncate"
+												style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{item.name}}</td>
+											<td>{{item.sizes}}</td>
+											<td>${{cart.price_product(item)}}</td>
+											<td><input ng-change="cart.saveToLocalStorage()"
+												name="count" ng-model="item.qty" type="number" min="1"
+												style="width: 60px;"></td>
+											<td>${{cart.amtt_of(item) | number : 2}}</td>
+											<!-- <td>
+												<button ng-click="cart.remove(item.id)"
+													class="btn btn-sm btn-danger">
+													<i class="fas fa-trash"></i>
+												</button>
+											</td> -->
+										</tr>
+										<!-- Your ng-repeat content here -->
+									</tbody>
+								</table>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+
+
 			<!--  tab -->
 			<div style="border-bottom: groove;" class="mt-5"></div>
 			<h1 style="text-align: center;">Mặt hàng liên quan</h1>
@@ -213,8 +337,29 @@
 		</div>
 	</div>
 
+	<script th:inline="javascript">
+		/* Function to toggle the reply form */
+		function toggleReplyForm(event, formId, commentId) {
+			event.preventDefault();
+			var form = document.getElementById(formId);
+			form.style.display = form.style.display === "none" ? "block"
+					: "none";
+		}
 
-	
+		/* Function to hide other reply forms */
+		function hideOtherReplyForms(event, currentFormId) {
+			event.preventDefault();
+			var forms = document.getElementsByClassName("reply-form");
+			for (var i = 0; i < forms.length; i++) {
+				var form = forms[i];
+				if (form.id !== currentFormId) {
+					form.style.display = "none";
+				}
+			}
+		}
+	</script>
+
+
 </body>
 
 </html>

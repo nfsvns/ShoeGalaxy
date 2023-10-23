@@ -1,7 +1,7 @@
 package com.poly.entity;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,26 +11,27 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "discount_product")
-public class DiscountProduct  implements Serializable{
+@Table(name = "replyComments")
+public class ReplyComment implements Serializable {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	private String description;
+
+	private Date create_date;
 	@ManyToOne
-	@JoinColumn(name = "productId")
+	@JoinColumn(name = "product_id")
 	private Product product;
-	private String name;
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-	private LocalDate start_Date;
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-	private LocalDate end_Date;
-	private int percentage;
-	private boolean active;
+	@ManyToOne
+	@JoinColumn(name = "comment_id")
+	private Comment comment;
+	@ManyToOne
+	@JoinColumn(name = "username")
+	private Account account;
 
 }

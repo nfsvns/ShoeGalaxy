@@ -9,10 +9,10 @@
 
 </head>
 <body>
-	<div class="bg-light py-3">
+	<div class="bg-light">
 		<div class="container">
 			<div class="row">
-				<div class="col-md-12 mb-0">
+				<div class="col-md-12">
 					<a href="index.html" style="text-decoration: none">Home</a> <span
 						class="mx-2 mb-0">/</span> <strong class="text-black">Shop</strong>
 				</div>
@@ -23,7 +23,7 @@
 	<div class="site-section">
 		<div class="container">
 
-			<div class="row mb-5">
+			<div class="row">
 				<div class="col-md-9 order-2">
 
 					<div class="row">
@@ -68,18 +68,20 @@
 						<div class="row">
 							<div th:each="product : ${products}"
 								class="col-md-4 col-6 col-sm-4">
-								<div class="wsk-cp-product">
-									<div class="card border border-light mb-4 position-relative wsk-cp-img">
+								<div class="wsk-cp-product border border-light">
+									<div
+										class="card border border-light mb-4 position-relative wsk-cp-img">
 										<a th:href="@{|/shop-single.html/${product.id}|}"> <img
 											th:if="${not #lists.isEmpty(product.images)}"
-											class="card-img-top boder-light img-fluid"
+											class="card-img-top border-light img-fluid"
 											th:src="@{|/images/${product.images[0].image}|}"
 											alt="Product Image">
 										</a>
-										<div class="discount-percentage position-absolute">
+										<div
+											class="discount-percentage position-absolute border border-light">
 											<span th:if="${not #lists.isEmpty(discountProducts)}">
 												<span th:each="discountProduct : ${discountProducts}"
-												th:if="${discountProduct.product.id == product.id and T(java.time.LocalDate).now().isAfter(discountProduct.start_Date) and T(java.time.LocalDate).now().isBefore(discountProduct.end_Date)}">
+												th:if="${discountProduct.product.id == product.id and T(java.time.LocalDate).now().isAfter(discountProduct.start_Date) and (T(java.time.LocalDate).now().isBefore(discountProduct.end_Date) or T(java.time.LocalDate).now() == discountProduct.start_Date or T(java.time.LocalDate).now() == discountProduct.end_Date)}">
 													<i class="fas fa-tag discount-icon"> <span
 														class="discount-text"
 														th:text="${discountProduct.percentage + '% OFF'}"></span>
@@ -89,19 +91,20 @@
 										</div>
 									</div>
 									<div class="card-body">
-										<h5 class="card-title" th:utext="${product.name}"></h5>
-										<div class="product-price">
+										<h5 class="card-title text-truncate"
+											th:utext="${product.name}"></h5>
+										<div class="product_total">
 											<span
 												th:if="${product.discountProduct != null and not #lists.isEmpty(product.discountProduct)}">
 												<span
-												th:if="${T(java.time.LocalDate).now().isAfter(product.discountProduct[0].start_Date) and T(java.time.LocalDate).now().isBefore(product.discountProduct[0].end_Date)}">
+												th:if="${T(java.time.LocalDate).now().isAfter(product.discountProduct[0].start_Date) and (T(java.time.LocalDate).now().isBefore(product.discountProduct[0].end_Date) or T(java.time.LocalDate).now() == product.discountProduct[0].end_Date)}">
 													<del th:text="${'$' + product.price}"
 														style="font-size: 20px; color: red;"></del> <strong
 													style="font-size: 24px; color: red;"> <span
 														th:text="${'$' + (product.price - (product.price * product.discountProduct[0].percentage / 100))}"></span>
 												</strong>
 											</span> <span
-												th:unless="${T(java.time.LocalDate).now().isAfter(product.discountProduct[0].start_Date) and T(java.time.LocalDate).now().isBefore(product.discountProduct[0].end_Date)}">
+												th:unless="${T(java.time.LocalDate).now().isAfter(product.discountProduct[0].start_Date) and (T(java.time.LocalDate).now().isBefore(product.discountProduct[0].end_Date) or T(java.time.LocalDate).now() == product.discountProduct[0].end_Date)}">
 													<strong style="font-size: 24px; color: red;"> <span
 														th:text="${'$' + product.price}"></span>
 												</strong>
@@ -118,6 +121,7 @@
 							</div>
 						</div>
 					</div>
+
 
 
 					<div class="row" data-aos="fade-up">
@@ -193,15 +197,15 @@
 						<h3 class="mb-3 h6 text-uppercase text-black d-block">Categories</h3>
 						<ul class="list-unstyled mb-0">
 							<li class="mb-1"><a href="/shop.html?brand=Adidas"
-								style="text-decoration: none" class="d-flex"><span>Adidas</span>
+								style="text-decoration: none" class="d-flex text-dark"><span>Adidas</span>
 									<span class="text-black ml-auto"><span
 										th:text="${countAD}"></span></a></li>
 							<li class="mb-1"><a style="text-decoration: none"
-								href="/shop.html?brand=MLB" class="d-flex"><span>MLB</span>
+								href="/shop.html?brand=MLB" class="d-flex text-dark"><span>MLB</span>
 									<span class="text-black ml-auto"><span
 										th:text="${count}"></span></a></li>
 							<li class="mb-1"><a style="text-decoration: none"
-								href="/shop.html?brand=Nike" class="d-flex"><span>Nike</span>
+								href="/shop.html?brand=Nike" class="d-flex text-dark"><span>Nike</span>
 									<span class="text-black ml-auto"><span
 										th:text="${countNK}"></span></a></li>
 						</ul>
