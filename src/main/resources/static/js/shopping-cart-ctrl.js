@@ -20,6 +20,8 @@ app.controller("cart-ctrl", function($scope, $http) {
 			}
 		}
 	}
+	$scope.totalCount = 0; // Khai báo biến totalCount trong $scope
+
 	var $cart = $scope.cart = {
 		items: [],
 		add(id) {
@@ -79,7 +81,6 @@ app.controller("cart-ctrl", function($scope, $http) {
 										this.items.push(resp.data);
 									} else {
 										alert('Số lượng vượt quá số lượng tồn kho.');
-
 									}
 								});
 								// Set the quantity and selected size based on user input
@@ -94,27 +95,6 @@ app.controller("cart-ctrl", function($scope, $http) {
 				}
 			}).catch(error => {
 				console.error("Lỗi khi tải dữ liệu từ cơ sở dữ liệu: ", error);
-			});
-		},
-		removeFromDatabase(id) { // xóa sản phẩm khỏi giỏ hàng
-			if (confirm("Bạn muốn xóa lịch sử đơn hàng này?")) {
-				$http.delete(`/rest/carts/${id}`).then(response => {
-
-				}).catch(error => {
-					console.error('Lỗi không xác định: ', error);
-				});
-			}
-			this.loadFromDatabase(); // Tải lại trang giỏ hàng sau khi xóa thành công
-		},
-		clear() { // Xóa sạch các mặt hàng trong giỏ
-			var spanElement = document.getElementById('remoteU');
-			var spanText = spanElement !== null ? spanElement.innerText : null;
-			$http.delete(`/rest/carts/all/${spanText}`).then(function(response) {
-				console.log('Đã xóa sạch giỏ hàng');
-				// Gọi hàm tải lại trang giỏ hàng ở đây nếu cần thiết
-			}).catch(function(error) {
-				console.error('Lỗi khi xóa giỏ hàng: ', error);
-				console.log('Chi tiết lỗi: ', error.data);
 			});
 		},
 		price_product(item) {
@@ -132,11 +112,7 @@ app.controller("cart-ctrl", function($scope, $http) {
 			return item.price * item.qty;
 		},
 		get count() { // tính tổng số lượng các mặt hàng trong giỏ
-			let totalCount = 0;
-			this.items.forEach(item => {
-				totalCount += item.qty;
-			});
-			return totalCount;
+			return this.items.reduce((total, currentItem) => total + currentItem.qty, 0);
 		},
 		get amount() { // tổng thành tiền các mặt hàng trong giỏ
 			return this.items
@@ -206,14 +182,50 @@ app.controller("cart-ctrl", function($scope, $http) {
 				var spanText = spanElement !== null ? spanElement.innerText : null;
 				$http.get(`/rest/carts/username/${spanText}`).then(response => {
 					this.items = response.data;
+					this.updateCount();
 				}).catch(error => {
 					console.error("Lỗi khi tải dữ liệu từ cơ sở dữ liệu: ", error);
 				});
 			}
 		},
-
+		remove(item) { // xóa sản phẩm khỏi giỏ hàng
+			$http.delete(`/rest/carts/${item.id}`)
+				.then(response => {
+					var index = this.items.findIndex(p => p.id == item.id);
+					this.items.splice(index, 1); // Xóa phần tử khỏi mảng items
+					this.loadFromDatabase(); // Tải lại bảng sau khi xóa thành công
+				})
+				.catch(error => {
+					console.error('Lỗi khi xóa sản phẩm khỏi giỏ hàng: ', error);
+				});
+		},
+		clear() { // Xóa sạch các mặt hàng trong giỏ
+			var spanElement = document.getElementById('remoteU');
+			var spanText = spanElement !== null ? spanElement.innerText : null;
+			if (!spanText) {
+				console.error('Không thể xác định tên người dùng.');
+				return;
+			}
+			$http.delete(`/rest/carts/delete/${spanText}`)
+				.then(response => {
+					if (response.status === 200) {
+						this.items = [];
+						this.loadFromDatabase();
+						console.log('Đã xóa tất cả sản phẩm trong giỏ hàng thành công.');
+					} else {
+						console.error('Xảy ra lỗi khi xóa sản phẩm trong giỏ hàng.');
+					}
+				})
+				.catch(error => {
+					console.error('Lỗi khi xóa sản phẩm trong giỏ hàng: ', error);
+				});
+		}
 	}
 	$cart.loadFromDatabase();
+
+
+
+
 
 	// Đặt hàng
 	$scope.order = {

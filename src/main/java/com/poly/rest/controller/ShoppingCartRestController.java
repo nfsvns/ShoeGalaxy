@@ -59,14 +59,13 @@ public class ShoppingCartRestController {
 	}
 
 	@DeleteMapping("{id}")
-	public String deleteById(@PathVariable("id") Integer id) {
+	public void deleteById(@PathVariable("id") Integer id) {
 		shoppingCartService.deleteById(id);
-		return "Deleted shopping cart with id: " + id;
 	}
 
-	@DeleteMapping("/all/{username}")
-	public void deleteAll(@PathVariable("username") String username) {
-		shoppingCartService.deleteAllByUsername(username);
-	}
+	@DeleteMapping("/delete/{username}")
+    public void deleteAllByUsername(@PathVariable("username") String username) {
+        shoppingCartService.deleteAll(username);
+    }
 	
 }

@@ -2,6 +2,8 @@ package com.poly.service.impl;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +33,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 	}
 
 	@Override
-	public void deleteById(int id) {
+	public void deleteById(Integer id) {
 		shoppingCartDAO.deleteById(id);
 	}
 
@@ -49,11 +51,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 	public ShoppingCart findByProductIdAndUsernameAndSize(Integer id, String username, Integer size) {
 		return shoppingCartDAO.findShoppingCartByProductIdAndUsernameAndSize(id, username, size);
 	}
-
+	
+	@Transactional
 	@Override
-	public void deleteAllByUsername(String username) {
-		shoppingCartDAO.deleteByAccount_Username(username);
-		
+	public void deleteAll(String username) {
+		List<ShoppingCart> shoppingCarts = shoppingCartDAO.findShoppingCartsByUsername(username);
+		shoppingCartDAO.deleteAll(shoppingCarts);
 	}
-
 }
