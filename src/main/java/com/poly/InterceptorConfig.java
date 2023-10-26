@@ -15,7 +15,7 @@ public class InterceptorConfig implements WebMvcConfigurer{
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(globalInterceptor)
-			.addPathPatterns("/**")
-				.excludePathPatterns("/admin/**", "/rest/**", "/assets/**");
+			.addPathPatterns("/**");
+				
 	}
 }

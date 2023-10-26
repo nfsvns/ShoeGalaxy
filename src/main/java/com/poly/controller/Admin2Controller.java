@@ -9,4 +9,6 @@ public class Admin2Controller {
 	public String index2() {
 		return "redirect:/assets/admin2/index.html";
 	}
+	
+
 }

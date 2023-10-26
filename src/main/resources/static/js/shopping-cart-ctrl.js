@@ -1,12 +1,33 @@
+
+
 const app = angular.module("app", [])
 app.controller("cart-ctrl", function($scope, $http) {
 	$scope.cart = [];
 
 	$scope.selectedSize = '';
 
+
+	function displayModal() {
+		var modal = document.getElementById('myModal');
+		modal.classList.add('show');
+		modal.style.display = 'block';
+		setTimeout(function() {
+			var modal = document.getElementById('myModal');
+			modal.classList.remove('show');
+			modal.style.display = 'none';
+			var modalBackdrop = document.querySelector('.modal-backdrop');
+			modalBackdrop.parentNode.removeChild(modalBackdrop);
+		}, 3000);
+	}
+
+
+
 	$scope.getSize = function(event) {
 		var size = event.target.innerText;
 		$scope.selectedSize = size.trim();
+
+
+
 		var buttons = document.getElementsByClassName('btn');
 		var size = event.target.innerText.trim();
 
@@ -19,6 +40,8 @@ app.controller("cart-ctrl", function($scope, $http) {
 				buttons[i].classList.add('btn-dark');
 			}
 		}
+
+
 	}
 	$scope.totalCount = 0; // Khai báo biến totalCount trong $scope
 

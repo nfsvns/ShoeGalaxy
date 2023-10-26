@@ -1,6 +1,8 @@
 app.controller("dashboard-ctrl", function($scope, $http, $location) {
 	$scope.selectedYear = null;
 	$scope.initialize = function() {
+
+
 		$http.get("/rest/revenue").then(resp => {
 			$scope.years = resp.data;
 			$scope.selectedYear = 2023; // Đặt năm 2023 làm năm mặc định
@@ -8,6 +10,7 @@ app.controller("dashboard-ctrl", function($scope, $http, $location) {
 		}).catch(error => {
 			$location.path("/unauthorized");
 		})
+		// 4 BẢNG
 		// Gọi API để lấy tổng doanh thu trong ngày
 		$http.get("/rest/revenue/today")
 			.then(function(response) {
@@ -16,6 +19,97 @@ app.controller("dashboard-ctrl", function($scope, $http, $location) {
 			.catch(function(error) {
 				console.error('Error fetching daily revenue data:', error);
 			});
+		// Gọi API để lấy  tổng số lượng sản phẩm bán ra trong tháng
+		$http.get("/rest/revenue/saleVolume")
+			.then(function(response) {
+				$scope.saleVolume = response.data; // Gán tổng doanh thu trong ngày vào biến $scope.dailyRevenue
+			})
+			.catch(function(error) {
+				console.error('Error fetching daily revenue data:', error);
+			});
+
+		// Gọi API để lấy AOV (tổng doanh thu/ tổng đơn) trong tháng
+		$http.get("/rest/revenue/averageOrderValue")
+			.then(function(response) {
+				$scope.averageOrderValue = response.data; // Gán tổng doanh thu trong ngày vào biến $scope.dailyRevenue
+			})
+			.catch(function(error) {
+				console.error('Error fetching daily revenue data:', error);
+			});
+
+		// Gọi API để lấy tổng doanh thu trong năm nnay
+		$http.get("/rest/revenue/revenueYear")
+			.then(function(response) {
+				$scope.revenueYear = response.data; // Gán tổng doanh thu trong ngày vào biến $scope.dailyRevenue
+			})
+			.catch(function(error) {
+				console.error('Error fetching daily revenue data:', error);
+			});
+
+		//BẢNG CITY
+		// Gọi API để lấy thống kê city
+		$http.get("/rest/revenue/city")
+			.then(function(response) {
+				$scope.cities = response.data;
+				console.log('cities:', $scope.cities);
+			})	
+			.catch(function(error) {
+				console.error('Error fetching total quantity by category data:', error);
+			});
+		
+
+		
+		// BẢNG CATEGORY
+		// Gọi API để lấy tổng số lượng hàng tồn kho theo danh mục
+		$http.get("/rest/revenue/totalQuantityByCategory")
+			.then(function(response) {
+				$scope.totalQuantityByCategory = response.data;
+				combineData(); // Gọi hàm combineData sau khi nhận được dữ liệu
+			})
+			.catch(function(error) {
+				console.error('Error fetching total quantity by category data:', error);
+			});
+
+		// Gọi API để lấy tổng số lượng hàng đã bán theo danh mục
+		$http.get("/rest/revenue/totalQuantitySoldByCategory")
+			.then(function(response) {
+				$scope.totalQuantitySoldByCategory = response.data;
+				combineData(); // Gọi hàm combineData sau khi nhận được dữ liệu
+			})
+			.catch(function(error) {
+				console.error('Error fetching total quantity sold by category data:', error);
+			});
+
+
+		function combineData() {
+			if ($scope.totalQuantityByCategory && $scope.totalQuantitySoldByCategory) {
+				console.log('totalQuantityByCategory:', $scope.totalQuantityByCategory);
+				console.log('totalQuantitySoldByCategory:', $scope.totalQuantitySoldByCategory);
+				// Kiểm tra xem cả hai mảng dữ liệu đã được nhận chưa
+				$scope.combinedData = [];
+				angular.forEach($scope.totalQuantityByCategory, function(category) {
+					var categoryId = category[0];
+					var quantityInStock = category[1];
+					var soldQuantity ;
+					// Tìm số lượng đã bán tương ứng với danh mục
+					angular.forEach($scope.totalQuantitySoldByCategory, function(soldItem) {
+						if (soldItem[0] == categoryId) {
+							soldQuantity = soldItem[1];
+						}
+					});
+					// Thêm dữ liệu vào mảng combinedData
+					$scope.combinedData.push({
+						categoryId: categoryId,
+						quantityInStock: quantityInStock,
+						soldQuantity: soldQuantity
+					});
+				});
+				console.log('combinedData:', $scope.combinedData);
+			}
+		}
+		
+		
+
 	}
 
 	$scope.getRevenueByYear = function() {

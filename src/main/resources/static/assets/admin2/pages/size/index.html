@@ -138,22 +138,35 @@
 					<div class="text-center text-secondary">SIZE PRODUCT EDITION</div>
 					<div class="row">
 						<div class="col-sm-10 mx-auto">
-
+							<div>
+								<input ng-model="form.id" class="form-control" type="hidden" name="id">
+							</div>
 							<div class="row">
-								<div class="col-sm-6">
-									<label for="formDiscountAmount" class="form-label"> Id</label>
-									<div>
-										<input ng-model="form.id" class="form-control"
-											disabled="disabled">
-									</div>
-								</div>
+								
 								<div class="col-sm-6">
 									<div>
 										<label for="formDiscountAmount" class="form-label">Product
-											Id</label> <select ng-model="form.product.id" class="form-control">
-											<option value="" disabled selected>Select Product Id</option>
-											<option ng-repeat="p in products" ng-value="p.id">{{p.id}}
+											Id</label> 
+											
+											<select ng-model="form.product.id" class="form-control" >
+											<option value="{{p.id}}" disabled selected>Select Product Id</option>
+											<option ng-repeat="p in products" ng-value="{{p.id}}">{{p.id}}
 												{{p.name}}</option>
+										</select>
+									</div>
+								</div>
+								
+								<div class="col-sm-6">
+									<div>
+										<label for="formDiscountAmount" class="form-label">Discount
+											Name</label> <select class="form-control" ng-model="form.sizes">
+											<option value="">Select Size</option>
+											<option ng-value="37" value="37">37</option>
+											<option ng-value="38" value="38">38</option>
+											<option ng-value="39"value="39">39</option>
+											<option ng-value="40" value="40">40</option>
+											<option ng-value="41" value="41">41</option>
+											<option ng-value="42" value="42">42</option>
 										</select>
 									</div>
 								</div>
@@ -161,20 +174,7 @@
 							</div>
 
 							<div class="row">
-								<div class="col-sm-6">
-									<div>
-										<label for="formDiscountAmount" class="form-label">Discount
-											Name</label> <select class="form-control" ng-model="form.sizes">
-											<option value="">Select Size</option>
-											<option ng-value="37">37</option>
-											<option ng-value="38">38</option>
-											<option ng-value="39">39</option>
-											<option ng-value="40">40</option>
-											<option ng-value="41">41</option>
-											<option ng-value="42">42</option>
-										</select>
-									</div>
-								</div>
+								
 								<div class="col-sm-6">
 									<div>
 										<label for="formStartDate" class="form-label">Quantity
@@ -239,7 +239,7 @@
 									<th
 										class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
 										Size</th>
-										<th
+									<th
 										class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
 										Quantity</th>
 
@@ -258,7 +258,7 @@
 									<td class="align-middle  text-sm"><span
 										class="badge badge-sm bg-gradient-success">{{item.product.id
 											}} {{item.product.name}}</span></td>
-																				<td class="align-middle text-center   text-sm"><span
+									<td class="align-middle text-center   text-sm"><span
 										class="badge badge-sm bg-gradient-success">{{item.sizes}}</span></td>
 									<td class="align-middle text-center   text-sm"><span
 										class="badge badge-sm bg-gradient-success">{{item.quantity}}</span></td>

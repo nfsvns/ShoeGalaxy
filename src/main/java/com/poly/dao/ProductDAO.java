@@ -61,6 +61,14 @@ public interface ProductDAO extends JpaRepository<Product, Integer> {
 
 	@Query(value = "SELECT * FROM Products ORDER BY NEWID()", nativeQuery = true)
 	List<Product> topProduct();
+	
+	
+	@Query(value = "SELECT TOP 4 * FROM products ORDER BY products.id DESC", nativeQuery = true)
+	List<Product> NewProduct();
+	
+	
+	
+	
 
 	
 //	@Query(value = "SELECT p.id, p.category_id,p.name,p.price,d.percentage from Products p\r\n"

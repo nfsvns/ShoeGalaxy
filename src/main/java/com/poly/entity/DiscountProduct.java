@@ -1,5 +1,6 @@
 package com.poly.entity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import javax.persistence.Entity;
@@ -17,7 +18,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "discount_product")
-public class DiscountProduct {
+public class DiscountProduct  implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
@@ -29,7 +30,7 @@ public class DiscountProduct {
 	private LocalDate start_Date;
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private LocalDate end_Date;
-	private double percentage;
+	private int percentage;
 	private boolean active;
 
 }

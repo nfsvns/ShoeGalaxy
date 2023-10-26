@@ -23,7 +23,7 @@ app.controller("history-ctrl", function($scope, $http){
 				available : true,
 			};
 		})
-
+        
 		$scope.reset(); //để có hình mây lyc1 mới đầu
 	}
 	$scope.edit = function(item){

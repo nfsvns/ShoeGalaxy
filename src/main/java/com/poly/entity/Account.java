@@ -28,6 +28,10 @@ public class Account implements Serializable {
 	@JsonIgnore
 	@OneToMany(mappedBy = "account")
 	List<Order> orders;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "account")
+	List<Address> addresses;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "account", fetch = FetchType.EAGER)

@@ -1,10 +1,14 @@
 package com.poly.controller;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,16 +19,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.poly.dao.AccountDAO;
 import com.poly.dao.CategoryDAO;
+import com.poly.dao.CommentDAO;
 import com.poly.dao.DiscountProductDAO;
 
 import com.poly.dao.ProductDAO;
+import com.poly.dao.ReplyCommentDAO;
 import com.poly.dao.SizeDAO;
+import com.poly.entity.Account;
+import com.poly.entity.Comment;
 import com.poly.entity.DiscountProduct;
 import com.poly.entity.Product;
+import com.poly.entity.ReplyComment;
 import com.poly.entity.Size;
 import com.poly.service.SessionService;
 
@@ -37,32 +49,37 @@ public class ProductController {
 	SizeDAO sizeDAO;
 	@Autowired
 	DiscountProductDAO dpDAO;
+	@Autowired
+	CommentDAO commentDAO;
+
+	@Autowired
+	AccountDAO accountDAO;
+	@Autowired
+	ReplyCommentDAO replyDAO;
 
 	@Autowired
 	SessionService sessionService;
+
 	@RequestMapping("/shop.html")
 	public String list(Model model, @RequestParam("p") Optional<Integer> p) {
-	    Pageable pageable = PageRequest.of(p.orElse(0), 6);
-	    Page<Product> page = dao.findAll(pageable);
+		Pageable pageable = PageRequest.of(p.orElse(0), 6);
+		Page<Product> page = dao.findAll(pageable);
 
-	    // Lấy danh sách DiscountProduct
-	    List<DiscountProduct> discountProducts = dpDAO.findAll();
+		// Lấy danh sách DiscountProduct
+		List<DiscountProduct> discountProducts = dpDAO.findAll();
 
-	    model.addAttribute("products", page);
-	    model.addAttribute("discountProducts", discountProducts);
-	    
-	    int count = dao.countMlBProducts();
-	    model.addAttribute("count", count);
-	    int countAD = dao.countADProducts();
-	    model.addAttribute("countAD", countAD);
-	    int countNK = dao.countNKProducts();
-	    model.addAttribute("countNK", countNK);
+		model.addAttribute("products", page);
+		model.addAttribute("discountProducts", discountProducts);
 
-	 
-	    return "shop";
+		int count = dao.countMlBProducts();
+		model.addAttribute("count", count);
+		int countAD = dao.countADProducts();
+		model.addAttribute("countAD", countAD);
+		int countNK = dao.countNKProducts();
+		model.addAttribute("countNK", countNK);
+
+		return "shop";
 	}
-
-
 
 	@RequestMapping("/shop.html/search")
 	public String searchAndPage(Model model, @RequestParam("keywords") Optional<String> kw,
@@ -164,14 +181,111 @@ public class ProductController {
 
 	@RequestMapping("/shop-single.html/{productId}")
 	public String getProduct(Model model, @PathVariable("productId") int productId) {
-	    Product list = dao.findById(productId).get();
-	    List<Size> listS = sizeDAO.findByIdProduct(productId);
-	    List<DiscountProduct> discountProducts = dpDAO.findByIdProduct(productId);
-	    model.addAttribute("discountProducts", discountProducts);
-	    model.addAttribute("prod", list);
-	    model.addAttribute("prodd", listS); // Chắc chắn rằng listS chứa thông tin về số lượng của size
-	    return "shop-single";
+		Product list = dao.findById(productId).get();
+		List<Size> listS = sizeDAO.findByIdProduct(productId);
+		List<DiscountProduct> discountProducts = dpDAO.findByIdProduct(productId);
+		List<Comment> comment = commentDAO.findByCommentId(productId);
+		/*
+		 * List<ReplyComment> replyComment = replyDAO.findByReplyCommentId(productId);
+		 * model.addAttribute("replyComment",replyComment);
+		 */
+		model.addAttribute("prod", list);
+		model.addAttribute("prodd", listS);
+		model.addAttribute("discountProducts", discountProducts);
+		model.addAttribute("comment", comment);
+		
+		// Chắc chắn rằng listS chứa thông tin về số lượng của size
+		return "shop-single";
 	}
 
+	@PostMapping("/shop.html/addComments")
+	public String addComment(@RequestParam("description") String description,
+			@RequestParam(value = "productId", required = false) Integer idProduct, Model model,
+			HttpServletRequest request) {
+		Comment commentt = new Comment();
+		Timestamp now = new Timestamp(new Date().getTime());
+		String username = request.getRemoteUser();
+		Account user = accountDAO.findById(username).orElse(null);
+
+		commentt.setDescription(description); // Set the comment text
+		commentt.setAccount(user);
+		commentt.setCreate_Date(now);
+
+		if (idProduct != null) {
+			Product product = dao.findById(idProduct).orElse(null);
+			if (product != null) {
+				commentt.setProduct(product);
+			} else {
+				throw new IllegalArgumentException("Product with id " + idProduct + " not found!");
+			}
+		} else {
+			// Handle when productId is null
+			throw new IllegalArgumentException("Product id is null!");
+		}
+
+		commentDAO.save(commentt);
+
+		// Fetch data again after saving the new comment
+		Product list = dao.findById(idProduct).orElse(null);
+		List<Size> listS = sizeDAO.findByIdProduct(idProduct);
+		List<DiscountProduct> discountProducts = dpDAO.findByIdProduct(idProduct);
+		List<Comment> comment = commentDAO.findByCommentId(idProduct);
+
+		model.addAttribute("prod", list);
+		model.addAttribute("prodd", listS);
+		model.addAttribute("discountProducts", discountProducts);
+		model.addAttribute("comment", comment);
+
+		// Add a success message to the model
+		model.addAttribute("message", "Comment added successfully!");
+
+		// Return the name of your success template
+		return "shop-single.html";
+	}
+
+	@PostMapping("/shop.html/replyComments")
+	public String replyComment(@RequestParam("descriptionReply") String description,
+			@RequestParam(value = "productIdReply", required = false) Integer idProduct, Model model,
+			HttpServletRequest request) {
+		Comment commentt = new Comment();
+		Timestamp now = new Timestamp(new Date().getTime());
+		String username = request.getRemoteUser();
+		Account user = accountDAO.findById(username).orElse(null);
+
+		commentt.setDescription(description); // Set the comment text
+		commentt.setAccount(user);
+		commentt.setCreate_Date(now);
+
+		if (idProduct != null) {
+			Product product = dao.findById(idProduct).orElse(null);
+			if (product != null) {
+				commentt.setProduct(product);
+			} else {
+				throw new IllegalArgumentException("Product with id " + idProduct + " not found!");
+			}
+		} else {
+			// Handle when productId is null
+			throw new IllegalArgumentException("Product id is null!");
+		}
+
+		commentDAO.save(commentt);
+
+		// Fetch data again after saving the new comment
+		Product list = dao.findById(idProduct).orElse(null);
+		List<Size> listS = sizeDAO.findByIdProduct(idProduct);
+		List<DiscountProduct> discountProducts = dpDAO.findByIdProduct(idProduct);
+		List<Comment> comment = commentDAO.findByCommentId(idProduct);
+
+		model.addAttribute("prod", list);
+		model.addAttribute("prodd", listS);
+		model.addAttribute("discountProducts", discountProducts);
+		model.addAttribute("comment", comment);
+
+		// Add a success message to the model
+		model.addAttribute("message", "Comment added successfully!");
+
+		// Return the name of your success template
+		return "shop-single";
+	}
 
 }

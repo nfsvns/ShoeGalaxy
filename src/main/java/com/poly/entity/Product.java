@@ -43,6 +43,7 @@ public class Product implements Serializable {
 	@OneToMany(mappedBy = "product")
 	private List<Size> sizes;
 
+	
 	@JsonIgnore
 	@OneToMany(mappedBy = "product")
 	private List<Image> images;

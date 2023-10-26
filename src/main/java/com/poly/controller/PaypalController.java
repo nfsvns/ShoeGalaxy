@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,11 +23,13 @@ import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
 import com.poly.dao.AccountDAO;
+import com.poly.dao.AddressDAO;
 import com.poly.dao.OrderDAO;
 import com.poly.dao.OrderDetailDAO;
 import com.poly.dao.ProductDAO;
 import com.poly.dao.SizeDAO;
 import com.poly.entity.Account;
+import com.poly.entity.Address;
 import com.poly.entity.Order;
 import com.poly.entity.OrderDetail;
 import com.poly.entity.Product;
@@ -46,12 +49,15 @@ public class PaypalController {
 	AccountDAO accountDAO;
 	@Autowired
 	SizeDAO sizeDAO;
+	@Autowired
+	AddressDAO addressDAO;
+	String city;
 
 	public static final String SUCCESS_URL = "pay/success";
 	public static final String CANCEL_URL = "pay/cancel";
 
 	@PostMapping("/paypal")
-	public String payment(Model model, @RequestParam double total, @RequestParam String address,
+	public String payment(Model model, @RequestParam double total, @RequestParam String address,@RequestParam String address2,
 			@RequestParam String fullname, @RequestParam(value = "productId", required = false) List<Integer> productID,
 			@RequestParam(value = "sizeId", required = false) List<Integer> size,
 			@RequestParam(value = "provinceLabel", required = false) String provinceLabel,
@@ -62,7 +68,7 @@ public class PaypalController {
 		request.getSession().setAttribute("productID", productID);
 		request.getSession().setAttribute("size", size);
 		request.getSession().setAttribute("count", count);
-
+		request.getSession().setAttribute("address2", address2);
 		boolean allProductsEnough = true; // Biến để theo dõi xem tất cả sản phẩm có đủ số lượng không
 
 		// Tạo một danh sách để lưu trạng thái kiểm tra số lượng của từng sản phẩm
@@ -118,9 +124,20 @@ public class PaypalController {
 			return "cart.html";
 		}
 
-		String fullAddress = address + ", " + wardLabel + ", " +  districtLabel;
+//		String fullAddress = address + ", " + wardLabel + ", " +  districtLabel;
+		 // Tìm Address bằng addressDetail
+        Optional<Address> addressOptional = addressDAO.findByAddressDetail(address2);
+        
+        // Kiểm tra xem address có tồn tại không
+        if (addressOptional.isPresent()) {
+            // Trả về giá trị city nếu address tồn tại
+             city = addressOptional.get().getCity();
+        } else {
+        	city = "Unknown City";
+        }
+		
 		try {
-			Payment payment = service.createPayment(total, "USD", "paypal", "sale", "test", fullname, fullAddress, provinceLabel,
+			Payment payment = service.createPayment(total, "USD", "paypal", "sale", "test", fullname, address2, city,
 					"http://localhost:8080/" + CANCEL_URL, "http://localhost:8080/" + SUCCESS_URL);
 			for (Links link : payment.getLinks()) {
 				if (link.getRel().equals("approval_url")) {
@@ -142,6 +159,7 @@ public class PaypalController {
 		List<Integer> productID = (List<Integer>) request.getSession().getAttribute("productID");
 		List<Integer> size = (List<Integer>) request.getSession().getAttribute("size");
 		List<Integer> count = (List<Integer>) request.getSession().getAttribute("count");
+		String address2 = (String) request.getSession().getAttribute("address2");
 		System.out.println(productID.size());
 		for (int i = 0; i < productID.size(); i++) {
 			Integer id = productID.get(i);
@@ -157,8 +175,18 @@ public class PaypalController {
 			SimpleDateFormat paypalDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 			Date date = paypalDateFormat.parse(paypalDateString);
 			Timestamp timestamp = new Timestamp(date.getTime());
+			 Optional<Address> addressOptional = addressDAO.findByAddressDetail(address2);	        
+		        // Kiểm tra xem address có tồn tại không
+		        if (addressOptional.isPresent()) {
+		            // Trả về giá trị city nếu address tồn tại
+		             city = addressOptional.get().getCity();
+		        } else {
+		        	city = "Unknown City";
+		        }
+			
 			// LẤY THÔNG TIN
 			String address = payment.getPayer().getPayerInfo().getShippingAddress().getLine1();
+//			String city = payment.getPayer().getPayerInfo().getShippingAddress().getCity();
 			String recipientName = payment.getPayer().getPayerInfo().getShippingAddress().getRecipientName();
 			String totalAmountString = payment.getTransactions().get(0).getAmount().getTotal();
 
@@ -171,6 +199,7 @@ public class PaypalController {
 				order.setAddress(address);
 				order.setAccount(user);
 				order.setNguoinhan(recipientName);
+				order.setCity(city);
 				order.setAvailable(true);
 				try {
 					double totalAmountDouble = Double.parseDouble(totalAmountString);
@@ -190,8 +219,8 @@ public class PaypalController {
 					orderDetail.setQuantity(count.get(i));
 					orderDetailDAO.save(orderDetail);
 				}
-
-				return "thankyou";
+				return "redirect:/thankyou.html";
+//				return "thankyou";
 			}
 		} catch (PayPalRESTException e) {
 			System.out.println(e.getMessage());
