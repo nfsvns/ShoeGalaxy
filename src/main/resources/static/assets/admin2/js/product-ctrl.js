@@ -34,6 +34,8 @@ app.controller("product-ctrl", function($scope, $http){
 			console.log("Error", error);
 		})
 	}
+	
+	
 	$scope.reset = function(){
 		$scope.form = {
 			available: true,
@@ -69,7 +71,7 @@ app.controller("product-ctrl", function($scope, $http){
 	}
 
 	$scope.delete = function(item){	
-		var item = angular.copy($scope.form);
+		var item = angular.copy(item);
 		item.available = false;
 		$http.put(`/rest/products/${item.id}`, item).then(resp => {
 			var index = $scope.items.findIndex(p => p.id == item.id);
