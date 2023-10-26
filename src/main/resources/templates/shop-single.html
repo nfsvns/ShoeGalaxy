@@ -137,21 +137,6 @@
 					</div>
 					<br>
 
-					<div class="btn-group" role="group" aria-label="Chọn Size">
-						<th:block th:each="size : ${#numbers.sequence(36, 44)}">
-							<th:block th:if="${prodd.![sizes].contains(size)}">
-								<button type="button" class="btn btn-dark m-2" th:text="${size}"
-									ng-click="getSize($event)"></button>
-							</th:block>
-							<th:block th:unless="${prodd.![sizes].contains(size)} ">
-								<button type="button" class="btn btn-secondary disabled m-2"
-									th:text="${size}"></button>
-							</th:block>
-						</th:block>
-					</div>
-					<br>
-
-
 					<!-- <select ng-model="selectedSize" class="form-control mb-2 mt-3">
 						<option value="" disabled selected>Chọn Size</option>
 						<option th:each="item : ${prodd}" th:if="${item.quantity > 0}"
