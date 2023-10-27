@@ -51,19 +51,19 @@ app.controller("history-ctrl", function($scope, $http){
 		});
 	}
 
-	$scope.delete = function(item){
-		if(confirm("Bạn muốn xóa lịch sử đơn hàng này?")){
-			$http.delete(`/rest/historys/${item.id}`).then(resp => {
-				var index = $scope.items.findIndex(p => p.id == item.id);
-				$scope.items.splice(index, 1);
-				$scope.reset();
-				alert("Xóa lịch sử đơn hàng thành công!");
-			}).catch(error => {
-				alert("Lỗi xóa lịch sử đơn hàng!");
-				console.log("Error", error);
-			})
+		$scope.delete = function(item){
+			if(confirm("Bạn muốn xóa lịch sử đơn hàng này?")){
+				$http.delete(`/rest/historys/${item.id}`).then(resp => {
+					var index = $scope.items.findIndex(p => p.id == item.id);
+					$scope.items.splice(index, 1);
+					$scope.reset();
+					alert("Xóa lịch sử đơn hàng thành công!");
+				}).catch(error => {
+					alert("Lỗi xóa lịch sử đơn hàng!");
+					console.log("Error", error);
+				})
+			}
 		}
-	}
 	$scope.pager = {
 		page: 0,
 		size: 10,

@@ -19,7 +19,8 @@ app.config(function($routeProvider) {
 		}).when("/history", {
 			templateUrl: "/assets/admin2/pages/history.html",
 			controller: "history-ctrl"
-		}).when("/discount", {
+			})
+		.when("/discount", {
 			templateUrl: "/assets/admin2/pages/discountCode/index.html",
 			controller: "discount-ctrl"
 		}).when("/discountProduct", {
@@ -37,7 +38,10 @@ app.config(function($routeProvider) {
 		}).when("/profile", {
 			templateUrl: "/assets/admin2/pages/profile.html",		
 		})
-		
+		.when("/unauthorized", {
+            templateUrl: "/assets/admin2/pages/authority/unauthorized.html",
+            controller: "authority-ctrl"
+        })
 		.otherwise({
 			redirectTo: "/dashboard"
 		});
