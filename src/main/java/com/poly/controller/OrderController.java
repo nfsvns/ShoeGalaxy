@@ -1,11 +1,13 @@
 package com.poly.controller;
 
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.poly.dao.AccountDAO;
+import com.poly.dao.AddressDAO;
 import com.poly.dao.DiscountCodeDAO;
 import com.poly.dao.OrderDAO;
 import com.poly.dao.OrderDetailDAO;
@@ -27,6 +30,7 @@ import com.poly.dao.ProductDAO;
 import com.poly.dao.ShoppingCartDAO;
 import com.poly.dao.SizeDAO;
 import com.poly.entity.Account;
+import com.poly.entity.Address;
 import com.poly.entity.DiscountCode;
 import com.poly.entity.MailInfo;
 import com.poly.entity.Order;
@@ -36,6 +40,8 @@ import com.poly.entity.Size;
 import com.poly.service.MailerService;
 import com.poly.service.OrderService;
 import com.poly.service.SessionService;
+
+import lombok.var;
 
 @Controller
 public class OrderController {
@@ -61,13 +67,24 @@ public class OrderController {
 
 	@Autowired
 	SizeDAO sizeDAO;
+	@Autowired
+	AddressDAO addressDAO;
+	String city ;
 
 	@RequestMapping("/check")
-	public String checkout(Model model, @RequestParam(value = "totalAmount", required = false) String totalAmount) {
-//		model.addAttribute("cartItems", shoppingCartDAO.getAll());
-//		model.addAttribute("total", shoppingCartDAO.getAmount());
+	public String checkout(Model model, @RequestParam(value = "totalAmount", required = false) String totalAmount, HttpServletRequest request) {
+
+		String username = request.getRemoteUser();
+		Account user = accountDAO.findById(username).orElse(null);
+	
+		 List<Address> userAddresses = addressDAO.getAddressesByUsername(username);
+		   model.addAttribute("userAddresses", userAddresses);
+		model.addAttribute("user",user);
 		return "checkout.html";
 	}
+	
+
+	
 	@RequestMapping("/searchCodee")
 	public String searchDiscountCode(Model model, @RequestParam(value = "code", required = false) String code,
 	        @RequestParam(value = "totalAmount", required = false) String totalAmount,
@@ -114,16 +131,33 @@ public class OrderController {
 	    model.addAttribute("discountCodes", discountCodes);
 	    return "checkout.html";
 	}
+	
+	@PostMapping("/addAddress")
+	public String addAddress(Model model, @RequestParam String address,
+			@RequestParam(value = "provinceLabel", required = false) String provinceLabel,
+            @RequestParam(value = "districtLabel", required = false) String districtLabel,
+            @RequestParam(value = "wardLabel", required = false) String wardLabel,
+            HttpServletRequest request) {
+		String username = request.getRemoteUser();
+		Account user = accountDAO.findById(username).orElse(null);
+		
+		Address ad = new Address();
+		ad.setAccount(user);
+		ad.setAddressDetail(address + ", " + wardLabel + ", " +  districtLabel + ", " +  provinceLabel);
+		ad.setCity(provinceLabel);
+		addressDAO.save(ad);
+		return "redirect:/check";
+	}
 
 
 	@PostMapping("checkout.html")
-	public String checkout1(Model model, @RequestParam String address, @RequestParam String[] productId,
+	public String checkout1(Model model, @RequestParam String address, @RequestParam String[] productId,@RequestParam String address2,
 			@RequestParam String[] sizeId, @RequestParam String[] countProduct, @RequestParam String email,
 			@RequestParam String fullname, @RequestParam double total, HttpServletRequest request,
 			 @RequestParam(value = "provinceLabel", required = false) String provinceLabel,
              @RequestParam(value = "districtLabel", required = false) String districtLabel,
              @RequestParam(value = "wardLabel", required = false) String wardLabel,
-
+        
 			@RequestParam(value = "productId", required = false) List<Integer> productID,
 			@RequestParam(value = "sizeId", required = false) List<Integer> size,
 			@RequestParam(value = "countProduct", required = false) List<Integer> count,
@@ -131,8 +165,6 @@ public class OrderController {
 			@RequestParam(value = "priceTotal", required = false) List<Double> priceTotal) {
 		
 		
-		
-
 		boolean allProductsEnough = true; // Biến để theo dõi xem tất cả sản phẩm có đủ số lượng không
 		// Tạo một danh sách để lưu trạng thái kiểm tra số lượng của từng sản phẩm
 		List<Boolean> productStatus = new ArrayList<>();
@@ -195,7 +227,8 @@ public class OrderController {
 			Account user = accountDAO.findById(username).orElse(null);
 
 			order.setCreateDate(now);
-			order.setAddress(address + ", " + wardLabel + ", " +  districtLabel + ", " +  provinceLabel);
+//			order.setAddress(address + ", " + wardLabel + ", " +  districtLabel + ", " +  provinceLabel);
+			order.setAddress(address2);
 			System.out.println(order.getAddress());
 
 			order.setDiscountCode(null); // May need a null check here for the discount object
@@ -203,6 +236,19 @@ public class OrderController {
 			order.setAvailable(false);
 			order.setNguoinhan(fullname);
 			order.setTongtien(total);
+			
+			 // Tìm Address bằng addressDetail
+	        Optional<Address> addressOptional = addressDAO.findByAddressDetail(address2);
+	        
+	        // Kiểm tra xem address có tồn tại không
+	        if (addressOptional.isPresent()) {
+	            // Trả về giá trị city nếu address tồn tại
+	             city = addressOptional.get().getCity();
+	        } else {
+	        	city = "Unknown City";
+	        }
+   
+			order.setCity(city);
 			Order newOrder = orderDAO.saveAndFlush(order);
 
 			// ADD OrderDetail
@@ -216,7 +262,7 @@ public class OrderController {
 					orderDetail.setSize(Integer.parseInt(sizeId[i]));
 				       orderDetail.setPrice(priceTotal.get(i));
 					orderDetail.setQuantity(Integer.parseInt(countProduct[i]));
-					order.setCity(provinceLabel);
+					
 					orderDetailDAO.save(orderDetail);
 				}
 			}
@@ -263,13 +309,24 @@ public class OrderController {
 			DiscountCode discount = dcDAO.findById(IdCode).orElse(null);
 
 			order.setCreateDate(now);
-			order.setAddress(address + ", " + wardLabel + ", " +  districtLabel + ", " +  provinceLabel);
+			order.setAddress(address2);
 			System.out.println(order.getAddress());
             order.setAvailable(false);
 			order.setAccount(user);
 			order.setNguoinhan(fullname);
 			order.setTongtien(total);
-			order.setCity(provinceLabel);
+			 // Tìm Address bằng addressDetail
+	        Optional<Address> addressOptional = addressDAO.findByAddressDetail(address2);
+	        
+	        // Kiểm tra xem address có tồn tại không
+	        if (addressOptional.isPresent()) {
+	            // Trả về giá trị city nếu address tồn tại
+	             city = addressOptional.get().getCity();
+	             System.out.println(city + "****************************");
+	        } else {
+	        	city = "Unknown City";
+	        }
+			order.setCity(city);
 			Order newOrder = orderDAO.saveAndFlush(order);
 
 			
@@ -298,7 +355,7 @@ public class OrderController {
 		// Tạo nội dung email
 		StringBuilder bodyBuilder = new StringBuilder();
 		bodyBuilder.append("Tổng hóa đơn của ").append(fullname).append(" là: $").append(total).append(" tại địa chỉ: ")
-				.append(address).append("<br><br>");
+				.append(address2).append("<br><br>");
 
 		// Tạo bảng với CSS
 		bodyBuilder.append("<table style=\"border-collapse: collapse;\">");

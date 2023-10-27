@@ -78,12 +78,14 @@ public class LoadPage {
 		List<Object[]> orderDetails = orderDetailDAO.findByAllTopProductOrderDetail();
 		List<DiscountProduct> discountProducts = dpDAO.findAll();
 
+		List<Product> newProduct = productDAO.NewProduct();
 		model.addAttribute("pro", pro);
+		model.addAttribute("newProduct", newProduct);
 		model.addAttribute("images", images);
 		model.addAttribute("products", products);
 		model.addAttribute("discountProducts", discountProducts);
 		model.addAttribute("orderDetails", orderDetails);
-		System.out.println(orderDetails);
+
 		return "index";
 	}
 

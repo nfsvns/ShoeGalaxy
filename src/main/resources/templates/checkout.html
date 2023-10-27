@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="~{/layout/layout.html::dynamic(~{::title}, ~{::body})}">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{/layout/layout.html::dynamic(~{::title}, ~{::body})}"
+	encoding="UTF-8">
 
 <head>
 	<title>Shoe Galaxy</title>
@@ -60,8 +61,8 @@
 												ng-model="item.qty" type="number" min="1" style="width: 30px"
 												class="border border-light" /></td>
 
-										<td><input type="text" name="priceTotal" 
-											style="width: 100%; border: none;" value="{{ cart.amtt_of(item)}}"></td>
+										<td><input type="text" name="priceTotal" style="width: 100%; border: none;"
+												value="{{ cart.amtt_of(item)}}"></td>
 
 
 
@@ -127,50 +128,65 @@
 
 									<div class="form-group row">
 										<div class="col-md-12">
+											<h4>Thông tin:
+											</h4>
+											<select name="address2" id="address2">
+												<option th:each="address : ${userAddresses}"
+													th:value="${address.addressDetail}"
+													th:text="${address.addressDetail}"
+												></option>
+											</select>
+											
+										</div>
+
+										<div class="col-md-12">
 											<label th:text="${message}"></label> <label for="c_fname"
 												class="text-black">Name<span class="text-danger">*</span>
 											</label> <input type="text" class="form-control" id="fullname"
-												name="fullname"
-												th:value="${session.user != null ? session.user.fullname : ''}"
-												required>
-										</div>
-
-										<div class="col-md-12 mt-3">
-											<label for="c_fname"
-												class="text-black">Province/City<span class="text-danger">*</span>
-											</label>
-											<select class="form-select mb-3" name="provinceLabel" id="province">
-												<!--<option value="">chọn tỉnh/thành phố</option>-->
-											</select>
-											
-											<label for="c_fname"
-												class="text-black">District<span class="text-danger">*</span>
-											</label>
-											<select class="form-select mb-3" name="districtLabel" id="district">
-												<option value="">chọn quận</option>
-											</select>
-											
-											<label for="c_fname"
-												class="text-black">Ward<span class="text-danger">*</span>
-											</label>
-											<select class="form-select mb-3" name="wardLabel" id="ward">
-												<option value="">chọn phường</option>
-											</select>
-
-										</div>
-										
-										<div class="col-md-12 ">
-											<label for="c_address" class="text-black">Address <span
-													class="text-danger">*</span></label> <input type="text"
-												class="form-control" id="address" name="address" placeholder="Address"
-												required>
+												name="fullname" th:value="${user.fullname}" required>
 										</div>
 										<div class="col-md-12 pt-4">
 											<label for="c_email_address" class="text-black">Email
 												Address <span class="text-danger">*</span>
 											</label> <input type="text" class="form-control" id="email" name="email"
-												th:value="${session.user != null ? session.user.email : ''}" required>
+												th:value="${user.email}" required>
 										</div>
+
+										<a class="mt-4" id="editButton">Edit</a>
+
+										<div class="col-md-12 mt-3 address-div" style="display: none;">
+											<label for="c_fname" class="text-black">Province/City<span
+													class="text-danger">*</span>
+											</label>
+											<select class="form-select mb-3" name="provinceLabel" id="province">
+												<!--<option value="">chọn tỉnh/thành phố</option>-->
+											</select>
+
+											<label for="c_fname" class="text-black">District<span
+													class="text-danger">*</span>
+											</label>
+											<select class="form-select mb-3" name="districtLabel" id="district">
+												<option value="">chọn quận</option>
+											</select>
+
+											<label for="c_fname" class="text-black">Ward<span
+													class="text-danger">*</span>
+											</label>
+											<select class="form-select mb-3" name="wardLabel" id="ward">
+												<option value="">chọn phường</option>
+											</select>
+
+
+											<label for="c_address" class="text-black">Address <span
+													class="text-danger">*</span></label> <input type="text"
+												class="form-control" id="address" name="address" placeholder="Address">
+
+											<button class="btn my-3  py-3 btn-block" formaction="/addAddress"
+											formmethod="post">Thêm</button>			
+										</div>
+
+
+
 									</div>
 
 								</div>
@@ -215,6 +231,27 @@
 			</form>
 		</div>
 	</div>
+	<script>
+		// Lấy các phần tử DOM cần ẩn/hiển thị
+		var addressDiv = document.querySelector('.address-div');
+		// Lấy nút "Edit"
+		var editButton = document.getElementById("editButton");
+		// Thêm sự kiện click vào nút "Edit"
+		editButton.addEventListener("click", function () {
+			// Kiểm tra xem div đang ẩn hay hiển thị
+			var isHidden = addressDiv.style.display === "none";
+
+			// Nếu đang ẩn, hiển thị div
+			if (isHidden) {
+				addressDiv.style.display = "block";
+			} else {
+				// Nếu đang hiển thị, ẩn div
+				addressDiv.style.display = "none";
+			}
+		});
+
+		
+	</script>
 </body>
 
 </html>

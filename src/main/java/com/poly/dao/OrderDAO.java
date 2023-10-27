@@ -43,9 +43,13 @@ public interface OrderDAO extends JpaRepository<Order, Long> {
 	@Query(value = "SELECT ROUND( SUM(tongtien), 2) FROM Orders WHERE YEAR(create_date) = YEAR(GETDATE())", nativeQuery = true)
 	Double getTotalRevenueThisYear();
 
-	// Phan tich city
-	@Query(value = "SELECT o.city AS cityName, SUM(o.tongtien) AS totalSales, COUNT(o.id) AS orderCount, SUM(o.tongtien)/COUNT(o.id) AS aov "
-			+ "FROM Orders o " + "WHERE o.city IS NOT NULL " + "GROUP BY o.city", nativeQuery = true)
+	
+	//Phan tich city
+	@Query(value = "SELECT o.city AS cityName, SUM(o.tongtien) AS totalSales, COUNT(o.id) AS orderCount, ROUND( SUM(o.tongtien)/COUNT(o.id) , 2) AS aov " +
+            "FROM Orders o " +
+            "WHERE o.city IS NOT NULL " +
+            "GROUP BY o.city", nativeQuery = true)
+
 	List<Object[]> getCityOrderStatistics();
 
 	@Query(value = "SELECT o.id as order_id, o.username, o.tongtien, od.id as order_detail_id, od.quantity,od.size, p.image, p.name, p.price,p.id "
