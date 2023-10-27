@@ -2,7 +2,12 @@
 .table-container {
     position: relative;
 }
-
+.btn-show{
+	color: blue;
+}
+.btn-hide{
+	color:red;
+}
 
 /* CSS cho bảng chi tiết */
 .detail-table {

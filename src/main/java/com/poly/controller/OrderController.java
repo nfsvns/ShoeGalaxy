@@ -70,6 +70,7 @@ public class OrderController {
 	@Autowired
 	AddressDAO addressDAO;
 	String city ;
+	String fulladdress;
 
 	@RequestMapping("/check")
 	public String checkout(Model model, @RequestParam(value = "totalAmount", required = false) String totalAmount, HttpServletRequest request) {
@@ -78,8 +79,9 @@ public class OrderController {
 		Account user = accountDAO.findById(username).orElse(null);
 	
 		 List<Address> userAddresses = addressDAO.getAddressesByUsername(username);
-		   model.addAttribute("userAddresses", userAddresses);
-		model.addAttribute("user",user);
+		 model.addAttribute("userAddresses", userAddresses);
+		 
+		 model.addAttribute("user",user);
 		return "checkout.html";
 	}
 	
@@ -145,13 +147,16 @@ public class OrderController {
 		ad.setAccount(user);
 		ad.setAddressDetail(address + ", " + wardLabel + ", " +  districtLabel + ", " +  provinceLabel);
 		ad.setCity(provinceLabel);
+		ad.setDistrict(districtLabel);
+		ad.setWard(wardLabel);
+		ad.setStreet(address);
 		addressDAO.save(ad);
 		return "redirect:/check";
 	}
 
 
 	@PostMapping("checkout.html")
-	public String checkout1(Model model, @RequestParam String address, @RequestParam String[] productId,@RequestParam String address2,
+	public String checkout1(Model model, @RequestParam String address, @RequestParam String[] productId,@RequestParam Integer address2,
 			@RequestParam String[] sizeId, @RequestParam String[] countProduct, @RequestParam String email,
 			@RequestParam String fullname, @RequestParam double total, HttpServletRequest request,
 			 @RequestParam(value = "provinceLabel", required = false) String provinceLabel,
@@ -225,29 +230,32 @@ public class OrderController {
 			Timestamp now = new Timestamp(new Date().getTime());
 			String username = request.getRemoteUser();
 			Account user = accountDAO.findById(username).orElse(null);
-
 			order.setCreateDate(now);
-//			order.setAddress(address + ", " + wardLabel + ", " +  districtLabel + ", " +  provinceLabel);
-			order.setAddress(address2);
+			
+			Optional<Address> a = addressDAO.findById(address2);
+			fulladdress = a.get().getStreet() + ", " + a.get().getWard() + ", " +  a.get().getDistrict() + ", " +  a.get().getCity();
+			order.setAddress(fulladdress);
 			System.out.println(order.getAddress());
 
 			order.setDiscountCode(null); // May need a null check here for the discount object
 			order.setAccount(user);
+			order.setAvailable(false);
 			order.setNguoinhan(fullname);
 			order.setTongtien(total);
+			order.setAvailable(false);
 			
 			 // Tìm Address bằng addressDetail
-	        Optional<Address> addressOptional = addressDAO.findByAddressDetail(address2);
-	        
-	        // Kiểm tra xem address có tồn tại không
-	        if (addressOptional.isPresent()) {
-	            // Trả về giá trị city nếu address tồn tại
-	             city = addressOptional.get().getCity();
-	        } else {
-	        	city = "Unknown City";
-	        }
+//	        Optional<Address> addressOptional = addressDAO.findByAddressDetail(address2);
+//	        
+//	        // Kiểm tra xem address có tồn tại không
+//	        if (addressOptional.isPresent()) {
+//	            // Trả về giá trị city nếu address tồn tại
+//	             city = addressOptional.get().getCity();
+//	        } else {
+//	        	city = "Unknown City";
+//	        }
    
-			order.setCity(city);
+			order.setCity(a.get().getCity());
 			Order newOrder = orderDAO.saveAndFlush(order);
 
 			// ADD OrderDetail
@@ -306,31 +314,20 @@ public class OrderController {
 			Account user = accountDAO.findById(username).orElse(null);
 			// Update the discount code
 			DiscountCode discount = dcDAO.findById(IdCode).orElse(null);
-
 			order.setCreateDate(now);
-			order.setAddress(address2);
+			
+			Optional<Address> a = addressDAO.findById(address2);
+			fulladdress = a.get().getStreet() + ", " + a.get().getWard() + ", " +  a.get().getDistrict() + ", " +  a.get().getCity();
+			order.setAddress(fulladdress);
 			System.out.println(order.getAddress());
-			order.setDiscountCode(discount);
-
+            order.setAvailable(false);
 			order.setAccount(user);
 			order.setNguoinhan(fullname);
 			order.setTongtien(total);
-			 // Tìm Address bằng addressDetail
-	        Optional<Address> addressOptional = addressDAO.findByAddressDetail(address2);
-	        
-	        // Kiểm tra xem address có tồn tại không
-	        if (addressOptional.isPresent()) {
-	            // Trả về giá trị city nếu address tồn tại
-	             city = addressOptional.get().getCity();
-	             System.out.println(city + "****************************");
-	        } else {
-	        	city = "Unknown City";
-	        }
-			order.setCity(city);
+			order.setAvailable(false);
+			order.setCity(a.get().getCity());
 			Order newOrder = orderDAO.saveAndFlush(order);
 
-			
-		
 			// ADD OrderDetail
 			for (int i = 0; i < productId.length; i++) {
 				Product product = productDAO.findById(Integer.parseInt(productId[i])).orElse(null);
@@ -355,7 +352,7 @@ public class OrderController {
 		// Tạo nội dung email
 		StringBuilder bodyBuilder = new StringBuilder();
 		bodyBuilder.append("Tổng hóa đơn của ").append(fullname).append(" là: $").append(total).append(" tại địa chỉ: ")
-				.append(address2).append("<br><br>");
+				.append(fulladdress).append("<br><br>");
 
 		// Tạo bảng với CSS
 		bodyBuilder.append("<table style=\"border-collapse: collapse;\">");

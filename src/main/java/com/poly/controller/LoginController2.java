@@ -22,10 +22,14 @@ public class LoginController2 {
 	@Autowired
 	AccountDAO accountDAO;
 	@Autowired
+	AuthorityDAO authorityDAO;
+	@Autowired
 	UserService userService;
 	@Autowired
+
 	AuthorityDAO authorityDAO;
 	@Autowired 
+
 	RoleDAO roleDAO;
 
 	@RequestMapping("/login")
@@ -38,9 +42,10 @@ public class LoginController2 {
 		model.addAttribute("message", "Đăng nhập thành công!");
 		return "forward:/login";
 	}
-	
+
 	@RequestMapping("/oauth2/login/success")
 	public String success(OAuth2AuthenticationToken oauthh2) {
+		
 		userService.loginFromOAuth2(oauthh2);
 		return "forward:/login/success";
 	}
@@ -81,14 +86,16 @@ public class LoginController2 {
 			user.setFullname(fullname);
 			user.setEmail(email);
 			accountDAO.save(user);
+
 			Authority authority = new Authority();
 			authority.setAccount(user);
 			Role role = roleDAO.findById("CUST").get();
+
 			authority.setRole(role);
 			authorityDAO.save(authority);
 			model.addAttribute("message", "Đăng kí thành công");
 		}
-		return "register";
+		return "redirect:/login";
 	}
 
 }

@@ -63,8 +63,9 @@ public class ProductController {
 	@RequestMapping("/shop.html")
 	public String list(Model model, @RequestParam("p") Optional<Integer> p) {
 		Pageable pageable = PageRequest.of(p.orElse(0), 6);
-		Page<Product> page = dao.findAll(pageable);
-
+//		Page<Product> page = dao.findAll(pageable);
+		Page<Product> page = dao.findDelete(pageable);
+		
 		// Lấy danh sách DiscountProduct
 		List<DiscountProduct> discountProducts = dpDAO.findAll();
 

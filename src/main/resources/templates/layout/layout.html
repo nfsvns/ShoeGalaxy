@@ -3,24 +3,65 @@
 	th:fragment="dynamic(title, view)">
 
 <head>
-	<meta charset="UTF-8">
-	<title th:replace="${title}">Shoe Galaxy</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mukta:300,400,700">
-	<link rel="stylesheet" href="../../fonts/icomoon/style.css">
-	<link rel="stylesheet" href="../../css/bootstrap.min.css">
-	<link rel="stylesheet" href="../../css/magnific-popup.css">
-	<link rel="stylesheet" href="../../css/jquery-ui.css">
-	<link rel="stylesheet" href="../../css/owl.carousel.min.css">
-	<link rel="stylesheet" href="../../css/owl.theme.default.min.css">
-	<link rel="stylesheet" href="../../css/aos.css">
-	<link rel="stylesheet" href="../../css/style.css">
-	<link rel="stylesheet" href="../../css/login.css" />
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<meta charset="UTF-8">
+<title th:replace="${title}">Shoe Galaxy</title>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/css?family=Mukta:300,400,700">
+<link rel="stylesheet" href="../../fonts/icomoon/style.css">
+<link rel="stylesheet" href="../../css/bootstrap.min.css">
+<link rel="stylesheet" href="../../css/magnific-popup.css">
+<link rel="stylesheet" href="../../css/jquery-ui.css">
+<link rel="stylesheet" href="../../css/owl.carousel.min.css">
+<link rel="stylesheet" href="../../css/owl.theme.default.min.css">
+<link rel="stylesheet" href="../../css/aos.css">
+<link rel="stylesheet" href="../../css/style.css">
+<link rel="stylesheet" href="../../css/login.css" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 
 
-<link rel="icon" type="image/x-icon" href="/images/logo.jpg" class="img-fluid rounded">
+
+
+
+
+
+
+
+
+
+
+
+
+<!--  <link href="/assets/admin2/css/nucleo-icons.css" rel="stylesheet" />
+	<link href="/assets/admin2/css/nucleo-svg.css" rel="stylesheet" />
+		
+	
+<link id="pagestyle" href="/assets/admin2/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
+
+    <link rel="stylesheet" href="/assets/admin2/css/account.css">		
+	 -->
+
+
+
+
+
+<!--admin 2  -->
+
+
+
+
+
+
+
+
+
+
+<link rel="icon" type="image/x-icon" href="/images/logo.jpg"
+	class="img-fluid rounded">
 
 <script src="https://kit.fontawesome.com/fa975b375a.js"
 	crossorigin="anonymous"></script>
@@ -49,10 +90,13 @@
 			<div class="site-navbar-top">
 				<div class="container">
 					<div class="row p-5">
-						<div class="col-6 col-md-4 order-2 order-md-1 site-search-icon text-left">
-							<form th:action="@{/shop.html/search}" class="site-block-top-search">
-								<span class="icon icon-search2"></span> <input type="text" name="keywords"
-									th:value="${keywords}" th:onblur="$(this).closest('form').submit()"
+						<div
+							class="col-6 col-md-4 order-2 order-md-1 site-search-icon text-left">
+							<form th:action="@{/shop.html/search}"
+								class="site-block-top-search">
+								<span class="icon icon-search2"></span> <input type="text"
+									name="keywords" th:value="${keywords}"
+									th:onblur="$(this).closest('form').submit()"
 									class="form-control border-0" placeholder="Search">
 							</form>
 						</div>
@@ -62,7 +106,7 @@
 							<div class="site-logo">
 								<img th:src="@{../../images/logowebsite.jpg}"
 									alt="Image placeholder" class="img-fluid rounded"
-									style="width:40%; height:30%">
+									style="width: 40%; height: 30%">
 
 							</div>
 						</div>
@@ -72,16 +116,17 @@
 
 									<li>
 										<div style="text-decoration: none" class="dropdown"
-											th:if="${#request.remoteUser != null}"> <span
-												th:text="${#request.remoteUser}"></span>
-
-											<span data-bs-toggle="dropdown"><i class="fa-solid fa-user c"></i></span>
+											th:if="${#request.remoteUser != null}">
+											<span th:text="${#request.remoteUser}"></span> <span
+												data-bs-toggle="dropdown"><i
+												class="fa-solid fa-user c"></i></span>
 
 											<ul class="dropdown-menu">
 												<li
 													th:if="${#request.isUserInRole('DIRE') or #request.isUserInRole('STAF')}">
 													<a class="dropdown-item" th:href="@{/admin2}" th:text="#{nav.admin}">Admin</a>
 												</li>
+
 												<li><a class="dropdown-item" href="/ChangeInfomation" th:text="#{nav.info}">Personal information</a></li>
 												<li><a class="dropdown-item" href="/TrangThai" th:text="#{nav.order}">Order status</a>
 												</li>
@@ -89,6 +134,7 @@
 												<li th:if="${#request.remoteUser != null}"><a class="dropdown-item"
 														href="/logout" th:text="#{nav.logout}">Logout</a>
 												</li>
+
 
 											</ul>
 
@@ -100,6 +146,7 @@
 											class="icon icon-person"></span>
 									</a></li>
 									<li><a href="#" style="text-decoration: none"><span
+
 												class="icon icon-heart-o c"></span></a></li>
 												
 									
@@ -118,6 +165,7 @@
 											</ul>
 										</div>
 									</li>
+
 									<li class="d-inline-block d-md-none ml-md-0"><a href="#"
 										class="site-menu-toggle js-menu-toggle"><span
 											class="icon-menu"></span></a></li>
@@ -146,12 +194,11 @@
 
 
 
-						<li th:unless="${#request.remoteUser}" class="has-children"><a href="/login"
-								th:text="#{nav.login}">Login</a>
+						<li th:unless="${#request.remoteUser}" class="has-children"><a
+							href="/login" th:text="#{nav.login}">Login</a>
 							<ul class="dropdown">
 								<li><a href="/register.html" th:text="#{nav.register}">Register</a></li>
-							</ul>
-						</li>
+							</ul></li>
 
 						<!--<li th:if="${#request.isUserInRole('DIRE') or #request.isUserInRole('STAF')}"
 							class="has-children"><a href="/account.html">Admin</a>
@@ -191,38 +238,40 @@
 						<div class="row">
 							<div class="col-md-12 site-logo">
 								<img th:src="@{../../images/logo1.jpg}" alt="Image placeholder"
-									class="img-fluid rounded" style="width:20%;padding-bottom: 10px">
+									class="img-fluid rounded"
+									style="width: 20%; padding-bottom: 10px">
 							</div>
 							<div class="col-md-6 col-lg-4">
 								<ul class="list-unstyled">
-									<li><a style="text-decoration: none" href="#" th:text="#{footer.sell}">Sell
-											online</a></li>
 									<li><a style="text-decoration: none" href="#"
-											th:text="#{footer.features}">Features</a></li>
-									<li><a style="text-decoration: none" href="#" th:text="#{footer.cart}">Shopping
-											cart</a></li>
+										th:text="#{footer.sell}">Sell online</a></li>
+									<li><a style="text-decoration: none" href="#"
+										th:text="#{footer.features}">Features</a></li>
+									<li><a style="text-decoration: none" href="#"
+										th:text="#{footer.cart}">Shopping cart</a></li>
 								</ul>
 							</div>
 							<div class="col-md-6 col-lg-4">
 								<ul class="list-unstyled">
 									<li><a style="text-decoration: none" href="#"
-											th:text="#{footer.mobilecommerce}">Mobile commerce</a></li>
+										th:text="#{footer.mobilecommerce}">Mobile commerce</a></li>
 									<li><a style="text-decoration: none" href="#"
-											th:text="#{footer.dropshipping}">Dropshipping</a></li>
+										th:text="#{footer.dropshipping}">Dropshipping</a></li>
 								</ul>
 							</div>
 							<div class="col-md-6 col-lg-4">
 								<ul class="list-unstyled">
-									<li><a style="text-decoration: none" href="#" th:text="#{footer.pointofsale}">Point
-											of sale</a></li>
+									<li><a style="text-decoration: none" href="#"
+										th:text="#{footer.pointofsale}">Point of sale</a></li>
 								</ul>
 							</div>
 						</div>
 					</div>
 					<div class="col-md-6 col-lg-3 mb-4 mb-lg-0">
 						<h3 class="footer-heading mb-4">Promo</h3>
-						<a href="#" class="block-6"> <img th:src="@{../../images/a1.webp}" alt="Image placeholder"
-								class="img-fluid rounded mb-4">
+						<a href="#" class="block-6"> <img
+							th:src="@{../../images/a1.webp}" alt="Image placeholder"
+							class="img-fluid rounded mb-4">
 
 						</a>
 					</div>
@@ -233,8 +282,8 @@
 							<ul class="list-unstyled">
 								<li class="address">Tòa nhà QTSC9 (toà T), đường Tô Ký,
 									phường Tân Chánh Hiệp, quận 12, TP HCM</li>
-								<li class="phone"><a style="text-decoration: none" href="tel://23923929210">+2 392
-										3929 210</a></li>
+								<li class="phone"><a style="text-decoration: none"
+									href="tel://23923929210">+2 392 3929 210</a></li>
 								<li class="email">shoegalaxy@gmail.com</li>
 							</ul>
 						</div>

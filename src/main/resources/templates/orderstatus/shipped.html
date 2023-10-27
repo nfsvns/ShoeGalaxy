@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{/layout/layout.html::dynamic(~{::title}, ~{::body})}"
+>
+<head>
+    <title>Đã giao hàng</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div class="container">
+ <div class="row p-4">
+     <div class="col-4 text-center ">
+      <a class="ka"  th:href="@{/TrangThai}">Ordered</a>
+     </div>
+     <div class="col-4 text-center ">
+     <a class="ka" th:href="@{/unshipped}"> Shipped</a>
+     </div>
+    <div class="col-4 text-center">
+     <a class="ka"  style="border-bottom: 1px solid #ee83e5;"th:href="@{/shipped}">On the way</a>
+     </div>
+     </div>
+     
+ </div>
+ <section class="vh-90" >
+  <div class="container h-50">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col" >
+        <div class="card mb-4 t-2">
+          <div class="card-body p-4">
+
+            <div class="row align-items-center" th:each="obj : ${shippedOrders}">
+              <div class="col-md-2 d-flex justify-content-center">
+                <div>
+                  <p class="small text-muted mb-4 pb-2">OrderId</p>
+                  <p class="lead fw-normal mb-0" th:text="${obj[0]}"></p>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <img th:src="@{|/images/${obj[6]}|}"
+                  class="img-fluid w-10" alt="Generic placeholder image">
+              </div>
+              <div class="col-md-2 d-flex justify-content-center">
+                <div>
+                  <p class="small text-muted mb-4 pb-2">Name</p>
+                  <p class="lead fw-normal mb-0" th:text="${obj[7]}"></p>
+                </div>
+              </div>
+              <div class="col-md-2 d-flex justify-content-center">
+                <div>
+                  <p class="small text-muted mb-4 pb-2">Size</p>
+                  <p class="lead fw-normal mb-0" th:text="${obj[5]}"></p>
+                </div>
+              </div>
+              <div class="col-md-2 d-flex justify-content-center">
+                <div>
+                  <p class="small text-muted mb-4 pb-2">Quantity</p>
+                  <p class="lead fw-normal mb-0" th:text="${obj[4]}"></p>
+                </div>
+              </div>
+              <div class="col-md-2 d-flex justify-content-center">
+                <div>
+                  <p class="small text-muted mb-4 pb-2">Price</p>
+                  <p class="lead fw-normal mb-0" th:text="${obj[8]}"></p>
+                </div>
+              </div>
+              <div class="text-end">
+              <button class="btn btn-primary text-white"><a style="text-decoration: none;color: white;" th:href="@{|/shop-single.html/${obj[9]}|}"> Rebuy
+						</a></button>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</body>
+</html>

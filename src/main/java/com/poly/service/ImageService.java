@@ -10,4 +10,5 @@ public interface ImageService {
 
 	public List<Image> getImageByProductId(Integer productId);
 	
+	
 }
