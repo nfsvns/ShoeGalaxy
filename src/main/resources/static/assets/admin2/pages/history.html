@@ -182,9 +182,31 @@
 												</label>
 											</div>
 										</div>
-									</div>
-								</div>
-							</div>
+
+									</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<!-- End Navbar -->
+		<div class="container-fluid py-4">
+			<div class="row">
+				<div class="col-12">
+					<div class="card mb-4">
+						<div class="card-header pb-0">
+							<h6>History Edit</h6>
 						</div>
 						<div class="panel-footer text-center">
 							<button ng-click="create()" ng-disabled="form.id"
@@ -213,110 +235,101 @@
 					<div class="card-header pb-0">
 						<h6>List of History</h6>
 					</div>
-					<div class="card-body px-0 pt-0 pb-2 w-100">
-						<div class="table-responsive p-0">
-							<table
-								class="table align-items-center justify-content-center mb-0">
-								<thead>
-									<tr>
-										<th
-											class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-											ID</th>
-										<th
-											class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">
-											Username</th>
-										<th
-											class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">
-											Create Date</th>
-										<th
-											class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7">
-											Address</th>
-										<th
-											class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7">
-											To</th>
-										<th
-											class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7">
-											Total</th>
-										<th
-											class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7">
-											Discount Code</th>
-										<th
-											class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7">
-											Show Order Detail</th>
-										<th
-											class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7">
-											Action</th>
-										<th></th>
-									</tr>
-								</thead>
-								<tbody class="text-xs font-weight-bolder text-center ">
-									<tr ng-repeat="item in pager.items">
-										<td>{{item.id}}</td>
-										<td>{{item.account.username}}</td>
-										<td>{{item.createDate | date:'dd/MM/yyyy'}}</td>
-										<td class="text-truncate" style="max-width: 200px;">
-											{{item.address}}</td>
-										<td>{{item.nguoinhan}}</td>
-										<td>{{item.tongtien}}</td>
-										<td>{{item.discountCode.id}} {{item.discountCode.code}}</td>
-										<td
-											ng-class="{'btn-show':item.available,'btn-hide':!item.available}">{{item.available?'Đã
-											giao hàng':'Chưa giao hàng'}}</td>
-										<td><button ng-click="getDetailData(item)"
-												class="btn btn-primary">{{item.showDetail ? 'Hide'
-												: 'Show'}}</button></td>
-										<td>
-											<div class="btn-group btn-group-xs">
-												<a ng-click="edit(item)" href="" class="btn btn-warning">
-													<i class="fa-solid fa-pen-to-square"></i>
-												</a> <a ng-click="delete(item)" href="" class="btn btn-danger">
-													<i class="fa-solid fa-trash"></i>
-												</a>
-											</div>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-							<div ng-repeat="item in pager.items">
-								<div class="fixed-top">
-									<table class="table table-condensed detail-table"
-										ng-show="item.showDetail">
-										<thead class="bg-danger"
-											style="color: aliceblue; font-variant: small-caps;">
-											<th>Id</th>
-											<th>Order id</th>
-											<th>size</th>
-											<th>Name</th>
-											<th>Price</th>
-											<th>Quantity</th>
-										</thead>
-										<tbody class="bg-dark" style="color: aliceblue;">
-											<tr ng-repeat="detailItem in item.detailData">
-												<td>{{detailItem.id}}</td>
-												<td>{{detailItem.order.id}}</td>
-												<td>{{detailItem.size}}</td>
-												<td class="text-truncate">{{detailItem.product.name}}</td>
-												<td>{{detailItem.price}}</td>
-												<td>{{detailItem.quantity}}</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-								<!-- 
-				<td>
-					<div class="btn-group btn-group-xs">
-						<a ng-click="edit(item)" href="" class="btn btn-warning">
-							<i class="fa-solid fa-pen-to-square fa-2xs"></i>
-						</a>
-						<a ng-click="delete(item)" href="" class="btn btn-danger">
-							<i class="fa-solid fa-trash fa-2xs"></i>
-						</a>
-					</div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	 -->
+
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="card mb-4">
+						<div class="card-header pb-0">
+							<h6>List of History</h6>
+						</div>
+						<div class="card-body px-0 pt-0 pb-2 w-100" >
+							<div class="table-responsive p-0">
+								<table class="table align-items-center justify-content-center mb-0">
+									<thead>
+										<tr>
+											<th
+												class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+												ID</th>
+											<th
+												class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">
+												Username</th>
+											<th
+												class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">
+												Create Date</th>
+											<th
+												class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7">
+												Address</th>
+												<th
+												class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7">
+												To</th>
+												<th
+												class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7">
+												Total</th>
+												<th
+												class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7">
+												Discount Code</th>
+												<th
+												class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7">
+												Show Order Detail</th>
+												<th
+												class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7">
+												Action</th>
+										        <th></th>
+										</tr>
+									</thead>
+									<tbody class="text-xs font-weight-bolder text-center " >
+									 <tr ng-repeat="item in pager.items">
+                <td>{{item.id}}</td>
+                <td >{{item.account.username}}</td>
+                <td>{{item.createDate}}</td>
+                <td>{{item.address}}</td>
+                <td>{{item.nguoinhan}}</td>
+                <td>{{item.tongtien}}</td>
+                <td>{{item.discountCode.id}} {{item.discountCode.code}}</td>
+                <td ng-class="{'btn-show':item.available,'btn-hide':!item.available}">{{item.available?'Đã giao hàng':'Chưa giao hàng'}}</td>
+                <td><button ng-click="getDetailData(item)" class="btn btn-primary">
+                    {{item.showDetail ? 'Hide' : 'Show'}}
+                    </button></td>
+                <td>
+                    <div class="btn-group btn-group-xs">
+                        <a ng-click="edit(item)" href="" class="btn btn-warning">
+                           <i class="fa-solid fa-pen-to-square"></i>
+                        </a>
+                        <a ng-click="delete(item)" href="" class="btn btn-danger">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+									</tbody>
+								</table>
+								
+									<div ng-repeat="item in pager.items">		
+		<div class="fixed-top">
+			<table class="table table-condensed detail-table" ng-show="item.showDetail">
+            <thead class="bg-danger" style="color: aliceblue;font-variant: small-caps;">
+                <th>Id</th>
+                <th>Order id</th>
+                <th>size</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+            </thead>
+            <tbody class="bg-dark" style="color: aliceblue;">
+                <tr ng-repeat="detailItem in item.detailData">
+                    <td>{{detailItem.id}}</td>
+                    <td>{{detailItem.order.id}}</td>
+                    <td>{{detailItem.size}}</td>
+                    <td class="text-truncate">{{detailItem.product.name}}</td>
+                    <td>{{detailItem.price}}</td>
+                    <td>{{detailItem.quantity}}</td>
+                </tr>
+            </tbody>
+        </table>
+		</div>
+		
 							</div>
 							<div class="panel-footer text-center">
 								<button ng-click="pager.first()" class="btn "

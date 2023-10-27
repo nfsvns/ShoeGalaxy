@@ -16,6 +16,7 @@ app.controller("history-ctrl", function($scope, $http){
 		})
 	}
 	}
+	
 	$scope.initialize = function(){
 		$http.get("/rest/historys").then(resp => {
 			$scope.items = resp.data;

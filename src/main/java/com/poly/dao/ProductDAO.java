@@ -30,7 +30,7 @@ public interface ProductDAO extends JpaRepository<Product, Integer> {
 			+ " GROUP BY o.category.name" + " ORDER BY sum(o.price) DESC")
 	List<Report> getInventoryByCategory();
 
-	@Query("SELECT p FROM Product p LEFT JOIN p.discountProduct dp")
+	@Query("SELECT p FROM Product p  LEFT JOIN p.discountProduct dp")
 	Page<Product> findAllProductsAndDiscounts(Pageable pageable);
 
 	
@@ -38,16 +38,16 @@ public interface ProductDAO extends JpaRepository<Product, Integer> {
 	@Query("SELECT p FROM Product p WHERE p.category.id=?1 and p.available = True")
 	List<Product> findByCategoryId(String cid);
 
-	@Query("SELECT p FROM Product p ORDER BY p.name ASC ")
+	@Query("SELECT p FROM Product p WHERE p.available = 'true' ORDER BY p.name ASC ")
 	List<Product> sortProductAS();
 
-	@Query("SELECT p FROM Product p ORDER BY p.name Desc")
+	@Query("SELECT p FROM Product p WHERE p.available = 'true' ORDER BY p.name Desc")
 	List<Product> sortProductDesc();
 
-	@Query("SELECT p FROM Product p ORDER BY p.price ASC")
+	@Query("SELECT p FROM Product p WHERE p.available = 'true' ORDER BY p.price ASC")
 	List<Product> sortPriceLowToHight();
 
-	@Query("SELECT p FROM Product p ORDER BY p.price DESC")
+	@Query("SELECT p FROM Product p WHERE p.available = 'true' ORDER BY p.price DESC")
 	List<Product> sortPriceHightToLow();
 
 	@Query("SELECT COUNT(p) FROM Product p WHERE p.category.id = 'M' and p.available = True")
@@ -59,11 +59,12 @@ public interface ProductDAO extends JpaRepository<Product, Integer> {
 	@Query("SELECT COUNT(p) FROM Product p WHERE p.category.id = 'NK' and p.available = True")
 	Integer countNKProducts();
 
-	@Query(value = "SELECT * FROM Products ORDER BY NEWID()", nativeQuery = true)
+	@Query(value = "SELECT * FROM Products WHERE Products.available = 'true' ORDER BY NEWID()", nativeQuery = true)
+
 	List<Product> topProduct();
 	
 	
-	@Query(value = "SELECT TOP 4 * FROM products ORDER BY products.id DESC", nativeQuery = true)
+	@Query(value = "SELECT TOP 4 * FROM products WHERE Products.available = 'true' ORDER BY products.id DESC", nativeQuery = true)
 	List<Product> NewProduct();
 	
 	

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.poly.dao.AccountDAO;
 import com.poly.entity.Account;
+import com.poly.entity.Product;
 import com.poly.service.AccountService;
 
 
@@ -59,4 +60,39 @@ public class AccountServiceImpl implements AccountService{
 	        String username = authentication.getName();
 	        return dao.findByUsername(username);
 	}
+
+	@Override
+	public Account update(Account account) {
+		
+		return dao.save(account);
+	}
+
+	@Override
+	public Account create(Account account) {
+		// TODO Auto-generated method stub
+		return dao.save(account);
+	}
+
+	@Override
+	public void delete(String username) {
+		// TODO Auto-generated method stub
+		dao.deleteById(username);
+	}
+
+	@Override
+	public boolean updateProfileWithoutPhoto(String username, String newFullname, String newEmail) {
+		Account account = dao.findById(username).orElse(null);
+
+        if (account != null) {
+            // Cập nhật thông tin cá nhân
+            account.setFullname(newFullname);
+            account.setEmail(newEmail);
+            dao.save(account);
+            return true;
+        }
+
+        return false;
+    }
+
+	
 }
