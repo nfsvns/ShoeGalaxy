@@ -233,6 +233,7 @@ public class OrderController {
 
 			order.setDiscountCode(null); // May need a null check here for the discount object
 			order.setAccount(user);
+			order.setAvailable(false);
 			order.setNguoinhan(fullname);
 			order.setTongtien(total);
 			
@@ -310,8 +311,7 @@ public class OrderController {
 			order.setCreateDate(now);
 			order.setAddress(address2);
 			System.out.println(order.getAddress());
-			order.setDiscountCode(discount);
-
+            order.setAvailable(false);
 			order.setAccount(user);
 			order.setNguoinhan(fullname);
 			order.setTongtien(total);
