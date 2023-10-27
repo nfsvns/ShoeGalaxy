@@ -57,7 +57,7 @@ public class PaypalController {
 	public static final String CANCEL_URL = "pay/cancel";
 
 	@PostMapping("/paypal")
-	public String payment(Model model, @RequestParam double total, @RequestParam String address,@RequestParam String address2,
+	public String payment(Model model, @RequestParam double total, @RequestParam String address,@RequestParam Integer address2,
 			@RequestParam String fullname, @RequestParam(value = "productId", required = false) List<Integer> productID,
 			@RequestParam(value = "sizeId", required = false) List<Integer> size,
 			@RequestParam(value = "provinceLabel", required = false) String provinceLabel,
@@ -123,21 +123,24 @@ public class PaypalController {
 					"Số lượng đơn giày của bạn muốn mua lớn hơn số lượng tồn kho cho ít nhất một sản phẩm!");
 			return "cart.html";
 		}
+		
+		Optional<Address> a = addressDAO.findById(address2);
+		String addressNoCity = a.get().getStreet() + ", " + a.get().getWard() + ", " +  a.get().getDistrict();
 
 //		String fullAddress = address + ", " + wardLabel + ", " +  districtLabel;
 		 // Tìm Address bằng addressDetail
-        Optional<Address> addressOptional = addressDAO.findByAddressDetail(address2);
-        
-        // Kiểm tra xem address có tồn tại không
-        if (addressOptional.isPresent()) {
-            // Trả về giá trị city nếu address tồn tại
-             city = addressOptional.get().getCity();
-        } else {
-        	city = "Unknown City";
-        }
+//        Optional<Address> addressOptional = addressDAO.findByAddressDetail(address2);
+//        
+//        // Kiểm tra xem address có tồn tại không
+//        if (addressOptional.isPresent()) {
+//            // Trả về giá trị city nếu address tồn tại
+//             city = addressOptional.get().getCity();
+//        } else {
+//        	city = "Unknown City";
+//        }
 		
 		try {
-			Payment payment = service.createPayment(total, "USD", "paypal", "sale", "test", fullname, address2, city,
+			Payment payment = service.createPayment(total, "USD", "paypal", "sale", "test", fullname, addressNoCity, a.get().getCity(),
 					"http://localhost:8080/" + CANCEL_URL, "http://localhost:8080/" + SUCCESS_URL);
 			for (Links link : payment.getLinks()) {
 				if (link.getRel().equals("approval_url")) {
@@ -159,7 +162,7 @@ public class PaypalController {
 		List<Integer> productID = (List<Integer>) request.getSession().getAttribute("productID");
 		List<Integer> size = (List<Integer>) request.getSession().getAttribute("size");
 		List<Integer> count = (List<Integer>) request.getSession().getAttribute("count");
-		String address2 = (String) request.getSession().getAttribute("address2");
+		Integer address2 = (Integer) request.getSession().getAttribute("address2");
 		System.out.println(productID.size());
 		for (int i = 0; i < productID.size(); i++) {
 			Integer id = productID.get(i);
@@ -175,17 +178,19 @@ public class PaypalController {
 			SimpleDateFormat paypalDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 			Date date = paypalDateFormat.parse(paypalDateString);
 			Timestamp timestamp = new Timestamp(date.getTime());
-			 Optional<Address> addressOptional = addressDAO.findByAddressDetail(address2);	        
-		        // Kiểm tra xem address có tồn tại không
-		        if (addressOptional.isPresent()) {
-		            // Trả về giá trị city nếu address tồn tại
-		             city = addressOptional.get().getCity();
-		        } else {
-		        	city = "Unknown City";
-		        }
+			Optional<Address> a = addressDAO.findById(address2);
+			String addressNoCity = a.get().getStreet() + ", " + a.get().getWard() + ", " +  a.get().getDistrict();
+//			 Optional<Address> addressOptional = addressDAO.findByAddressDetail(address2);	        
+//		        // Kiểm tra xem address có tồn tại không
+//		        if (addressOptional.isPresent()) {
+//		            // Trả về giá trị city nếu address tồn tại
+//		             city = addressOptional.get().getCity();
+//		        } else {
+//		        	city = "Unknown City";
+//		        }
 			
 			// LẤY THÔNG TIN
-			String address = payment.getPayer().getPayerInfo().getShippingAddress().getLine1();
+			String address = payment.getPayer().getPayerInfo().getShippingAddress().getLine1() + ", " + a.get().getCity();
 //			String city = payment.getPayer().getPayerInfo().getShippingAddress().getCity();
 			String recipientName = payment.getPayer().getPayerInfo().getShippingAddress().getRecipientName();
 			String totalAmountString = payment.getTransactions().get(0).getAmount().getTotal();
@@ -199,7 +204,7 @@ public class PaypalController {
 				order.setAddress(address);
 				order.setAccount(user);
 				order.setNguoinhan(recipientName);
-				order.setCity(city);
+				order.setCity(a.get().getCity());
 				order.setAvailable(true);
 				try {
 					double totalAmountDouble = Double.parseDouble(totalAmountString);

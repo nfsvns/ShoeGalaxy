@@ -29,8 +29,9 @@ public class Address implements Serializable {
 	@Column(name = "address_detail")
 	String addressDetail;
 	String city;
-	
-	
+	String district;
+	String ward;
+	String street;
 	@ManyToOne
 	@JoinColumn(name = "account_username")
 	Account account;
