@@ -200,6 +200,7 @@ public class OrderController {
 
 			order.setDiscountCode(null); // May need a null check here for the discount object
 			order.setAccount(user);
+			order.setAvailable(false);
 			order.setNguoinhan(fullname);
 			order.setTongtien(total);
 			Order newOrder = orderDAO.saveAndFlush(order);
@@ -264,8 +265,7 @@ public class OrderController {
 			order.setCreateDate(now);
 			order.setAddress(address + ", " + wardLabel + ", " +  districtLabel + ", " +  provinceLabel);
 			System.out.println(order.getAddress());
-			order.setDiscountCode(discount);
-
+            order.setAvailable(false);
 			order.setAccount(user);
 			order.setNguoinhan(fullname);
 			order.setTongtien(total);

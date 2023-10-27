@@ -1,6 +1,7 @@
 
 /* @import url('https://fonts.googleapis.com/css?family=Muli:400,400i,700,700i'); */* /
-/* Footer */ 
+/* Footer */
+
 .f{
 	text-decoration: none;
 }
@@ -549,12 +550,11 @@ a {
       .site-navbar .site-navigation .site-menu .has-children > a {
         position: relative;
         padding-right: 20px; }
-        .site-navbar .site-navigation .site-menu .has-children > a:before {
-          position: absolute;
+       .site-navbar .site-navigation .site-menu .has-children > a:before {
+          justify-content:center;
           content: "\e313";
           font-size: 16px;
           top: 50%;
-          right: 0;
           -webkit-transform: translateY(-50%);
           -ms-transform: translateY(-50%);
           transform: translateY(-50%);

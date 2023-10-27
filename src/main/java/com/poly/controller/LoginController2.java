@@ -70,7 +70,7 @@ public class LoginController2 {
 			accountDAO.save(user);
 			model.addAttribute("message", "Đăng kí thành công");
 		}
-		return "register";
+		return "redirect:/login";
 	}
 
 }

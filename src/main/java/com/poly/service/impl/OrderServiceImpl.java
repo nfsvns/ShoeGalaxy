@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.poly.dao.OrderDAO;
 import com.poly.dao.OrderDetailDAO;
+import com.poly.entity.Account;
 import com.poly.entity.Order;
 import com.poly.entity.OrderDetail;
 import com.poly.entity.Product;
@@ -71,6 +72,18 @@ public class OrderServiceImpl implements OrderService{
 	public List<OrderDetail> getDetailDataById(Long id) {
 		// TODO Auto-generated method stub
 		return detaildao.findByOrderDetailId(id);
+	}
+
+	@Override
+	public List<Object[]> getShippedOrdersForCurrentAccount(String username) {
+		// TODO Auto-generated method stub
+		return dao.findShippedOrdersByAccount(username);
+	}
+
+	@Override
+	public List<Object[]> getUnshippedOrdersForCurrentAccount(String username) {
+		// TODO Auto-generated method stub
+		return dao.findUnshippedOrdersByAccount(username);
 	}
 
 }
