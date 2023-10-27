@@ -11,4 +11,5 @@ public interface ImageDAO extends JpaRepository<Image, Integer> {
 	
 	@Query("SELECT i FROM Image i WHERE i.product.id = :productId")
 	List<Image> findByProductId(Integer productId);
+	
 }
