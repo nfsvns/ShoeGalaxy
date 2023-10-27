@@ -26,10 +26,6 @@ public class LoginController2 {
 	@Autowired
 	UserService userService;
 	@Autowired
-
-	AuthorityDAO authorityDAO;
-	@Autowired 
-
 	RoleDAO roleDAO;
 
 	@RequestMapping("/login")
