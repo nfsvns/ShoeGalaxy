@@ -26,6 +26,10 @@ public class LoginController2 {
 	@Autowired
 	UserService userService;
 	@Autowired
+
+	AuthorityDAO authorityDAO;
+	@Autowired 
+
 	RoleDAO roleDAO;
 
 	@RequestMapping("/login")
@@ -82,13 +86,11 @@ public class LoginController2 {
 			user.setFullname(fullname);
 			user.setEmail(email);
 			accountDAO.save(user);
-			
-		
+
 			Authority authority = new Authority();
 			authority.setAccount(user);
-			
-			
-			Role role =  roleDAO.findById("CUST").orElse(null);
+			Role role = roleDAO.findById("CUST").get();
+
 			authority.setRole(role);
 			authorityDAO.save(authority);
 			model.addAttribute("message", "Đăng kí thành công");

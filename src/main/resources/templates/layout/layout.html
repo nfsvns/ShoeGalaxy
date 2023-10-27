@@ -124,37 +124,52 @@
 											<ul class="dropdown-menu">
 												<li
 													th:if="${#request.isUserInRole('DIRE') or #request.isUserInRole('STAF')}">
-													<a class="dropdown-item" th:href="@{/admin2}">Admin</a>
+													<a class="dropdown-item" th:href="@{/admin2}" th:text="#{nav.admin}">Admin</a>
 												</li>
-												<li><a class="dropdown-item" href="/ChangeInfomation">Thông
-														tin cá nhân</a></li>
 
-												<li><a class="dropdown-item" href="/TrangThai">Trạng
-														thái đơn hàng</a></li>
-												<li><a class="dropdown-item"
-													href="/ChangePassword.html">Thay đổi mật khẩu</a></li>
-												<li th:if="${#request.remoteUser != null}"><a
-													class="dropdown-item" href="/logout"
-													th:text="#{nav.logout}">Logout</a></li>
+												<li><a class="dropdown-item" href="/ChangeInfomation" th:text="#{nav.info}">Personal information</a></li>
+												<li><a class="dropdown-item" href="/TrangThai" th:text="#{nav.order}">Order status</a>
+												</li>
+												<li><a class="dropdown-item" href="/ChangePassword.html" th:text="#{nav.changepass}">Change password</a></li>
+												<li th:if="${#request.remoteUser != null}"><a class="dropdown-item"
+														href="/logout" th:text="#{nav.logout}">Logout</a>
+												</li>
+
 
 											</ul>
 
 										</div>
+										
 									</li>
 									<li><a href="/login" style="text-decoration: none"
 										th:unless="${#request.remoteUser != null}"> <span
 											class="icon icon-person"></span>
 									</a></li>
 									<li><a href="#" style="text-decoration: none"><span
-											class="icon icon-heart-o"></span></a></li>
-									<li><a style="text-decoration: none; display: flex"
-										href="/cart.html" class="site-cart "> <i
-											class="fa-solid fa-cart-shopping c"></i>
+
+												class="icon icon-heart-o c"></span></a></li>
+												
+									
+									<li><a style="text-decoration: none;display: flex" href="/cart.html"
+											class="site-cart ">
+											<i class="fa-solid fa-cart-shopping c"></i>
 											<p class="cart">{{cart.count}}</p>
-									</a></li>
+										</a> </li>
+										<li>
+										<div style="text-decoration: none" class="dropdown">
+											<span data-bs-toggle="dropdown"><i class="fa-solid fa-globe c"></i></span>
+											<ul class="dropdown-menu">
+												<li><a class="dropdown-item" href="?lang=vi">Tiếng
+														Việt</a></li>
+												<li><a class="dropdown-item" href="?lang=en">English</a></li>
+											</ul>
+										</div>
+									</li>
+
 									<li class="d-inline-block d-md-none ml-md-0"><a href="#"
 										class="site-menu-toggle js-menu-toggle"><span
 											class="icon-menu"></span></a></li>
+											
 								</ul>
 							</div>
 						</div>
@@ -207,10 +222,7 @@
 								href="?lang=en" th:attr="onclick='|${showVietnamese} = true|'">English</a>
 							</li>
 						</th:block> -->
-						<li class="has-children"><a href="?lang=vi">Tiếng Việt</a>
-							<ul class="dropdown">
-								<li><a href="?lang=en">English</a></li>
-							</ul></li>
+						
 
 					</ul>
 				</div>
