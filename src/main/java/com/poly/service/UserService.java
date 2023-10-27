@@ -31,7 +31,9 @@ public class UserService implements UserDetailsService{
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		try {
-			Account account = accDAO.findById(username.toUpperCase()).get();
+			
+			Account account = accDAO.findByUsername(username);
+			
 			// tạo UserDetail từ Account
 			String password = account.getPassword();
 			String[] roles = account.getAuthorities().stream()

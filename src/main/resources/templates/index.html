@@ -59,7 +59,7 @@
 	<div class="container">
 		<div class="row justify-content-center">
 			<div class="col-md-7 site-section-heading text-center pt-2">
-				<h2>Big Sale</h2>
+				<h2 th:text="#{body.bigsale}">Big Sale</h2>
 			</div>
 		</div>
 		<div class="row " >
@@ -109,7 +109,7 @@
 	<div class="container">
     <div class="row justify-content-center">
         <div class="col-md-7 site-section-heading text-center pt-4">
-            <h2>Popular Shoe</h2>
+            <h2 th:text="#{body.popular}">Popular Shoe</h2>
         </div>
     </div>
 
@@ -167,7 +167,7 @@
 	<div class="container mt-3">
 		<div class="row justify-content-center">
 			<div class="col-md-7 site-section-heading text-center pt-4">
-				<h2>New Products</h2>
+				<h2 th:text="#{body.product}">New Products</h2>
 			</div>
 		</div>
 
@@ -182,7 +182,7 @@
 							th:src="@{|/images/${newProduct.images[0].image}|}">
 						</a>
 						<div class="discount-percentage position-absolute">
-						     <i class="text-danger">NEW</i>
+						     <i class="text-danger" th:text="#{body.new}">NEW</i>
 							<i class="text-danger"
 								th:if="${newProduct.discountProduct != null and not #lists.isEmpty(newProduct.discountProduct) and (T(java.time.LocalDate).now().isEqual(newProduct.discountProduct[0].start_Date) or T(java.time.LocalDate).now().isEqual(newProduct.discountProduct[0].end_Date) 
 								or (T(java.time.LocalDate).now().isAfter(newProduct.discountProduct[0].start_Date) and T(java.time.LocalDate).now().isBefore(newProduct.discountProduct[0].end_Date)) )}"></i>
@@ -229,7 +229,7 @@
 
 		<div class="row justify-content-center">
 			<div class="col-md-7 site-section-heading text-center pt-4">
-				<h2>Local Collections</h2>
+				<h2 th:text="#{body.collection}">Local Collections</h2>
 			</div>
 		</div>
 		<div class="carousel-inner">

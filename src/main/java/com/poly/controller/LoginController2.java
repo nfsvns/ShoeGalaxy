@@ -9,7 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.poly.dao.AccountDAO;
+import com.poly.dao.AuthorityDAO;
+import com.poly.dao.RoleDAO;
 import com.poly.entity.Account;
+import com.poly.entity.Authority;
+import com.poly.entity.Role;
 import com.poly.service.UserService;
 
 @Controller
@@ -19,6 +23,10 @@ public class LoginController2 {
 	AccountDAO accountDAO;
 	@Autowired
 	UserService userService;
+	@Autowired
+	AuthorityDAO authorityDAO;
+	@Autowired 
+	RoleDAO roleDAO;
 
 	@RequestMapping("/login")
 	public String loginForm(Model model) {
@@ -73,6 +81,11 @@ public class LoginController2 {
 			user.setFullname(fullname);
 			user.setEmail(email);
 			accountDAO.save(user);
+			Authority authority = new Authority();
+			authority.setAccount(user);
+			Role role = roleDAO.findById("CUST").get();
+			authority.setRole(role);
+			authorityDAO.save(authority);
 			model.addAttribute("message", "Đăng kí thành công");
 		}
 		return "register";
