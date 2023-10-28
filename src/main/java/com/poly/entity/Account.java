@@ -28,7 +28,7 @@ public class Account implements Serializable {
 	@JsonIgnore
 	@OneToMany(mappedBy = "account")
 	List<Order> orders;
-	
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "account")
 	List<Address> addresses;
@@ -36,5 +36,13 @@ public class Account implements Serializable {
 	@JsonIgnore
 	@OneToMany(mappedBy = "account", fetch = FetchType.EAGER)
 	List<Authority> authorities;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "account")
+	private List<Comment> comments;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "account")
+	private List<Reply> reply;
 
 }

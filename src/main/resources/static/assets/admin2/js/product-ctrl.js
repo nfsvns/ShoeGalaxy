@@ -2,6 +2,7 @@ app.controller("product-ctrl", function($scope, $http) {
 	$scope.items = [];
 	$scope.form = {};
 	$scope.formImg = {};
+	$scope.productCounts = {};
 
 	$scope.initialize = function() {
 		$http.get("/rest/categories").then(resp => {
@@ -101,6 +102,7 @@ app.controller("product-ctrl", function($scope, $http) {
 				console.log("Error", error);
 			});
 	}
+
 
 	$scope.editImg = function(image) {
 		$scope.formImg = angular.copy(image);
@@ -236,6 +238,7 @@ app.controller("product-ctrl", function($scope, $http) {
 		}
 	};
 
+
 	$scope.pager = {
 		page: 0,
 		size: 10,
@@ -266,5 +269,131 @@ app.controller("product-ctrl", function($scope, $http) {
 		}
 	}
 
+	/*$scope.getProductCounts = function() {
+		$http.get('http://localhost:8080/rest/products/counts').then(function(response) {
+			$scope.productCounts = response.data;
+			renderChart();
+		}, function(error) {
+			console.error('Error fetching product counts', error);
+		});
+	};
+	$scope.getProductCounts();*/
+
+	/*function renderChart() {
+		var labels = Object.keys($scope.productCounts);
+		var counts = Object.values($scope.productCounts);
+
+		var data = {
+			labels: labels,
+			datasets: [{
+				data: counts,
+				backgroundColor: [
+					'#FF6384',
+					'#36A2EB',
+					'#FFCE56'
+				]
+			}]
+		};
+
+		var ctx = document.getElementById('myChart').getContext('2d');
+		var myChart = new Chart(ctx, {
+			type: 'pie',
+			data: data
+		});
+	}*/
+
+/*	$http.get("/rest/products/quantities")
+		.then(function(response) {
+			console.log(response.data); // Log the response data to check for any issues
+
+			var data = response.data;
+			var labelsBar = data.map(function(product) {
+				return product.name;
+			});
+			var valuesBar = data.map(function(product) {
+				return product.quantity;
+			});
+			var backgroundColorsBar = [
+				'#FF6384',
+				'#36A2EB',
+				'#FFCE56',
+				'#33FF99',
+				'#FF99FF',
+				'#9966FF',
+				'#FF9933',
+				'#99CCFF',
+				'#FF6699',
+				'#66FF99',
+				'#FFCC99',
+				'#66CCFF',
+				'#FF99CC',
+				'#99FFCC',
+				'#FF6666'
+			]; // Colors can be customized
+
+			var ctxBar = document.getElementById('myChartBar').getContext('2d');
+			var myChartBar = new Chart(ctxBar, {
+				type: 'bar', // Change the type to 'bar' for quantities
+				data: {
+					labels: labelsBar,
+					datasets: [{
+						data: valuesBar,
+						backgroundColor: backgroundColorsBar
+					}]
+				}
+			});
+		});
+*/
+	$http.get("http://localhost:8080/rest/products/counts")
+		.then(function(response) {
+			var data = response.data;
+			var labelsPie = Object.keys(data);
+			var valuesPie = Object.values(data);
+			var backgroundColorsPie = ['#FF6384', '#36A2EB', '#FFCE56']; // Colors can be customized
+
+			var ctxPie = document.getElementById('myChartPie').getContext('2d');
+			var myChartPie = new Chart(ctxPie, {
+				type: 'pie', // Change the type to 'pie' for counts
+				data: {
+					labels: labelsPie,
+					datasets: [{
+						data: valuesPie,
+						backgroundColor: backgroundColorsPie
+					}]
+				}
+			});
+		});
+
+
+
+
+
+
+
+
+	/*	var data = {
+			labels: ["Nike", "Adidas", "Puma"],
+			datasets: [{
+				data: [30, 20, 15, 10],
+				backgroundColor: [
+					"#FF6384",
+					"#36A2EB",
+					"#FFCE56"
+		
+				]
+			}]
+		};
+		
+		var ctx = document.getElementById('myCharttt').getContext('2d');
+		var myChart = new Chart(ctx, {
+			type: 'pie',
+			data: data
+		});
+	*/
 	$scope.initialize();
+
+
+
+
+
 });
