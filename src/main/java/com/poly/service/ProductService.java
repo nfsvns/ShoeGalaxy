@@ -6,25 +6,36 @@ import org.springframework.data.domain.Page;
 
 import com.poly.entity.Product;
 
-
 public interface ProductService {
-	public List<Product> findAll() ;
-	
-	public Product findById(Integer id) ;
+	public List<Product> findAll();
 
-	public List<Product> findByCategoryId(String cid) ;
+	public Product findById(Integer id);
 
-	public Product create(Product product) ;
+	public List<Product> findByCategoryId(String cid);
 
-	public Product update(Product product) ;
+	public Product create(Product product);
 
-	public void delete(Integer id) ;
-	
+	public Product update(Product product);
+
+	public void delete(Integer id);
+
 	public List<Product> sortProductASC();
+
 	public List<Product> sortProductDesc();
-	
+
 	public List<Product> sortPriceLowToHight();
+
 	public List<Product> sortPriceHightToLow();
-    public Product deletu(Product product);
+
+	public List<Object[]> getProductQuantity();
+
+	public Product deletu(Product product);
+
 	public Page<Product> findDelete();
+
+	Integer countMlBProducts();
+
+	Integer countADProducts();
+
+	Integer countNKProducts();
 }

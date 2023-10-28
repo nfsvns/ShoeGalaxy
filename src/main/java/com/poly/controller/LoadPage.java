@@ -23,6 +23,8 @@ import com.poly.dao.ImageDAO;
 import com.poly.dao.OrderDAO;
 import com.poly.dao.OrderDetailDAO;
 import com.poly.dao.ProductDAO;
+
+import com.poly.dao.ReplyDAO;
 import com.poly.dao.ShoppingCartDAO;
 import com.poly.entity.DiscountProduct;
 import com.poly.entity.Image;
@@ -49,6 +51,10 @@ public class LoadPage {
 	ImageDAO imageDAO;
 	@Autowired
 	OrderDetailDAO orderDetailDAO;
+	
+
+	@Autowired
+	ReplyDAO replyDAO;
 
 	@GetMapping({ "/contact.html", "/about.html", "/ChangeInfomation.html","/ChangeInfomation2.html" , "/TrangThai.html", "/ChangePassword.html"})
 	public String loadPage(HttpServletRequest request) {
@@ -90,6 +96,7 @@ public class LoadPage {
 		model.addAttribute("products", products);
 		model.addAttribute("discountProducts", discountProducts);
 		model.addAttribute("orderDetails", orderDetails);
+		
 
 		return "index";
 	}

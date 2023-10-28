@@ -27,7 +27,7 @@
 	<link id="pagestyle" href="../admin2/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
 	<!-- angular js -->
 	 <link rel="stylesheet" href="css/history.css">  
-	  
+	 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
    
@@ -75,22 +75,19 @@
 
 						</div> <span class="nav-link-text ms-1">Billing</span>
 				</a></li>
-				
+
 				<li class="nav-item"><a class="nav-link " href="#!product">
 						<div
 							class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
 							<i class="ni ni-credit-card text-success text-sm opacity-10"></i>
 						</div> <span class="nav-link-text ms-1">Product</span>
-				</a></li>		
-				<li class="nav-item">
-					<a class="nav-link " href="#!history">
+				</a></li>
+				<li class="nav-item"><a class="nav-link " href="#!history">
 						<div
 							class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
 							<i class="ni ni-app text-info text-sm opacity-10"></i>
-						</div>
-						<span class="nav-link-text ms-1">History</span>
-					</a>
-				</li>
+						</div> <span class="nav-link-text ms-1">History</span>
+				</a></li>
 
 				<li class="nav-item"><a class="nav-link " href="#!discount">
 						<div
@@ -118,10 +115,20 @@
 						</div> <span class="nav-link-text ms-1">Size</span>
 				</a></li>
 
+
+				<li class="nav-item"><a class="nav-link " href="#!category">
+						<div
+							class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+							<i class="fa-solid fa-code-branch fa-beat fa-2xl" style="color: #e21232;"></i>
+						</div> <span class="nav-link-text ms-1">Category</span>
+				</a></li>
+
+
 				<li class="nav-item"><a class="nav-link " href="#!authority">
 						<div
 							class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-							<i class="fa-solid fa-shoe-prints fa-beat fa-2xl" style="color: #f91010;"></i>
+							<i class="fa-solid fa-shoe-prints fa-beat fa-2xl"
+								style="color: #f91010;"></i>
 						</div> <span class="nav-link-text ms-1">Authority</span>
 				</a></li>
 				
@@ -142,22 +149,19 @@
 						class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Account
 						pages</h6>
 				</li>
-				<li class="nav-item"><a class="nav-link "
-					href="#!profile">
+				<li class="nav-item"><a class="nav-link " href="#!profile">
 						<div
 							class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
 							<i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
 						</div> <span class="nav-link-text ms-1">Profile</span>
 				</a></li>
-				<li class="nav-item"><a class="nav-link "
-					href="../signin">
+				<li class="nav-item"><a class="nav-link " href="../signin">
 						<div
 							class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
 							<i class="ni ni-single-copy-04 text-warning text-sm opacity-10"></i>
 						</div> <span class="nav-link-text ms-1">Sign In</span>
 				</a></li>
-				<li class="nav-item"><a class="nav-link "
-					href="../signup">
+				<li class="nav-item"><a class="nav-link " href="../signup">
 						<div
 							class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
 							<i class="ni ni-collection text-info text-sm opacity-10"></i>
@@ -297,7 +301,7 @@
 	<script src="../admin2/js/plugins/smooth-scrollbar.min.js"></script>
 	<!-- Chart with index label -->
 	<script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
-	
+
 	<!-- Github buttons -->
 	<script async defer src="https://buttons.github.io/buttons.js"></script>
 	<!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
@@ -313,6 +317,7 @@
 	<script src="../admin2/js/size-ctrl.js"></script>
 	<script src="../admin2/js/product-ctrl.js"></script>
 	<script src="../admin2/js/authority-ctrl.js"></script>
+	<script src="../admin2/js/category-ctrl.js"></script>
 	<script src="../admin2/js/account-ctrl.js"></script>
 
 </body>
