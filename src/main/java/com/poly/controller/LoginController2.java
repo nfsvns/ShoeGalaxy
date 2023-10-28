@@ -25,9 +25,6 @@ public class LoginController2 {
 	AuthorityDAO authorityDAO;
 	@Autowired
 	UserService userService;
-	@Autowired
-
-	AuthorityDAO authorityDAO;
 	@Autowired 
 
 	RoleDAO roleDAO;
