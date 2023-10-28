@@ -1,30 +1,30 @@
 package com.poly.service.impl;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import javax.servlet.ServletContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.poly.service.UploadService;
 
-
 @Service
-public class UploadServiceImpl implements UploadService{
+public class UploadServiceImpl implements UploadService {
 	@Autowired
 	ServletContext app;
 
 	public File save(MultipartFile file, String folder) {
-		File dir = new File(app.getRealPath("/" + folder));
-		if(!dir.exists()) {
-			dir.mkdirs();
-		}
-		String s = System.currentTimeMillis() + file.getOriginalFilename();
-		String name = Integer.toHexString(s.hashCode()) + s.substring(s.lastIndexOf("."));
 		try {
-			File savedFile = new File(dir, name);
+			File dir = new File(app.getRealPath("/" + folder));
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+			String originalFileName = file.getOriginalFilename();
+			File savedFile = new File(dir, originalFileName);
 			file.transferTo(savedFile);
 			System.out.println(savedFile.getAbsolutePath());
 			return savedFile;

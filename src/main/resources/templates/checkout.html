@@ -129,13 +129,23 @@
 										<div class="col-md-12">
 											<h4>Thông tin:
 											</h4>
-											<select name="address2" id="address2">
-												<option th:each="address : ${userAddresses}"
-													th:value="${address.addressDetail}"
-													th:text="${address.addressDetail}"
-												></option>
+											<select class="form-select" name="address2" id="address2" >
+												<!--<option selected disabled>Open address menu</option>-->
+												<!-- Kiểm tra điều kiện userAddresses null hoặc trống -->
+												<th:block
+													th:if="${userAddresses == null or #lists.isEmpty(userAddresses)}">
+													<option value="" disabled>Vui lòng thêm địa chỉ</option>
+												</th:block>
+												<!-- Nếu userAddresses không null và không trống, hiển thị danh sách địa chỉ -->
+												<th:block
+													th:if="${userAddresses != null and not #lists.isEmpty(userAddresses)}">
+													<option th:each="address : ${userAddresses}"
+														th:value="${address.id}" th:text="${address.addressDetail}">
+													</option>
 											</select>
-											
+
+
+
 										</div>
 
 										<div class="col-md-12">
@@ -176,13 +186,16 @@
 											</select>
 
 
-											<label for="c_address" class="text-black">Address <span
+											<label for="c_address" class="text-black">Street Name <span
 													class="text-danger">*</span></label> <input type="text"
-												class="form-control" id="address" name="address" placeholder="Address">
+												class="form-control" id="address" name="address"
+												placeholder="Street Name">
 
 											<button class="btn my-3  py-3 btn-block" formaction="/addAddress"
-											formmethod="post">Thêm</button>			
+												formmethod="post">Thêm</button>
 										</div>
+
+
 
 
 
@@ -249,7 +262,7 @@
 			}
 		});
 
-		
+
 	</script>
 </body>
 

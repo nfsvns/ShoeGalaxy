@@ -23,6 +23,9 @@ import com.poly.dao.ImageDAO;
 import com.poly.dao.OrderDAO;
 import com.poly.dao.OrderDetailDAO;
 import com.poly.dao.ProductDAO;
+
+import com.poly.dao.ReplyDAO;
+import com.poly.dao.ShoppingCartDAO;
 import com.poly.entity.DiscountProduct;
 import com.poly.entity.Image;
 import com.poly.entity.OrderDetail;
@@ -46,8 +49,12 @@ public class LoadPage {
 	ImageDAO imageDAO;
 	@Autowired
 	OrderDetailDAO orderDetailDAO;
+	
 
-	@GetMapping({ "/contact.html", "/about.html", "/ChangeInfomation.html", "/TrangThai.html", "/ChangePassword.html" })
+	@Autowired
+	ReplyDAO replyDAO;
+
+	@GetMapping({ "/contact.html", "/about.html", "/ChangeInfomation.html","/ChangeInfomation2.html" , "/TrangThai.html", "/ChangePassword.html"})
 	public String loadPage(HttpServletRequest request) {
 		String path = request.getServletPath();
 
@@ -58,11 +65,14 @@ public class LoadPage {
 			return "about";
 		} else if ("/ChangeInfomation.html".equals(path)) {
 			return "ChangeInfomation";
-		} else if ("/TrangThai.html".equals(path)) {
+		} else if ("/ChangeInfomation2.html".equals(path)) {
+			return "ChangeInfomation2";
+		}else if ("/TrangThai.html".equals(path)) {
 			return "TrangThai";
 		} else if ("/ChangePassword.html".equals(path)) {
 			return "ChangePassword";
 		}
+		 
 		return "error";
 	}
 
@@ -75,12 +85,15 @@ public class LoadPage {
 		List<DiscountProduct> discountProducts = dpDAO.findAll();
 
 		List<Product> newProduct = productDAO.NewProduct();
+		
+
 		model.addAttribute("pro", pro);
 		model.addAttribute("newProduct", newProduct);
 		model.addAttribute("images", images);
 		model.addAttribute("products", products);
 		model.addAttribute("discountProducts", discountProducts);
 		model.addAttribute("orderDetails", orderDetails);
+		
 
 		return "index";
 	}

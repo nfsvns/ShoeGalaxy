@@ -67,101 +67,105 @@ public class OrderController {
 	@Autowired
 	AddressDAO addressDAO;
 	String city ;
+	String fulladdress;
 
 	@RequestMapping("/check")
-	public String checkout(Model model, @RequestParam(value = "totalAmount", required = false) String totalAmount, HttpServletRequest request) {
+	public String checkout(Model model, @RequestParam(value = "totalAmount", required = false) String totalAmount,
+			HttpServletRequest request) {
 
 		String username = request.getRemoteUser();
 		Account user = accountDAO.findById(username).orElse(null);
 	
 		 List<Address> userAddresses = addressDAO.getAddressesByUsername(username);
-		   model.addAttribute("userAddresses", userAddresses);
-		model.addAttribute("user",user);
+		 model.addAttribute("userAddresses", userAddresses);
+		 model.addAttribute("user",user);
 		return "checkout.html";
 	}
-	
 
-	
 	@RequestMapping("/searchCodee")
 	public String searchDiscountCode(Model model, @RequestParam(value = "code", required = false) String code,
-	        @RequestParam(value = "totalAmount", required = false) String totalAmount,
-	        @RequestParam(value = "IdCode", required = false) Integer IdCode) {
-	    List<DiscountCode> discountCodes = new ArrayList<>();
+			@RequestParam(value = "totalAmount", required = false) String totalAmount,
+			@RequestParam(value = "IdCode", required = false) Integer IdCode) {
+		List<DiscountCode> discountCodes = new ArrayList<>();
 
-	    if (code != null && !code.isEmpty()) {
-	        discountCodes = dcDAO.findBykeyword(code);
+		if (code != null && !code.isEmpty()) {
+			discountCodes = dcDAO.findBykeyword(code);
 
-	        // Kiểm tra ngày hết hạn
-	        LocalDate currentDate = LocalDate.now();
-	        discountCodes.removeIf(dc -> (dc.getEnd_Date() != null && dc.getEnd_Date().isBefore(currentDate))
-	                || (dc.getStart_Date() != null && dc.getStart_Date().isAfter(currentDate)));
+			// Kiểm tra ngày hết hạn
+			LocalDate currentDate = LocalDate.now();
+			// check nếu như ngày hiện tại nằm trong khoảng thời gian. và ngày hiện tại bằng
+			// ngày bắt đầu và ngày hiện tại cũng bằng kết thúc
+			discountCodes.removeIf(dc -> (dc.getEnd_Date() != null && dc.getEnd_Date().isBefore(currentDate))
+					|| (dc.getStart_Date() != null && dc.getStart_Date().isAfter(currentDate)));
 
-	        if (!discountCodes.isEmpty()) {
-	            // Tìm thấy mã giảm giá
-	            DiscountCode foundDiscountCode = discountCodes.get(0);
+			if (!discountCodes.isEmpty()) {
+				// Tìm thấy mã giảm giá
 
-	            // Check if the quantity is 0
-	            if (foundDiscountCode.getQuantity() == 0) {
-	                model.addAttribute("messages", "Mã giảm giá này đã hết");
-	                return "checkout.html";
-	            }
+				DiscountCode foundDiscountCode = discountCodes.get(0);
 
-	            // Tính toán giá trị mới
-	            double cartAmount = Double.parseDouble(totalAmount); // Thay thế bằng giá trị thực tế từ HTML
-	            double discountAmount = foundDiscountCode.getDiscountAmount(); // Thay thế bằng phần trăm thực tế
+				// Check if the quantity is 0
+				if (foundDiscountCode.getQuantity() == 0) {
+					model.addAttribute("messages", "Mã giảm giá này đã hết");
+					return "checkout.html";
+				}
 
-	            int idCode = foundDiscountCode.getId();
-	            double calculatedValue = cartAmount - (cartAmount * (discountAmount / 100.0));
+				// Tính toán giá trị mới
+				double cartAmount = Double.parseDouble(totalAmount); // Thay thế bằng giá trị thực tế từ HTML
+				double discountAmount = foundDiscountCode.getDiscountAmount(); // Thay thế bằng phần trăm thực tế
 
-	            // Truyền giá trị mới vào view
-	            model.addAttribute("calculatedValue", calculatedValue);
-	            model.addAttribute("cartAmount", cartAmount);
-	            model.addAttribute("idCode", idCode);
-	            model.addAttribute("messages", "Áp dụng mã giảm giá thành công!");
-	        } else {
-	            // Không tìm thấy mã giảm giá hoặc đã hết hạn
-	            model.addAttribute("messages", "Mã giảm giá không hợp lệ, chưa đến thời gian bắt đầu hoặc đã hết hạn");
-	        }
-	    }
+				int idCode = foundDiscountCode.getId();
+				double calculatedValue = cartAmount - (cartAmount * (discountAmount / 100.0));
 
-	    model.addAttribute("code", code);
-	    model.addAttribute("discountCodes", discountCodes);
-	    return "checkout.html";
+				// Truyền giá trị mới vào view
+				model.addAttribute("calculatedValue", calculatedValue);
+				model.addAttribute("cartAmount", cartAmount);
+				model.addAttribute("idCode", idCode);
+				model.addAttribute("messages", "Áp dụng mã giảm giá thành công!");
+			} else {
+				// Không tìm thấy mã giảm giá hoặc đã hết hạn
+				model.addAttribute("messages", "Mã giảm giá không hợp lệ, chưa đến thời gian bắt đầu hoặc đã hết hạn");
+			}
+		}
+
+		model.addAttribute("code", code);
+		model.addAttribute("discountCodes", discountCodes);
+		return "checkout.html";
 	}
-	
+
 	@PostMapping("/addAddress")
 	public String addAddress(Model model, @RequestParam String address,
 			@RequestParam(value = "provinceLabel", required = false) String provinceLabel,
-            @RequestParam(value = "districtLabel", required = false) String districtLabel,
-            @RequestParam(value = "wardLabel", required = false) String wardLabel,
-            HttpServletRequest request) {
+			@RequestParam(value = "districtLabel", required = false) String districtLabel,
+			@RequestParam(value = "wardLabel", required = false) String wardLabel,
+			HttpServletRequest request) {
 		String username = request.getRemoteUser();
 		Account user = accountDAO.findById(username).orElse(null);
-		
+
 		Address ad = new Address();
 		ad.setAccount(user);
-		ad.setAddressDetail(address + ", " + wardLabel + ", " +  districtLabel + ", " +  provinceLabel);
+		ad.setAddressDetail(address + ", " + wardLabel + ", " + districtLabel + ", " + provinceLabel);
 		ad.setCity(provinceLabel);
+		ad.setDistrict(districtLabel);
+		ad.setWard(wardLabel);
+		ad.setStreet(address);
 		addressDAO.save(ad);
 		return "redirect:/check";
 	}
 
-
 	@PostMapping("checkout.html")
-	public String checkout1(Model model, @RequestParam String address, @RequestParam String[] productId,@RequestParam String address2,
+	public String checkout1(Model model, @RequestParam String address, @RequestParam String[] productId,@RequestParam Integer address2,
 			@RequestParam String[] sizeId, @RequestParam String[] countProduct, @RequestParam String email,
 			@RequestParam String fullname, @RequestParam double total, HttpServletRequest request,
-			 @RequestParam(value = "provinceLabel", required = false) String provinceLabel,
-             @RequestParam(value = "districtLabel", required = false) String districtLabel,
-             @RequestParam(value = "wardLabel", required = false) String wardLabel,
-        
+			@RequestParam(value = "provinceLabel", required = false) String provinceLabel,
+			@RequestParam(value = "districtLabel", required = false) String districtLabel,
+			@RequestParam(value = "wardLabel", required = false) String wardLabel,
+
 			@RequestParam(value = "productId", required = false) List<Integer> productID,
 			@RequestParam(value = "sizeId", required = false) List<Integer> size,
 			@RequestParam(value = "countProduct", required = false) List<Integer> count,
 			@RequestParam(value = "IdCode", required = false) Integer IdCode,
 			@RequestParam(value = "priceTotal", required = false) List<Double> priceTotal) {
-		
-		
+
 		boolean allProductsEnough = true; // Biến để theo dõi xem tất cả sản phẩm có đủ số lượng không
 		// Tạo một danh sách để lưu trạng thái kiểm tra số lượng của từng sản phẩm
 		List<Boolean> productStatus = new ArrayList<>();
@@ -216,49 +220,53 @@ public class OrderController {
 			model.addAttribute("messages", "Số lượng đơn giày của bạn muốn mua lớn hơn số lượng sản phẩm tồn kho!");
 			return "cart.html";
 		}
+
 		if (IdCode == null) {
 			// Create a new order
 			Order order = new Order();
 			Timestamp now = new Timestamp(new Date().getTime());
 			String username = request.getRemoteUser();
 			Account user = accountDAO.findById(username).orElse(null);
-
 			order.setCreateDate(now);
-//			order.setAddress(address + ", " + wardLabel + ", " +  districtLabel + ", " +  provinceLabel);
-			order.setAddress(address2);
+			
+			Optional<Address> a = addressDAO.findById(address2);
+			fulladdress = a.get().getStreet() + ", " + a.get().getWard() + ", " +  a.get().getDistrict() + ", " +  a.get().getCity();
+			order.setAddress(fulladdress);
 			System.out.println(order.getAddress());
 
 			order.setDiscountCode(null); // May need a null check here for the discount object
 			order.setAccount(user);
+			order.setAvailable(false);
 			order.setNguoinhan(fullname);
 			order.setTongtien(total);
+			order.setAvailable(false);
 			
 			 // Tìm Address bằng addressDetail
-	        Optional<Address> addressOptional = addressDAO.findByAddressDetail(address2);
-	        
-	        // Kiểm tra xem address có tồn tại không
-	        if (addressOptional.isPresent()) {
-	            // Trả về giá trị city nếu address tồn tại
-	             city = addressOptional.get().getCity();
-	        } else {
-	        	city = "Unknown City";
-	        }
+//	        Optional<Address> addressOptional = addressDAO.findByAddressDetail(address2);
+//	        
+//	        // Kiểm tra xem address có tồn tại không
+//	        if (addressOptional.isPresent()) {
+//	            // Trả về giá trị city nếu address tồn tại
+//	             city = addressOptional.get().getCity();
+//	        } else {
+//	        	city = "Unknown City";
+//	        }
    
-			order.setCity(city);
+			order.setCity(a.get().getCity());
 			Order newOrder = orderDAO.saveAndFlush(order);
 
 			// ADD OrderDetail
 			for (int i = 0; i < productId.length; i++) {
-			    Product product = productDAO.findById(Integer.parseInt(productId[i])).orElse(null);
+				Product product = productDAO.findById(Integer.parseInt(productId[i])).orElse(null);
 
 				if (product != null) {
 					OrderDetail orderDetail = new OrderDetail();
 					orderDetail.setOrder(newOrder);
 					orderDetail.setProduct(product);
 					orderDetail.setSize(Integer.parseInt(sizeId[i]));
-				       orderDetail.setPrice(priceTotal.get(i));
+					orderDetail.setPrice(priceTotal.get(i));
 					orderDetail.setQuantity(Integer.parseInt(countProduct[i]));
-					
+
 					orderDetailDAO.save(orderDetail);
 				}
 			}
@@ -281,7 +289,7 @@ public class OrderController {
 						quantityDiscountCode.setQuantity(newQuantity);
 						// Lưu lại đối tượng đã cập nhật vào cơ sở dữ liệu
 						dcDAO.save(quantityDiscountCode);
-					
+
 					}
 				} catch (Exception e) {
 					System.out.println("Lỗi khi cập nhật trường quantity: " + e.getMessage());
@@ -303,31 +311,20 @@ public class OrderController {
 			Account user = accountDAO.findById(username).orElse(null);
 			// Update the discount code
 			DiscountCode discount = dcDAO.findById(IdCode).orElse(null);
-
 			order.setCreateDate(now);
-			order.setAddress(address2);
+			
+			Optional<Address> a = addressDAO.findById(address2);
+			fulladdress = a.get().getStreet() + ", " + a.get().getWard() + ", " +  a.get().getDistrict() + ", " +  a.get().getCity();
+			order.setAddress(fulladdress);
 			System.out.println(order.getAddress());
-			order.setDiscountCode(discount);
-
+            order.setAvailable(false);
 			order.setAccount(user);
 			order.setNguoinhan(fullname);
 			order.setTongtien(total);
-			 // Tìm Address bằng addressDetail
-	        Optional<Address> addressOptional = addressDAO.findByAddressDetail(address2);
-	        
-	        // Kiểm tra xem address có tồn tại không
-	        if (addressOptional.isPresent()) {
-	            // Trả về giá trị city nếu address tồn tại
-	             city = addressOptional.get().getCity();
-	             System.out.println(city + "****************************");
-	        } else {
-	        	city = "Unknown City";
-	        }
-			order.setCity(city);
+			order.setAvailable(false);
+			order.setCity(a.get().getCity());
 			Order newOrder = orderDAO.saveAndFlush(order);
 
-			
-		
 			// ADD OrderDetail
 			for (int i = 0; i < productId.length; i++) {
 				Product product = productDAO.findById(Integer.parseInt(productId[i])).orElse(null);
@@ -336,7 +333,7 @@ public class OrderController {
 					orderDetail.setOrder(newOrder);
 					orderDetail.setProduct(product);
 					orderDetail.setSize(Integer.parseInt(sizeId[i]));
-				       orderDetail.setPrice(priceTotal.get(i));
+					orderDetail.setPrice(priceTotal.get(i));
 					orderDetail.setQuantity(Integer.parseInt(countProduct[i]));
 					orderDetailDAO.save(orderDetail);
 				}
@@ -352,17 +349,17 @@ public class OrderController {
 		// Tạo nội dung email
 		StringBuilder bodyBuilder = new StringBuilder();
 		bodyBuilder.append("Tổng hóa đơn của ").append(fullname).append(" là: $").append(total).append(" tại địa chỉ: ")
-				.append(address2).append("<br><br>");
+				.append(fulladdress).append("<br><br>");
 
 		// Tạo bảng với CSS
 		bodyBuilder.append("<table style=\"border-collapse: collapse;\">");
 		bodyBuilder.append(
 				"<tr>"
-				+ "<th style=\"border: 1px solid black; padding: 8px;\">Sản phẩm</th>"
-				+ "<th style=\"border: 1px solid black; padding: 8px;\">Số lượng</th>"
-				+ "<th style=\"border: 1px solid black; padding: 8px;\">Size</th>"
-				+ "<th style=\"border: 1px solid black; padding: 8px;\">Giá</th>"
-				+ "<th style=\"border: 1px solid black; padding: 8px;\">Tổng cộng</th></tr>");
+						+ "<th style=\"border: 1px solid black; padding: 8px;\">Sản phẩm</th>"
+						+ "<th style=\"border: 1px solid black; padding: 8px;\">Số lượng</th>"
+						+ "<th style=\"border: 1px solid black; padding: 8px;\">Size</th>"
+						+ "<th style=\"border: 1px solid black; padding: 8px;\">Giá</th>"
+						+ "<th style=\"border: 1px solid black; padding: 8px;\">Tổng cộng</th></tr>");
 
 		// Lấy thông tin chi tiết của từng sản phẩm trong giỏ hàng và thêm vào bảng
 		for (int i = 0; i < productId.length; i++) {
@@ -402,17 +399,5 @@ public class OrderController {
 		sessionService.setAttribute("cartQuantity", 0);
 		return "thankyou";
 	}
-	
-	
-	
-	/*
-	  @RequestMapping("/TrangThai") public String
-	  getOrderStatus(Model model) {
-	  
-	  boolean a = true; System.out.println(a); model.addAttribute("b", a);
-	  
-	  
-	  return "TrangThai"; }
-	 */
-}
 
+}

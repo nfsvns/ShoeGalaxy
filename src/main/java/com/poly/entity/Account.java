@@ -28,7 +28,7 @@ public class Account implements Serializable {
 	@JsonIgnore
 	@OneToMany(mappedBy = "account")
 	List<Order> orders;
-	
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "account")
 	List<Address> addresses;
@@ -40,5 +40,13 @@ public class Account implements Serializable {
 	@JsonIgnore
 	@OneToMany(mappedBy = "account")
     List<ShoppingCart> shoppingCarts;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "account")
+	private List<Comment> comments;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "account")
+	private List<Reply> reply;
 
 }

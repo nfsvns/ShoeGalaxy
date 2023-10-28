@@ -2,8 +2,11 @@ package com.poly.rest.controller;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -58,26 +61,25 @@ public class ProductRestController {
 
 	@GetMapping("/{id}/price")
 	public List<DiscountProduct> getProductPrice(@PathVariable("id") Integer id) {
-	    List<DiscountProduct> allDiscountProducts = dcService.findByIdProductDiscount(id);
-	    LocalDate currentDate = LocalDate.now();
+		List<DiscountProduct> allDiscountProducts = dcService.findByIdProductDiscount(id);
+		LocalDate currentDate = LocalDate.now();
 
-	    List<DiscountProduct> validDiscountProducts = allDiscountProducts.stream().filter(discountProduct -> {
-	        LocalDate discountStartDate = discountProduct.getStart_Date();
-	        LocalDate discountEndDate = discountProduct.getEnd_Date();
+		List<DiscountProduct> validDiscountProducts = allDiscountProducts.stream().filter(discountProduct -> {
+			LocalDate discountStartDate = discountProduct.getStart_Date();
+			LocalDate discountEndDate = discountProduct.getEnd_Date();
 
-	        boolean isStartToday = currentDate.isEqual(discountStartDate);
-	        boolean isEndToday = currentDate.isEqual(discountEndDate);
+			boolean isStartToday = currentDate.isEqual(discountStartDate);
+			boolean isEndToday = currentDate.isEqual(discountEndDate);
 
-	        return isStartToday || isEndToday || (currentDate.isAfter(discountStartDate) && currentDate.isBefore(discountEndDate));
-	    }).collect(Collectors.toList());
+			return isStartToday || isEndToday
+					|| (currentDate.isAfter(discountStartDate) && currentDate.isBefore(discountEndDate));
+		}).collect(Collectors.toList());
 
-	    for (DiscountProduct validDiscountProduct : validDiscountProducts) {
-	        validDiscountProduct.setPercentage(validDiscountProduct.getPercentage());
-	    }
-	    return validDiscountProducts;
+		for (DiscountProduct validDiscountProduct : validDiscountProducts) {
+			validDiscountProduct.setPercentage(validDiscountProduct.getPercentage());
+		}
+		return validDiscountProducts;
 	}
-
-
 
 	@PostMapping
 	public Product post(@RequestBody Product product) {
@@ -85,25 +87,41 @@ public class ProductRestController {
 		return product;
 	}
 
-	@PutMapping("{id}")
-	public Product put(@PathVariable("id") Integer id, @RequestBody Product product) {
-		return productService.update(product);
-	}
-
-	@DeleteMapping("{id}")
-	public void delete(@PathVariable("id") Integer id) {
-		productService.delete(id);
-	}
 	@RequestMapping(value = "{id}", method = {RequestMethod.PUT, RequestMethod.DELETE})
 	public Product putOrDelete(@PathVariable("id") Integer id, @RequestBody Product product, 
 			HttpServletRequest request) {
-	    if (request.getMethod().equals(RequestMethod.DELETE.toString())) {
-	    	return productService.deletu(product);
-	}
-	    else if (request.getMethod().equals(RequestMethod.PUT.toString())) {
-	    	return productService.update(product);
-	}
+		if (request.getMethod().equals(RequestMethod.DELETE.toString())) {
+			return productService.deletu(product);
+		} else if (request.getMethod().equals(RequestMethod.PUT.toString())) {
+			return productService.update(product);
+		}
 		return product;
-	    
+
 	}
+
+	@GetMapping("/counts")
+	public ResponseEntity<Map<String, Integer>> getProductCounts() {
+		Map<String, Integer> productCounts = new HashMap<>();
+		productCounts.put("MLB", productService.countMlBProducts());
+		productCounts.put("ADIDAS", productService.countADProducts());
+		productCounts.put("NIKE", productService.countNKProducts());
+		return ResponseEntity.ok(productCounts);
+	}
+
+	@GetMapping("/quantities")
+	public ResponseEntity<List<Product>> getProductQuantities() {
+		List<Object[]> productQuantities = productService.getProductQuantity();
+		List<Product> productDTOs = new ArrayList<>();
+
+		for (Object[] row : productQuantities) {
+			Product productDTO = new Product();
+			productDTO.setId((Integer) row[0]);
+			productDTO.setName((String) row[1]);
+			productDTO.setQuantity((Integer) row[2]);
+			productDTOs.add(productDTO);
+		}
+
+		return ResponseEntity.ok(productDTOs);
+	}
+
 }

@@ -36,17 +36,16 @@
 								data-slide-to="[[${iterStat.index}]]"
 								th:classappend="${iterStat.index == 0} ? 'active' : ''"><img
 								th:src="@{|/images/${i.image}|}"
-
-								class="d-block w-100  img-thumbnail" width="100%" 
-							></li>
+								class="d-block w-100  img-thumbnail" width="100%"></li>
 
 						</ol>
 
 						<!-- The slideshow/carousel -->
 						<div class="carousel-inner" style="align-items: center;">
 							<div class="carousel-item" th:each="i, iterStat : ${prod.images}"
-								th:classappend="${iterStat.index == 0} ? 'active' : ''" >
-								<img th:src="@{|/images/${i.image}|}" class="d-block w-100"style="border-radius: 50px;">
+								th:classappend="${iterStat.index == 0} ? 'active' : ''">
+								<img th:src="@{|/images/${i.image}|}" class="d-block w-100"
+									style="border-radius: 50px;">
 							</div>
 						</div>
 
@@ -158,113 +157,127 @@
 
 
 			</div>
-			<div style="border-bottom: groove;" class="mt-5"></div>
-			<div class="container my-5">
-				<h2>Comments</h2>
-				<form action="/shop.html/addComments" method="post">
-					<input type="hidden" name="productId" th:value="${prod.id}"
-						class="form-control mb-3" />
-					<div class="form-group">
-						<label for="comment">Comment:</label>
-						<textarea class="form-control" id="comment" name="description"
-							rows="4" required></textarea>
-					</div>
-					<button type="submit" class="btn btn-primary">Submit</button>
-				</form>
+<div style="border-bottom: groove;" class="mt-5"></div>
+<div class="container my-5">
+    <h2>Comments</h2>
+    <form action="/shop.html/addComments" method="post">
+        <input type="hidden" name="productId" th:value="${prod.id}" class="form-control mb-3" />
+        <div class="form-group">
+            <label for="comment">Comment:</label>
+            <textarea class="form-control" id="comment" name="description" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
 
-				<!-- Display comment section -->
-				<div id="comments-container">
-					<div th:each="cmt, iterStat : ${comment}" class="card my-3"
-						th:if="${iterStat.index < 20}">
-						<div class="card-body">
-							<div class="row">
-								<div class="col-md-1">
-									<img th:src="@{|/images/${cmt.account.photo}|}"
-										class="img-fluid rounded-circle" style="width: 50%" alt="User">
-								</div>
-								<div class="col-md-11">
-									<h5 th:text="${cmt.account.fullname}"></h5>
-									<p th:text="${#dates.format(cmt.create_Date, 'dd-MM-yyyy')}"></p>
-									<p th:text="${cmt.description}"></p>
-									<button class="btn btn-secondary btn-sm mt-2"
-										onclick="toggleReplyForm(event, 'replyForm-${cmt.id}', '${cmt.id}')">Reply</button>
-									<div class="reply-form" id="replyForm-${cmt.id}"
-										style="display: none;">
-										<form action="/shop.html/replyComments" method="post">
-											<input type="text" name="productIdReply"
-												th:value="${prod.id}" class="form-control mb-3" /> <input
-												type="hidden" name="parentId" th:value="${cmt.id}"
-												class="form-control mb-3" />
-											<div class="form-group">
-												<label for="comment">Comment:</label>
-												<textarea class="form-control" name="descriptionReply"
-													rows="4" required></textarea>
-											</div>
-											<button type="submit" class="btn btn-primary">Submit</button>
-										</form>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+    <div id="comments-container">
+        <div th:each="cmt, iterStat : ${comment}" class="card my-3 border-0" th:if="${iterStat.index < 20}">
+            <div class="card-body comment-body">
+                <div class="row">
+                    <div class="col-md-1">
+                        <img th:src="@{|/images/${cmt.account.photo}|}" class="img-fluid rounded-circle comment-user-img" alt="User">
+                    </div>
+                    <div class="col-md-11">
+                        <h5 th:text="${cmt.account.fullname}" class="comment-user-name"></h5>
+                        <p th:text="${#dates.format(cmt.create_Date, 'dd-MM-yyyy')}" class="comment-date"></p>
+                        <p th:text="${cmt.description}" class="comment-description"></p>
+                        <button class="btn btn-secondary btn-sm mt-2 reply-btn" data-comment-id="${cmt.id}">Reply</button>
+                        <div class="reply-form card border-0" data-comment-id="${cmt.id}" style="display: none;">
+                            <form action="/shop.html/replyComments" method="post" onsubmit="hideOtherReplyForms('replyForm-${cmt.id}')">
+                                <input type="hidden" name="productIdReply" th:value="${prod.id}" class="form-control mb-3" />
+                                <input type="hidden" name="parentId" th:value="${cmt.id}" class="form-control mb-3" />
+                                <div class="form-group">
+                                    <label for="comment">Comment:</label>
+                                    <textarea class="form-control" name="descriptionReply" rows="4" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </form>
+                        </div>
+
+                        <!-- Display replies -->
+                        <div class="replies-container-${cmt.id}">
+                            <div th:each="rpl : ${reply}" th:if="${rpl.comment.id} == ${cmt.id}" class="card my-3 reply-card border-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-1">
+                                            <img th:src="@{|/images/${rpl.account.photo}|}" class="img-fluid rounded-circle reply-user-img" alt="User">
+                                        </div>
+                                        <div class="col-md-11">
+                                            <h5 th:text="${rpl.account.fullname}" class="reply-user-name"></h5>
+                                            <p th:text="${#dates.format(rpl.create_date, 'dd-MM-yyyy')}" class="reply-date"></p>
+                                            <p th:text="${rpl.description}" class="reply-description"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End of displaying replies -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
-			<div class="container">
 
-				<!-- The Modal -->
-				<div class="modal" id="myModal">
-					<div class="modal-dialog"
-						style="margin-left: auto; margin-right: 0; margin-top: 200px;">
-						<div class="modal-content">
 
-							<!-- Modal body -->
-							<div class="modal-body">
-								<table class="table table-bordered" style="width: 100%;">
-									<thead>
-										<tr>
-											<th class="product-name" style="font-weight: bold;">Product</th>
-											<th class="product-size" style="font-weight: bold;">Size</th>
-											<th class="product-price" style="font-weight: bold;">Price</th>
-											<th class="product-quantity" style="font-weight: bold;">Quantity</th>
-											<th class="product-total" style="font-weight: bold;">Total</th>
 
-										</tr>
-									</thead>
-									<tbody>
-										<tr ng-repeat="item in cart.items">
-											<td class="text-truncate"
-												style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{item.name}}</td>
-											<td>{{item.sizes}}</td>
-											<td>${{cart.price_product(item)}}</td>
-											<td><input ng-change="cart.saveToLocalStorage()"
-												name="count" ng-model="item.qty" type="number" min="1"
-												style="width: 60px;"></td>
-											<td>${{cart.amtt_of(item) | number : 2}}</td>
-											<!-- <td>
+
+
+				<div class="container">
+
+					<!-- The Modal -->
+					<div class="modal" id="myModal">
+						<div class="modal-dialog"
+							style="margin-left: auto; margin-right: 0; margin-top: 200px;">
+							<div class="modal-content">
+
+								<!-- Modal body -->
+								<div class="modal-body">
+									<table class="table table-bordered" style="width: 100%;">
+										<thead>
+											<tr>
+												<th class="product-name" style="font-weight: bold;">Product</th>
+												<th class="product-size" style="font-weight: bold;">Size</th>
+												<th class="product-price" style="font-weight: bold;">Price</th>
+												<th class="product-quantity" style="font-weight: bold;">Quantity</th>
+												<th class="product-total" style="font-weight: bold;">Total</th>
+
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-repeat="item in cart.items">
+												<td class="text-truncate"
+													style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{item.name}}</td>
+												<td>{{item.sizes}}</td>
+												<td>${{cart.price_product(item)}}</td>
+												<td><input ng-change="cart.saveToLocalStorage()"
+													name="count" ng-model="item.qty" type="number" min="1"
+													style="width: 60px;"></td>
+												<td>${{cart.amtt_of(item) | number : 2}}</td>
+												<!-- <td>
 												<button ng-click="cart.remove(item.id)"
 													class="btn btn-sm btn-danger">
 													<i class="fas fa-trash"></i>
 												</button>
 											</td> -->
-										</tr>
-										<!-- Your ng-repeat content here -->
-									</tbody>
-								</table>
-							</div>
+											</tr>
+											<!-- Your ng-repeat content here -->
+										</tbody>
+									</table>
+								</div>
 
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
 
 
-			<!--  tab -->
-			<div style="border-bottom: groove;" class="mt-5"></div>
-			<h1 style="text-align: center;">Mặt hàng liên quan</h1>
+				<!--  tab -->
+				<div style="border-bottom: groove;" class="mt-5"></div>
+				<h1 style="text-align: center;">Mặt hàng liên quan</h1>
 
-	<!-- 		<div class="container">
+				<!-- 		<div class="container">
 				<div id="productCarousel" class="carousel slide"
 					data-bs-ride="carousel">
 					<div class="carousel-inner">
@@ -304,58 +317,50 @@
 				</div>
 			</div> -->
 
-			<!-- Bootstrap 5.3.1 JavaScript (Popper.js là một phần bắt buộc của Bootstrap) -->
-			<script
-				src="https://cdn.jsdelivr.net/npm/popper.js@2.11.6/dist/umd/popper.min.js"></script>
-			<script
-				src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
+				<!-- Bootstrap 5.3.1 JavaScript (Popper.js là một phần bắt buộc của Bootstrap) -->
 
-			<div class="row">
-				<div class="col-lg-3 " th:each="item : ${prod.category.products}">
-					<div class="list-item wsk-cp-product">
-						<div class="block-4-image wsk-cp-image">
-							<a th:href="@{|/shop-single.html/${item.id}|}"> <img
-								th:if="${not #lists.isEmpty(item.images)}"
-								th:src="@{|/images/${item.images[0].image}|}" width="100%"
-								alt="Image placeholder" class="img-thumb">
-							</a>
-						</div>
-						<div class="item-details">
-							<h3 class="text-truncate" th:text="${item.name}"></h3>
-							<p class="price" th:text="${item.price + '$'}"></p>
+				<div class="row">
+					<div class="col-lg-3 " th:each="item : ${prod.category.products}">
+						<div class="list-item wsk-cp-product">
+							<div class="block-4-image wsk-cp-image">
+								<a th:href="@{|/shop-single.html/${item.id}|}"> <img
+									th:if="${not #lists.isEmpty(item.images)}"
+									th:src="@{|/images/${item.images[0].image}|}" width="100%"
+									alt="Image placeholder" class="img-thumb">
+								</a>
+							</div>
+							<div class="item-details">
+								<h3 class="text-truncate" th:text="${item.name}"></h3>
+								<p class="price" th:text="${item.price + '$'}"></p>
+							</div>
 						</div>
 					</div>
 				</div>
+
+
 			</div>
-
-
 		</div>
-	</div>
-
-	<script th:inline="javascript">
-		/* Function to toggle the reply form */
-		function toggleReplyForm(event, formId, commentId) {
-			event.preventDefault();
-			var form = document.getElementById(formId);
-			form.style.display = form.style.display === "none" ? "block"
-					: "none";
-		}
-
-		/* Function to hide other reply forms */
-		function hideOtherReplyForms(event, currentFormId) {
-			event.preventDefault();
-			var forms = document.getElementsByClassName("reply-form");
-			for (var i = 0; i < forms.length; i++) {
-				var form = forms[i];
-				if (form.id !== currentFormId) {
-					form.style.display = "none";
-				}
-			}
-		}
-	</script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/popper.js@2.11.6/dist/umd/popper.min.js"></script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
 
 
 </body>
 
+
+
+
+		<script
+			src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script>
+			$(document).ready(function() {
+				$(".reply-btn").click(function() {
+					var commentId = $(this).data('comment-id');
+					$('.reply-form').hide();
+					$(this).siblings('.reply-form').show();
+				});
+			});
+		</script>
 </body>
 </html>

@@ -1,109 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Comment Form</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        .comment {
-            margin-bottom: 20px;
-        }
+    <title>Product Quantity Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Latest compiled and minified CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-        .replyForm {
-            margin-left: 30px;
-            display: none;
-        }
-    </style>
+<!-- Latest compiled JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-    <div class="container mt-5">
-        <div id="comments">
-            <!-- Existing comments will be displayed here -->
-        </div>
-
-        <div class="mt-5">
-            <h3>Add a Comment</h3>
-            <div class="input-group mb-3">
-                <input type="text" id="commentInput" class="form-control" placeholder="Your comment">
-                <div class="input-group-append">
-                    <button class="btn btn-primary" type="button" onclick="addComment(document.getElementById('commentInput').value)">Submit</button>
-                </div>
-            </div>
-        </div>
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+        <canvas id="myChart" width="400" height="400"></canvas>
     </div>
-
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</div>
+    </div>
+    
 
     <script>
-        let comments = [];
+        // Giả sử bạn đã có dữ liệu từ câu lệnh truy vấn SQL
+        var data = {
+            labels: ["Product A", "Product B", "Product C", "Product D"],
+            datasets: [{
+                label: 'Total Quantity',
+                data: [100, 30, 40, 25], // Số lượng sản phẩm
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
 
-        function displayComments() {
-            let commentSection = document.getElementById('comments');
-            commentSection.innerHTML = '';
-            comments.forEach((comment, index) => {
-                let commentDiv = document.createElement('div');
-                commentDiv.classList.add('comment', 'bg-light', 'p-3');
-                commentDiv.innerHTML = `
-                    <p>${comment.text}</p>
-                    <button class="btn btn-sm btn-secondary" onclick="toggleReplyForm(${index})">Reply</button>
-                    <div id="replyForm${index}" class="replyForm" style="display: none;">
-                        <input type="text" id="replyInput${index}" class="form-control mt-2" placeholder="Your reply">
-                        <button class="btn btn-sm btn-primary mt-2" onclick="addReply(${index})">Submit Reply</button>
-                    </div>
-                    <div class="replies mt-3">
-                        <!-- Replies will be displayed here -->
-                    </div>
-                `;
-                if (comment.replies.length > 0) {
-                    let replySection = commentDiv.querySelector('.replies');
-                    comment.replies.forEach(reply => {
-                        let replyDiv = document.createElement('div');
-                        replyDiv.classList.add('bg-light', 'p-2', 'mt-2');
-                        replyDiv.innerHTML = `<p>${reply.text}</p>`;
-                        replySection.appendChild(replyDiv);
-                    });
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: data,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
-                commentSection.appendChild(commentDiv);
-            });
-        }
-
-        function addComment(comment) {
-            let newComment = {
-                text: comment,
-                replies: []
-            };
-            comments.push(newComment);
-            displayComments();
-            document.getElementById('commentInput').value = '';
-        }
-
-        function toggleReplyForm(commentIndex) {
-            let replyForm = document.getElementById(`replyForm${commentIndex}`);
-            if (replyForm.style.display === 'none') {
-                replyForm.style.display = 'block';
-            } else {
-                replyForm.style.display = 'none';
             }
-        }
-
-        function addReply(commentIndex) {
-            let replyInput = document.getElementById(`replyInput${commentIndex}`).value;
-            if (replyInput === '') {
-                alert('Please enter a reply');
-                return;
-            }
-            let newReply = {
-                text: replyInput
-            };
-            comments[commentIndex].replies.push(newReply);
-            displayComments();
-            document.getElementById(`replyInput${commentIndex}`).value = '';
-            document.getElementById(`replyForm${commentIndex}`).style.display = 'none';
-        }
+        });
     </script>
-
 </body>
 </html>

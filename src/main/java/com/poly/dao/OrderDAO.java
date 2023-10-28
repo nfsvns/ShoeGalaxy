@@ -6,8 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import com.poly.entity.Account;
 import com.poly.entity.Order;
+import com.poly.entity.OrderDetail;
 import com.poly.entity.Product;
 
 public interface OrderDAO extends JpaRepository<Order, Long> {
@@ -30,24 +33,34 @@ public interface OrderDAO extends JpaRepository<Order, Long> {
 	@Query("SELECT SUM(o.tongtien) FROM Order o WHERE CONVERT(date, o.createDate) = CONVERT(date, CURRENT_TIMESTAMP)")
 	Double getTotalRevenueToday();
 
-	//AOV
-	@Query(value = "SELECT ROUND( CASE " 
-			+ "    WHEN COUNT(*) > 0 THEN SUM(tongtien) / COUNT(*) " 
-			+ "    ELSE 0 "
-			+ "END, 2)" 
-			+ "FROM Orders o " 
-			+ "WHERE o.create_date >= DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0) "
+	// AOV
+	@Query(value = "SELECT ROUND( CASE " + "    WHEN COUNT(*) > 0 THEN SUM(tongtien) / COUNT(*) " + "    ELSE 0 "
+			+ "END, 2)" + "FROM Orders o " + "WHERE o.create_date >= DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0) "
 			+ "    AND o.create_date < DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()) + 1, 0)", nativeQuery = true)
 	Double AverageOrderValue();
 
 	// Tổng doannh thu năm nay
 	@Query(value = "SELECT ROUND( SUM(tongtien), 2) FROM Orders WHERE YEAR(create_date) = YEAR(GETDATE())", nativeQuery = true)
 	Double getTotalRevenueThisYear();
+
 	
 	//Phan tich city
 	@Query(value = "SELECT o.city AS cityName, SUM(o.tongtien) AS totalSales, COUNT(o.id) AS orderCount, ROUND( SUM(o.tongtien)/COUNT(o.id) , 2) AS aov " +
             "FROM Orders o " +
             "WHERE o.city IS NOT NULL " +
             "GROUP BY o.city", nativeQuery = true)
+
 	List<Object[]> getCityOrderStatistics();
+
+	@Query(value = "SELECT o.id as order_id, o.username, o.tongtien, od.id as order_detail_id, od.quantity,od.size, p.image, p.name, p.price,p.id "
+			+ "FROM Orders o " + "INNER JOIN OrderDetails od ON o.id = od.order_id "
+			+ "INNER JOIN Products p ON od.product_id = p.id "
+			+ "WHERE o.username = ?1 AND o.available = 1;", nativeQuery = true)
+	List<Object[]> findShippedOrdersByAccount(String username);
+
+	@Query(value = "SELECT o.id as order_id, o.username, o.tongtien, od.id as order_detail_id, od.quantity,od.size, p.image, p.name, p.price "
+			+ "FROM Orders o " + "INNER JOIN OrderDetails od ON o.id = od.order_id "
+			+ "INNER JOIN Products p ON od.product_id = p.id "
+			+ "WHERE o.username = ?1 AND o.available = 0;", nativeQuery = true)
+	List<Object[]> findUnshippedOrdersByAccount(String username);
 }
