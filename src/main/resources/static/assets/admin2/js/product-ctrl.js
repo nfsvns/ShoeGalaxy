@@ -110,15 +110,6 @@ app.controller("product-ctrl", function($scope, $http) {
 	}
 
 	$scope.createImg = function() {
-		/*var imageCopy = angular.copy($scope.form);
-		$http.post(`/rest/images`, imageCopy).then(resp => {
-			$scope.images.push(resp.data);
-			$scope.reset();
-			alert("Thêm mới hình ảnh thành công!");
-		}).catch(error => {
-			alert("Lỗi thêm mới hình ảnh!");
-			console.log("Error", error);
-		});*/
 		var imageCopy = angular.copy($scope.formImg);
 		var existingImageIndex = -1;
 
@@ -146,17 +137,6 @@ app.controller("product-ctrl", function($scope, $http) {
 	};
 
 	$scope.updateImg = function() {
-		/*var image = angular.copy($scope.form);
-		var index = $scope.images.findIndex(i => i.id == image.id);
-
-
-		$http.put(`/rest/images/${image.id}`, image).then(resp => {
-			$scope.images[index] = image;
-			alert("Cập nhật hình ảnh thành công!");
-		}).catch(error => {
-			alert("Lỗi cập nhật hình ảnh!");
-			console.log("Error", error);
-		});*/
 		var image = angular.copy($scope.formImg);
 		var existingImageIndex = -1;
 
