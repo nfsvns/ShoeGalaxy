@@ -28,7 +28,11 @@ app.config(function($routeProvider) {
 		}).when("/size", {
 			templateUrl: "/assets/admin2/pages/size/index.html",
 			controller: "size-ctrl"
-		}).when("/authority", {
+		}).when("/category", {
+			templateUrl: "/assets/admin2/pages/category/index.html",
+			controller: "category-ctrl"
+		})
+		.when("/authority", {
 			templateUrl: "/assets/admin2/pages/authority/index.html",
 			controller: "authority-ctrl"
 		}).when("/profile", {

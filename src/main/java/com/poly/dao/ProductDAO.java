@@ -33,8 +33,6 @@ public interface ProductDAO extends JpaRepository<Product, Integer> {
 	@Query("SELECT p FROM Product p LEFT JOIN p.discountProduct dp")
 	Page<Product> findAllProductsAndDiscounts(Pageable pageable);
 
-	
-	
 	@Query("SELECT p FROM Product p WHERE p.category.id=?1 and p.available = True")
 	List<Product> findByCategoryId(String cid);
 
@@ -52,31 +50,26 @@ public interface ProductDAO extends JpaRepository<Product, Integer> {
 
 	@Query("SELECT COUNT(p) FROM Product p WHERE p.category.id = 'M' and p.available = True")
 	Integer countMlBProducts();
-	
+
 	@Query("SELECT COUNT(p) FROM Product p WHERE p.category.id = 'AD' and p.available = True")
 	Integer countADProducts();
-	
+
 	@Query("SELECT COUNT(p) FROM Product p WHERE p.category.id = 'NK' and p.available = True")
 	Integer countNKProducts();
 
 	@Query(value = "SELECT * FROM Products ORDER BY NEWID()", nativeQuery = true)
 	List<Product> topProduct();
-	
-	
+
 	@Query(value = "SELECT TOP 4 * FROM products ORDER BY products.id DESC", nativeQuery = true)
 	List<Product> NewProduct();
-	
-	
-	
-	
 
-	
+	@Query(value = "SELECT p.id, p.name, SUM(s.quantity) FROM Products p INNER JOIN Sizes s ON p.id = s.product_id GROUP BY p.id, p.name", nativeQuery = true)
+	List<Object[]> getProductQuantity();
+
 //	@Query(value = "SELECT p.id, p.category_id,p.name,p.price,d.percentage from Products p\r\n"
 //			+ "inner join discount_Sales d on d.id = p.sale_id",nativeQuery = true)
 //	List<Product> findByDiscount();
 
-	
-	
 	@Query("SELECT p FROM Product p WHERE p.available = True")
 	Page<Product> findDelete(Pageable pageable);
 }
