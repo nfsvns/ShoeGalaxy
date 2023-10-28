@@ -87,8 +87,6 @@ public class ProductRestController {
 		return product;
 	}
 
-
-	
 	@RequestMapping(value = "{id}", method = {RequestMethod.PUT, RequestMethod.DELETE})
 	public Product putOrDelete(@PathVariable("id") Integer id, @RequestBody Product product, 
 			HttpServletRequest request) {
