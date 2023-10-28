@@ -87,18 +87,10 @@ public class ProductRestController {
 		return product;
 	}
 
-	@PutMapping("{id}")
-	public Product put(@PathVariable("id") Integer id, @RequestBody Product product) {
-		return productService.update(product);
-	}
 
-	@DeleteMapping("{id}")
-	public void delete(@PathVariable("id") Integer id) {
-		productService.delete(id);
-	}
-
-	@RequestMapping(value = "{id}", method = { RequestMethod.PUT, RequestMethod.DELETE })
-	public Product putOrDelete(@PathVariable("id") Integer id, @RequestBody Product product,
+	
+	@RequestMapping(value = "{id}", method = {RequestMethod.PUT, RequestMethod.DELETE})
+	public Product putOrDelete(@PathVariable("id") Integer id, @RequestBody Product product, 
 			HttpServletRequest request) {
 		if (request.getMethod().equals(RequestMethod.DELETE.toString())) {
 			return productService.deletu(product);

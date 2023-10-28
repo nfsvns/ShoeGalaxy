@@ -1,6 +1,20 @@
 app.controller("authority-ctrl", function($scope, $http, $location){
 	$scope.initialize = function(){
-		// load all roles
+		/*// load all roles
+		$http.get("/rest/roles").then(resp => {
+	    	$scope.roles = resp.data;
+	    })
+		// load staffs and directors (administrators)
+		$http.get("/rest/accounts").then(resp => {
+	    	$scope.admins = resp.data;
+	    })
+	    // load authorites of staffs and directors
+		$http.get("/rest/authorities").then(resp => {
+	    	$scope.authorities = resp.data;
+	    }).catch(error => {
+	    	$location.path("/unauthorized");
+	    })*/
+	    // load all roles
 		$http.get("/rest/roles").then(resp => {
 	    	$scope.roles = resp.data;
 	    })
