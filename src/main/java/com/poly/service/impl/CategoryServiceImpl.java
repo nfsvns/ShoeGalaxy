@@ -44,4 +44,10 @@ public class CategoryServiceImpl implements CategoryService {
 
 	}
 
+	@Override
+	public Category delete(Category category) {
+		category.setAvailable(Boolean.FALSE);
+		return dao.save(category);
+	}
+
 }

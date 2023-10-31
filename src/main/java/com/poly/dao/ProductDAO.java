@@ -1,4 +1,4 @@
-package com.poly.dao;
+   package com.poly.dao;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,6 +17,7 @@ import com.poly.entity.Report;
 @SessionScope
 public interface ProductDAO extends JpaRepository<Product, Integer> {
 
+	@Query("SELECT p FROM Product p WHERE p.price BETWEEN :minPrice AND :maxPrice ORDER BY p.price ASC")
 	Page<Product> findByPriceBetween(Double minPrice, Double maxPrice, Pageable pageable);
 
 	@Query("SELECT o FROM Product o WHERE o.category.name LIKE ?1 and o.available = True ")
@@ -60,8 +61,7 @@ public interface ProductDAO extends JpaRepository<Product, Integer> {
 	@Query(value = "SELECT * FROM Products WHERE Products.available = 'true' ORDER BY NEWID()", nativeQuery = true)
 
 	List<Product> topProduct();
-	
-	
+
 	@Query(value = "SELECT TOP 4 * FROM products WHERE Products.available = 'true' ORDER BY products.id DESC", nativeQuery = true)
 	List<Product> NewProduct();
 
