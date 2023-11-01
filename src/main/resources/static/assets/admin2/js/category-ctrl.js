@@ -53,21 +53,20 @@ app.controller("category-ctrl", function($scope, $http) {
 	}
 
 	$scope.delete = function(item) {
-    if (confirm("Bạn muốn xóa category này?")) {
-        $http.delete(`/rest/categories/${item.id}`).then(resp => {
-            var index = $scope.items.findIndex(p => p.id === item.id);
-            $scope.items.splice(index, 1);
-            $scope.reset();
-            alert("Xóa thành công!");
-        }).catch(error => {
-            if (error.status === 500) {
-                alert("Lỗi máy chủ, vui lòng thử lại sau.");
-            } else {
-                alert("Lỗi xóa !");
-            }
-        });
-    } 
-}
+		var item = angular.copy(item);
+		item.available = false;
+		$http.put(`/rest/categories/${item.id}`, item).then(resp => {
+			var index = $scope.items.findIndex(p => p.id == item.id);
+			$scope.items.splice(index, 1);
+			$scope.reset();
+			$scope.items[index] = item;
+			alert("Xóa sản phẩm thành công!");
+		})
+			.catch(error => {
+				alert("Lỗi xóa sản phẩm!");
+				console.log("Error", error);
+			});
+	}
 
 
 

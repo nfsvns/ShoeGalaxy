@@ -81,7 +81,7 @@
 											class="discount-percentage position-absolute border border-light">
 											<span th:if="${not #lists.isEmpty(discountProducts)}">
 												<span th:each="discountProduct : ${discountProducts}"
-												th:if="${discountProduct.product.id == product.id and T(java.time.LocalDate).now().isAfter(discountProduct.start_Date) and (T(java.time.LocalDate).now().isBefore(discountProduct.end_Date) or T(java.time.LocalDate).now() == discountProduct.start_Date or T(java.time.LocalDate).now() == discountProduct.end_Date)}">
+												th:if="${discountProduct.product.id == product.id and discountProduct.active and T(java.time.LocalDate).now().isAfter(discountProduct.start_Date) and (T(java.time.LocalDate).now().isBefore(discountProduct.end_Date) or T(java.time.LocalDate).now() == discountProduct.start_Date or T(java.time.LocalDate).now() == discountProduct.end_Date)}">
 													<i class="fas fa-tag discount-icon"> <span
 														class="discount-text"
 														th:text="${discountProduct.percentage + '% OFF'}"></span>
@@ -95,7 +95,7 @@
 											th:utext="${product.name}"></h5>
 										<div class="product_total">
 											<span
-												th:if="${product.discountProduct != null and not #lists.isEmpty(product.discountProduct)}">
+												th:if="${product.discountProduct != null and not #lists.isEmpty(product.discountProduct) and product.discountProduct[0].active}">
 												<span
 												th:if="${T(java.time.LocalDate).now().isAfter(product.discountProduct[0].start_Date) and (T(java.time.LocalDate).now().isBefore(product.discountProduct[0].end_Date) or T(java.time.LocalDate).now() == product.discountProduct[0].end_Date)}">
 													<del th:text="${'$' + product.price}"
@@ -110,7 +110,7 @@
 												</strong>
 											</span>
 											</span> <span
-												th:unless="${product.discountProduct != null and not #lists.isEmpty(product.discountProduct)}">
+												th:unless="${product.discountProduct != null and not #lists.isEmpty(product.discountProduct) and product.discountProduct[0].active}">
 												<strong style="font-size: 24px; color: red;"> <span
 													th:text="${'$' + product.price}"></span>
 											</strong>
@@ -121,6 +121,7 @@
 							</div>
 						</div>
 					</div>
+
 
 
 
@@ -196,16 +197,16 @@
 					<div class="border p-4 rounded mb-4">
 						<h3 class="mb-3 h6 text-uppercase text-black d-block">Categories</h3>
 						<ul class="list-unstyled mb-0">
-							<li class="mb-1"><a href="/shop.html?brand=Adidas"
+							<li class="mb-1"><a href="/shop.html/searchBrand?brand=Adidas"
 								style="text-decoration: none" class="d-flex text-dark"><span>Adidas</span>
 									<span class="text-black ml-auto"><span
 										th:text="${countAD}"></span></a></li>
 							<li class="mb-1"><a style="text-decoration: none"
-								href="/shop.html?brand=MLB" class="d-flex text-dark"><span>MLB</span>
+								href="/shop.html/searchBrand?brand=MLB" class="d-flex text-dark"><span>MLB</span>
 									<span class="text-black ml-auto"><span
 										th:text="${count}"></span></a></li>
 							<li class="mb-1"><a style="text-decoration: none"
-								href="/shop.html?brand=Nike" class="d-flex text-dark"><span>Nike</span>
+								href="/shop.html/searchBrand?brand=Nike" class="d-flex text-dark"><span>Nike</span>
 									<span class="text-black ml-auto"><span
 										th:text="${countNK}"></span></a></li>
 						</ul>

@@ -70,9 +70,9 @@ public class ProductController {
 		
 		// Lấy danh sách DiscountProduct
 		List<DiscountProduct> discountProducts = dpDAO.findAll();
-
-		model.addAttribute("products", page);
 		model.addAttribute("discountProducts", discountProducts);
+		model.addAttribute("products", page);
+	
 
 		int count = dao.countMlBProducts();
 		model.addAttribute("count", count);
@@ -94,6 +94,8 @@ public class ProductController {
 		Page<Product> page = dao.findByKeywords("%" + keywords + "%", pageable);
 		model.addAttribute("products", page);
 		model.addAttribute("keywords", keywords);
+		List<DiscountProduct> discountProducts = dpDAO.findAll();
+		model.addAttribute("discountProducts", discountProducts);
 		model.addAttribute("check", "1");
 		int count = dao.countMlBProducts();
 		model.addAttribute("count", count);
@@ -111,7 +113,8 @@ public class ProductController {
 		double maxPrice = max.orElse(sessionService.getAttribute("maxPrice"));
 		sessionService.setAttribute("minPrice", minPrice);
 		sessionService.setAttribute("maxPrice", maxPrice);
-
+		List<DiscountProduct> discountProducts = dpDAO.findAll();
+		model.addAttribute("discountProducts", discountProducts);
 		Pageable pageable = PageRequest.of(p.orElse(0), 6);
 		Page<Product> item = dao.findByPriceBetween(minPrice, maxPrice, pageable);
 		model.addAttribute("products", item);
@@ -125,24 +128,6 @@ public class ProductController {
 		return "shop";
 	}
 
-	@RequestMapping("/shop.html/searchBrand")
-	public String brand(Model model, @RequestParam("brand") Optional<String> br,
-			@RequestParam("p") Optional<Integer> p) {
-		String brand = br.orElse(sessionService.getAttribute("brand"));
-		sessionService.setAttribute("brand", brand);
-
-		Pageable pageable = PageRequest.of(p.orElse(0), 6);
-		Page<Product> page = dao.findByBrand(brand, pageable);
-		model.addAttribute("products", page);
-		model.addAttribute("check", "3");
-		int count = dao.countMlBProducts();
-		model.addAttribute("count", count);
-		int countAD = dao.countADProducts();
-		model.addAttribute("countAD", countAD);
-		int countNK = dao.countNKProducts();
-		model.addAttribute("countNK", countNK);
-		return "shop";
-	}
 
 	@RequestMapping("/shop.html/sort")
 	public String sort(Model model, @RequestParam("desc") Optional<String> de, @RequestParam("p") Optional<Integer> p) {
@@ -161,6 +146,8 @@ public class ProductController {
 		model.addAttribute("countAD", countAD);
 		int countNK = dao.countNKProducts();
 		model.addAttribute("countNK", countNK);
+		List<DiscountProduct> discountProducts = dpDAO.findAll();
+		model.addAttribute("discountProducts", discountProducts);
 		return "shop";
 	}
 
@@ -172,6 +159,9 @@ public class ProductController {
 		Pageable pageable = PageRequest.of(p.orElse(0), 6, sort);
 		Page<Product> page = dao.findAll(pageable);
 		model.addAttribute("products", page);
+		List<DiscountProduct> discountProducts = dpDAO.findAll();
+		model.addAttribute("discountProducts", discountProducts);
+		
 		model.addAttribute("check", "5");
 		int count = dao.countMlBProducts();
 		model.addAttribute("count", count);
@@ -181,6 +171,27 @@ public class ProductController {
 		model.addAttribute("countNK", countNK);
 		return "shop";
 	}
+	@RequestMapping("/shop.html/searchBrand")
+	public String brand(Model model, @RequestParam("brand") Optional<String> br,
+			@RequestParam("p") Optional<Integer> p) {
+		String brand = br.orElse(sessionService.getAttribute("brand"));
+		sessionService.setAttribute("brand", brand);
+
+		Pageable pageable = PageRequest.of(p.orElse(0), 6);
+		Page<Product> page = dao.findByBrand(brand, pageable);
+		model.addAttribute("products", page);
+		model.addAttribute("check", "3");
+		List<DiscountProduct> discountProducts = dpDAO.findAll();
+		model.addAttribute("discountProducts", discountProducts);
+		int count = dao.countMlBProducts();
+		model.addAttribute("count", count);
+		int countAD = dao.countADProducts();
+		model.addAttribute("countAD", countAD);
+		int countNK = dao.countNKProducts();
+		model.addAttribute("countNK", countNK);
+		return "shop";
+	}
+
 
 	@RequestMapping("/shop-single.html/{productId}")
 	public String getProduct(Model model, @PathVariable("productId") int productId) {

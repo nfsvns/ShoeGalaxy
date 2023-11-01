@@ -66,7 +66,7 @@ public class OrderController {
 	SizeDAO sizeDAO;
 	@Autowired
 	AddressDAO addressDAO;
-	String city ;
+	String city;
 	String fulladdress;
 
 	@RequestMapping("/check")
@@ -75,10 +75,10 @@ public class OrderController {
 
 		String username = request.getRemoteUser();
 		Account user = accountDAO.findById(username).orElse(null);
-	
-		 List<Address> userAddresses = addressDAO.getAddressesByUsername(username);
-		 model.addAttribute("userAddresses", userAddresses);
-		 model.addAttribute("user",user);
+
+		List<Address> userAddresses = addressDAO.getAddressesByUsername(username);
+		model.addAttribute("userAddresses", userAddresses);
+		model.addAttribute("user", user);
 		return "checkout.html";
 	}
 
@@ -106,7 +106,7 @@ public class OrderController {
 				// Check if the quantity is 0
 				if (foundDiscountCode.getQuantity() == 0) {
 					model.addAttribute("messages", "Mã giảm giá này đã hết");
-					return "checkout.html";
+					return "forward:/check";
 				}
 
 				// Tính toán giá trị mới
@@ -129,33 +129,16 @@ public class OrderController {
 
 		model.addAttribute("code", code);
 		model.addAttribute("discountCodes", discountCodes);
-		return "checkout.html";
+		return "forward:/check";
 	}
 
-	@PostMapping("/addAddress")
-	public String addAddress(Model model, @RequestParam String address,
-			@RequestParam(value = "provinceLabel", required = false) String provinceLabel,
-			@RequestParam(value = "districtLabel", required = false) String districtLabel,
-			@RequestParam(value = "wardLabel", required = false) String wardLabel,
-			HttpServletRequest request) {
-		String username = request.getRemoteUser();
-		Account user = accountDAO.findById(username).orElse(null);
-
-		Address ad = new Address();
-		ad.setAccount(user);
-		ad.setAddressDetail(address + ", " + wardLabel + ", " + districtLabel + ", " + provinceLabel);
-		ad.setCity(provinceLabel);
-		ad.setDistrict(districtLabel);
-		ad.setWard(wardLabel);
-		ad.setStreet(address);
-		addressDAO.save(ad);
-		return "redirect:/check";
-	}
+	
 
 	@PostMapping("checkout.html")
-	public String checkout1(Model model, @RequestParam String address, @RequestParam String[] productId,@RequestParam Integer address2,
-			@RequestParam String[] sizeId, @RequestParam String[] countProduct, @RequestParam String email,
-			@RequestParam String fullname, @RequestParam double total, HttpServletRequest request,
+	public String checkout1(Model model, @RequestParam String address, @RequestParam String[] productId,
+			@RequestParam(value = "address2", required = false) Integer address2, @RequestParam String[] sizeId,
+			@RequestParam String[] countProduct, @RequestParam String email, @RequestParam String fullname,
+			@RequestParam double total, HttpServletRequest request,
 			@RequestParam(value = "provinceLabel", required = false) String provinceLabel,
 			@RequestParam(value = "districtLabel", required = false) String districtLabel,
 			@RequestParam(value = "wardLabel", required = false) String wardLabel,
@@ -222,54 +205,49 @@ public class OrderController {
 		}
 
 		if (IdCode == null) {
-			// Create a new order
-			Order order = new Order();
-			Timestamp now = new Timestamp(new Date().getTime());
-			String username = request.getRemoteUser();
-			Account user = accountDAO.findById(username).orElse(null);
-			order.setCreateDate(now);
-			
-			Optional<Address> a = addressDAO.findById(address2);
-			fulladdress = a.get().getStreet() + ", " + a.get().getWard() + ", " +  a.get().getDistrict() + ", " +  a.get().getCity();
-			order.setAddress(fulladdress);
-			System.out.println(order.getAddress());
+			if (address2 != null) {
+				// Create a new order
+				Order order = new Order();
+				Timestamp now = new Timestamp(new Date().getTime());
+				String username = request.getRemoteUser();
+				Account user = accountDAO.findById(username).orElse(null);
+				order.setCreateDate(now);
 
-			order.setDiscountCode(null); // May need a null check here for the discount object
-			order.setAccount(user);
-			order.setAvailable(false);
-			order.setNguoinhan(fullname);
-			order.setTongtien(total);
-			order.setAvailable(false);
-			
-			 // Tìm Address bằng addressDetail
-//	        Optional<Address> addressOptional = addressDAO.findByAddressDetail(address2);
-//	        
-//	        // Kiểm tra xem address có tồn tại không
-//	        if (addressOptional.isPresent()) {
-//	            // Trả về giá trị city nếu address tồn tại
-//	             city = addressOptional.get().getCity();
-//	        } else {
-//	        	city = "Unknown City";
-//	        }
-   
-			order.setCity(a.get().getCity());
-			Order newOrder = orderDAO.saveAndFlush(order);
+				Optional<Address> a = addressDAO.findById(address2);
+				fulladdress = a.get().getStreet() + ", " + a.get().getWard() + ", " + a.get().getDistrict() + ", "
+						+ a.get().getCity();
+				order.setAddress(fulladdress);
+				System.out.println(order.getAddress());
 
-			// ADD OrderDetail
-			for (int i = 0; i < productId.length; i++) {
-				Product product = productDAO.findById(Integer.parseInt(productId[i])).orElse(null);
+				order.setDiscountCode(null); // May need a null check here for the discount object
+				order.setAccount(user);
+				order.setAvailable(false);
+				order.setNguoinhan(fullname);
+				order.setTongtien(total);
+				order.setAvailable(false);
+				order.setCity(a.get().getCity());
+				Order newOrder = orderDAO.saveAndFlush(order);
 
-				if (product != null) {
-					OrderDetail orderDetail = new OrderDetail();
-					orderDetail.setOrder(newOrder);
-					orderDetail.setProduct(product);
-					orderDetail.setSize(Integer.parseInt(sizeId[i]));
-					orderDetail.setPrice(priceTotal.get(i));
-					orderDetail.setQuantity(Integer.parseInt(countProduct[i]));
+				// ADD OrderDetail
+				for (int i = 0; i < productId.length; i++) {
+					Product product = productDAO.findById(Integer.parseInt(productId[i])).orElse(null);
 
-					orderDetailDAO.save(orderDetail);
+					if (product != null) {
+						OrderDetail orderDetail = new OrderDetail();
+						orderDetail.setOrder(newOrder);
+						orderDetail.setProduct(product);
+						orderDetail.setSize(Integer.parseInt(sizeId[i]));
+						orderDetail.setPrice(priceTotal.get(i));
+						orderDetail.setQuantity(Integer.parseInt(countProduct[i]));
+
+						orderDetailDAO.save(orderDetail);
+					}
 				}
+			} else {
+				 request.getSession().setAttribute("messagesAddress", "Vui lòng thêm địa chỉ");
+				return "redirect:/check";
 			}
+
 		} else {
 			DiscountCode quantityDiscountCode = dcDAO.findById(IdCode).orElse(null);
 			// Kiểm tra xem đối tượng có tồn tại không
@@ -303,41 +281,48 @@ public class OrderController {
 				// với thông báo lỗi
 				return "cart.html";
 			}
-
-			// Create a new order
-			Order order = new Order();
-			Timestamp now = new Timestamp(new Date().getTime());
-			String username = request.getRemoteUser();
-			Account user = accountDAO.findById(username).orElse(null);
-			// Update the discount code
-			DiscountCode discount = dcDAO.findById(IdCode).orElse(null);
-			order.setCreateDate(now);
 			
-			Optional<Address> a = addressDAO.findById(address2);
-			fulladdress = a.get().getStreet() + ", " + a.get().getWard() + ", " +  a.get().getDistrict() + ", " +  a.get().getCity();
-			order.setAddress(fulladdress);
-			System.out.println(order.getAddress());
-            order.setAvailable(false);
-			order.setAccount(user);
-			order.setNguoinhan(fullname);
-			order.setTongtien(total);
-			order.setAvailable(false);
-			order.setCity(a.get().getCity());
-			Order newOrder = orderDAO.saveAndFlush(order);
+			if(address2!= null) {
+				// Create a new order
+				Order order = new Order();
+				Timestamp now = new Timestamp(new Date().getTime());
+				String username = request.getRemoteUser();
+				Account user = accountDAO.findById(username).orElse(null);
+				// Update the discount code
+				DiscountCode discount = dcDAO.findById(IdCode).orElse(null);
+				order.setCreateDate(now);
 
-			// ADD OrderDetail
-			for (int i = 0; i < productId.length; i++) {
-				Product product = productDAO.findById(Integer.parseInt(productId[i])).orElse(null);
-				if (product != null) {
-					OrderDetail orderDetail = new OrderDetail();
-					orderDetail.setOrder(newOrder);
-					orderDetail.setProduct(product);
-					orderDetail.setSize(Integer.parseInt(sizeId[i]));
-					orderDetail.setPrice(priceTotal.get(i));
-					orderDetail.setQuantity(Integer.parseInt(countProduct[i]));
-					orderDetailDAO.save(orderDetail);
+				Optional<Address> a = addressDAO.findById(address2);
+				fulladdress = a.get().getStreet() + ", " + a.get().getWard() + ", " + a.get().getDistrict() + ", "
+						+ a.get().getCity();
+				order.setAddress(fulladdress);
+				System.out.println(order.getAddress());
+				order.setAvailable(false);
+				order.setAccount(user);
+				order.setNguoinhan(fullname);
+				order.setTongtien(total);
+				order.setAvailable(false);
+				order.setCity(a.get().getCity());
+				Order newOrder = orderDAO.saveAndFlush(order);
+
+				// ADD OrderDetail
+				for (int i = 0; i < productId.length; i++) {
+					Product product = productDAO.findById(Integer.parseInt(productId[i])).orElse(null);
+					if (product != null) {
+						OrderDetail orderDetail = new OrderDetail();
+						orderDetail.setOrder(newOrder);
+						orderDetail.setProduct(product);
+						orderDetail.setSize(Integer.parseInt(sizeId[i]));
+						orderDetail.setPrice(priceTotal.get(i));
+						orderDetail.setQuantity(Integer.parseInt(countProduct[i]));
+						orderDetailDAO.save(orderDetail);
+					}
 				}
-			}
+			}else {
+				 request.getSession().setAttribute("messagesAddress", "Vui lòng thêm địa chỉ");
+				return "redirect:/check";
+				}
+			
 		}
 
 		//// GỬI MAIL ////
@@ -353,13 +338,11 @@ public class OrderController {
 
 		// Tạo bảng với CSS
 		bodyBuilder.append("<table style=\"border-collapse: collapse;\">");
-		bodyBuilder.append(
-				"<tr>"
-						+ "<th style=\"border: 1px solid black; padding: 8px;\">Sản phẩm</th>"
-						+ "<th style=\"border: 1px solid black; padding: 8px;\">Số lượng</th>"
-						+ "<th style=\"border: 1px solid black; padding: 8px;\">Size</th>"
-						+ "<th style=\"border: 1px solid black; padding: 8px;\">Giá</th>"
-						+ "<th style=\"border: 1px solid black; padding: 8px;\">Tổng cộng</th></tr>");
+		bodyBuilder.append("<tr>" + "<th style=\"border: 1px solid black; padding: 8px;\">Sản phẩm</th>"
+				+ "<th style=\"border: 1px solid black; padding: 8px;\">Số lượng</th>"
+				+ "<th style=\"border: 1px solid black; padding: 8px;\">Size</th>"
+				+ "<th style=\"border: 1px solid black; padding: 8px;\">Giá</th>"
+				+ "<th style=\"border: 1px solid black; padding: 8px;\">Tổng cộng</th></tr>");
 
 		// Lấy thông tin chi tiết của từng sản phẩm trong giỏ hàng và thêm vào bảng
 		for (int i = 0; i < productId.length; i++) {
