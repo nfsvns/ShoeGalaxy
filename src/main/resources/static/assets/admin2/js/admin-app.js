@@ -32,6 +32,9 @@ app.config(function($routeProvider) {
 		}).when("/category", {
 			templateUrl: "/assets/admin2/pages/category/index.html",
 			controller: "category-ctrl"
+		}).when("/address", {
+			templateUrl: "/assets/admin2/pages/address.html",
+			controller: "address-ctrl"
 		})
 		.when("/authority", {
 			templateUrl: "/assets/admin2/pages/authority/index.html",
