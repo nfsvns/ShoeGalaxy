@@ -171,7 +171,7 @@
 								</div>
 								<div class="form-group col-sm-4">
 									<div>Password</div>
-									<input type="password" ng-model="form.password" class="form-control"> <!--  -->
+									<input ng-value=" " type="password" disabled class="form-control" > 
 									
 								</div>			
 								<div class="row"></div>
@@ -201,15 +201,15 @@
 		</div>
 	</div>
 		<div class="panel-footer text-center">
-		<button ng-click="create()"
+		<button ng-click="create()" ng-disabled="!form.username"
 			class="btn btn-primary">
 			<b class="glyphicon glyphicon-plus"></b> Create
 		</button>
-		<button ng-click="update()"
+		<button ng-click="update()" ng-disabled="!form.username"
 			class="btn btn-success">
 			<b class="glyphicon glyphicon-save"></b> Update
 		</button>
-		<button ng-click="delete(form)"
+		<button ng-click="delete(form)" ng-disabled="!form.username"
 			class="btn btn-danger">
 			<b class="glyphicon glyphicon-trash"></b> Delete
 		</button>	

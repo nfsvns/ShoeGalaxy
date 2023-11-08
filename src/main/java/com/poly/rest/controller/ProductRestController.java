@@ -100,11 +100,12 @@ public class ProductRestController {
 		return product;
 
 	}
-	
+	/*
 	@DeleteMapping("{id}/real") 
 	public void deleteProduct(@PathVariable("id") Integer id) {
 	    productService.DeleteProductAndRelatedData(id);
 	}
+	*/
            	@GetMapping("/counts")
     	public ResponseEntity<Map<String, Integer>> getProductCounts() {
 		Map<String, Integer> productCounts = new HashMap<>();

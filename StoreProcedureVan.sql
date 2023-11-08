@@ -1,7 +1,7 @@
 use ShoeGalaxy
 go
-
-ALTER PROCEDURE DeleteProductAndRelatedData
+/*
+CREATE PROCEDURE DeleteProductAndRelatedData
     @id INT
 AS
 BEGIN
@@ -16,25 +16,8 @@ BEGIN
     DELETE FROM Products WHERE id = @id;	
 END
 go
+*/
 
-
-ALTER PROCEDURE DeleteAccountAndRelatedData
-    @Username NVARCHAR(255)
-AS
-BEGIN
-    DELETE FROM OrderDetails
-    WHERE order_id IN (SELECT id FROM Orders WHERE username = @Username);
-    DELETE FROM Orders
-    WHERE username = @Username;
-    DELETE FROM Addresses
-    WHERE account_username = @Username;
-    DELETE FROM Authorities
-    WHERE username = @Username;
-    DELETE FROM Accounts
-    WHERE username = @Username;
-END;
-
-/*chuan chua edit 
 CREATE PROCEDURE DeleteAccountAndRelatedData
     @Username NVARCHAR(255)
 AS
@@ -49,4 +32,4 @@ BEGIN
     WHERE username = @Username;
     DELETE FROM Accounts
     WHERE username = @Username;
-END;*/
+END;

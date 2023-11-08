@@ -84,7 +84,7 @@ $scope.reset = function(){
     
 	$scope.create = function() {
     var item = angular.copy($scope.form);
-    item.photo = "nv01.jpg";
+    item.photo = "hieu.jpg";
     $http.post(`/rest/accounts`, item).then(resp => {
         $scope.items.unshift(resp.data);
         $scope.reset();
