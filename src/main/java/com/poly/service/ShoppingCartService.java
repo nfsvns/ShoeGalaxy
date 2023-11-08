@@ -19,5 +19,7 @@ public interface ShoppingCartService {
 	List<ShoppingCart> findByUsername(String username);
 
 	ShoppingCart findByProductIdAndUsernameAndSize(Integer id, String username, Integer size);
+	
+	void deleteByUsernameWithStatus(String username);
 
 }

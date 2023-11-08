@@ -1,5 +1,4 @@
 
-
 const app = angular.module("app", [])
 app.controller("cart-ctrl", function($scope, $http) {
 	$scope.cart = [];
@@ -139,7 +138,8 @@ app.controller("cart-ctrl", function($scope, $http) {
 		},
 		get amount() { // tổng thành tiền các mặt hàng trong giỏ
 			return this.items
-				.map(item => this.amtt_of(item))
+				.filter(item => item.status === true) // Lọc ra các mặt hàng có item.status = true
+				.map(item => this.amtt_of(item)) // Tính tổng tiền cho các mặt hàng thỏa mãn điều kiện
 				.reduce((total, amt) => total += amt, 0);
 		},
 		saveToDatabase(item) {
@@ -164,6 +164,7 @@ app.controller("cart-ctrl", function($scope, $http) {
 						price: itemPrice,
 						qty: item.qty,
 						total: total,
+						status: false,
 						// Thêm các trường dữ liệu khác vào đây nếu cần thiết
 					};
 					$http({
@@ -205,7 +206,6 @@ app.controller("cart-ctrl", function($scope, $http) {
 				var spanText = spanElement !== null ? spanElement.innerText : null;
 				$http.get(`/rest/carts/username/${spanText}`).then(response => {
 					this.items = response.data;
-					this.updateCount();
 				}).catch(error => {
 					console.error("Lỗi khi tải dữ liệu từ cơ sở dữ liệu: ", error);
 				});
@@ -242,11 +242,28 @@ app.controller("cart-ctrl", function($scope, $http) {
 				.catch(error => {
 					console.error('Lỗi khi xóa sản phẩm trong giỏ hàng: ', error);
 				});
+		},
+		status_changed(item, isChecked) {
+			var newStatus = isChecked ? true : false; // Đảm bảo rằng newStatus sẽ là true nếu checkbox được chọn và ngược lại
+			$http.get(`/rest/carts/${item.id}`)
+				.then(response => {
+					var data = response.data;
+					data.status = newStatus;
+					$http.put(`/rest/carts/${item.id}`, data)
+						.then(response => {
+							console.log("Trạng thái đã được cập nhật trong cơ sở dữ liệu", response.data);
+							this.loadFromDatabase();
+						})
+						.catch(error => {
+							console.error("Lỗi khi cập nhật trạng thái trong cơ sở dữ liệu: ", error);
+						});
+				})
+				.catch(error => {
+					console.error("Lỗi khi tải dữ liệu từ cơ sở dữ liệu: ", error);
+				});
 		}
 	}
 	$cart.loadFromDatabase();
-
-
 
 
 
@@ -324,70 +341,3 @@ $("#district").change(() => {
 $("#ward").change(() => {
 	// printResult();
 })
-
-/*add(id) {
-			if (!$scope.selectedSize) {
-				alert('Vui lòng chọn size.');
-				return;
-			}
-			// Check if the item with the same ID and size is already in the cart
-			var spanElement = document.getElementById('remoteU');
-			var spanText = spanElement !== null ? spanElement.innerText : null;
-			$http.get(`/rest/carts/username/${spanText}`).then(e => {
-				if (e.data.length > 0) {
-					var data = e.data;
-					data[0].qty += $scope.quantity;
-					data[0].total = data[0].qty * data[0].price;
-					if (data[0].product.id == id && data[0].size == $scope.selectedSize) {
-						$http.put(`/rest/carts/${data[0].id}`, data[0])
-							.then(response => {
-								console.log("Dữ liệu đã được cập nhật trong cơ sở dữ liệu", response.data);
-								// Reload cart data after successful update
-								this.loadFromDatabase(); // Sử dụng arrow function để giữ nguyên ngữ cảnh
-							})
-							.catch(error => {
-								console.error("Lỗi khi cập nhật dữ liệu trong cơ sở dữ liệu: ", error);
-							});
-					}
-				}
-			}).catch(error => {
-				console.error("Lỗi khi tải dữ liệu từ cơ sở dữ liệu: ", error);
-			});
-			// If the item doesn't exist in the cart, fetch product details
-			$http.get(`/rest/products/${id}`).then(resp => {
-				// Fetch product images 
-				$http.get(`/rest/products/${id}/images`).then(imageResp => {
-					if (imageResp.data.length > 0) {
-						resp.data.image = imageResp.data[0].image;
-					} else {
-						// Set a default image URL if no images are available
-						resp.data.image = 'url_to_default_image.jpg';
-					}
-
-					$http.get(`/rest/products/${id}/price`).then(totalAmount => {
-						if (totalAmount.data.length > 0) {
-							resp.data.percentage = totalAmount.data[0].percentage;
-
-						} else {
-							resp.data.percetage = 1;
-						}
-						// Check stock quantity before adding to cart
-						$http.get(`/rest/sizeManager/checkQuantity/${id}/${$scope.selectedSize}`).then(stockResp => {
-							var availableStock = stockResp.data;
-
-							if (availableStock >= resp.data.qty) {
-								this.items.push(resp.data);
-							} else {
-								alert('Số lượng vượt quá số lượng tồn kho.');
-							}
-						});
-						// Set the quantity and selected size based on user input
-						resp.data.qty = $scope.quantity;
-						resp.data.sizes = $scope.selectedSize;
-						this.saveToDatabase(resp.data);
-					});
-
-				});
-
-			});
-		},*/

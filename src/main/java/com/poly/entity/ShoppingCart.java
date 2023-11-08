@@ -34,5 +34,6 @@ public class ShoppingCart {
 	private float price;
 	private int qty;
 	private float total;
+	private	Boolean status;
 
 }

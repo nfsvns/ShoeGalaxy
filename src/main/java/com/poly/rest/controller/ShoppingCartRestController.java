@@ -1,6 +1,7 @@
 package com.poly.rest.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -64,8 +65,13 @@ public class ShoppingCartRestController {
 	}
 
 	@DeleteMapping("/delete/{username}")
-    public void deleteAllByUsername(@PathVariable("username") String username) {
-        shoppingCartService.deleteAll(username);
-    }
+	public void deleteAllByUsername(@PathVariable("username") String username) {
+		shoppingCartService.deleteAll(username);
+	}
 	
+	@DeleteMapping("/delete/status/{username}")
+	public void deleteByUsernameWithStatus(@PathVariable("username") String username) {
+		shoppingCartService.deleteByUsernameWithStatus(username);
+	}
+
 }

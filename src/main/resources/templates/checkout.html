@@ -48,7 +48,7 @@
 									<th>Total</th>
 								</thead>
 								<tbody>
-									<tr ng-repeat="item in cart.items">
+									<tr ng-repeat="item in cart.items | filter : { status: true }">
 										<td><input ng-model="item.product.id" type="text"
 											name="productId" style="width: 50%"></td>
 
@@ -63,7 +63,7 @@
 											style="width: 30px" class="border border-light" /></td>
 
 										<td><input type="text" name="priceTotal" style="width: 100%; border: none;"
-												value="{{ cart.amtt_of(item)}}"></td>
+												value="{{cart.amtt_of(item)}}"></td>
 
 
 
@@ -107,7 +107,7 @@
 							</div>
 
 							<div class="form-group">
-								<button class="btn btn-primary btn-lg py-3 btn-block">Place
+								<button class="btn btn-primary btn-lg py-3 btn-block" >Place
 									Order</button>
 							</div>
 							<div class="form-group">

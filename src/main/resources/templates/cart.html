@@ -32,6 +32,7 @@
 					<table class="table table-bordered">
 						<thead>
 							<tr>
+								<th></th>
 								<th class="product-thumbnail">Image</th>
 								<th class="product-name">Product</th>
 								<th class="product-size">Size</th>
@@ -43,6 +44,7 @@
 						</thead>
 						<tbody>
 							<tr ng-repeat="item in cart.items">
+								<td><input type="checkbox" ng-model="item.status" ng-click="cart.status_changed(item, item.status)"/></td>
 								<td><img src="/images/{{item.image}}" style="width: 50%">
 								</td>
 								<td>{{item.name}}</td>

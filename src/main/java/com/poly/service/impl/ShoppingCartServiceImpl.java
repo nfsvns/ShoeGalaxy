@@ -58,4 +58,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 		List<ShoppingCart> shoppingCarts = shoppingCartDAO.findShoppingCartsByUsername(username);
 		shoppingCartDAO.deleteAll(shoppingCarts);
 	}
+	
+	@Override
+	public void deleteByUsernameWithStatus(String username) {
+		shoppingCartDAO.deleteByUsernameWithStatus(username);
+	}
 }

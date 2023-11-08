@@ -218,7 +218,6 @@ public class OrderController {
 						+ a.get().getCity();
 				order.setAddress(fulladdress);
 				System.out.println(order.getAddress());
-
 				order.setDiscountCode(null); // May need a null check here for the discount object
 				order.setAccount(user);
 				order.setAvailable(false);
@@ -370,7 +369,7 @@ public class OrderController {
 		mail.setBody(bodyBuilder.toString());
 
 		mailerService.queue(mail);
-		request.getSession().removeAttribute("cart");
+//		request.getSession().removeAttribute("cart");
 
 		return "redirect:/thankyou.html";
 
