@@ -1,6 +1,6 @@
 use ShoeGalaxy
 go
-/*
+/* asd
 CREATE PROCEDURE DeleteProductAndRelatedData
     @id INT
 AS
