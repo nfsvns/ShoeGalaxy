@@ -61,6 +61,7 @@ public class AddressController {
 		return "redirect:/check";
 	}
 
+	
 	@PostMapping("/updateAddress")
 	public String updateAddress(Model model, @RequestParam(value = "address2", required = false) Integer address2,
 			@RequestParam String address, @RequestParam(value = "provinceLabel", required = false) String provinceLabel,
@@ -85,4 +86,35 @@ public class AddressController {
 			return "forward:/check";
 		}
 	}
+	
+
+	@PostMapping("/newAction")
+	public String newAction(Model model, @RequestParam String address,
+			@RequestParam(value = "provinceLabel", required = false) String provinceLabel,
+			@RequestParam(value = "districtLabel", required = false) String districtLabel,
+			@RequestParam(value = "wardLabel", required = false) String wardLabel, HttpServletRequest request) {
+		if (provinceLabel == null || provinceLabel.isEmpty() 
+				|| districtLabel == null || districtLabel.isEmpty()
+				|| wardLabel == null || wardLabel.isEmpty() 
+				|| address == null || address.isEmpty()) {
+			model.addAttribute("messages", "Vui lòng điền đầy đủ thông tin để thêm địa chỉ");
+			return "forward:/ChangeInfomation";
+		} else {
+			String username = request.getRemoteUser();
+			Account user = accountDAO.findById(username).orElse(null);
+
+			Address ad = new Address();
+			ad.setAccount(user);
+			ad.setAddressDetail(address + ", " + wardLabel + ", " + districtLabel + ", " + provinceLabel);
+			ad.setCity(provinceLabel);
+			ad.setDistrict(districtLabel);
+			ad.setWard(wardLabel);
+			ad.setStreet(address);
+			addressDAO.save(ad);
+			return "redirect:/ChangeInfomation";
+		}
+
+	}
+
+	
 }

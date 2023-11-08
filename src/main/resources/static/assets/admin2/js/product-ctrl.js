@@ -20,7 +20,13 @@ app.controller("product-ctrl", function($scope, $http) {
 		});
 
 		$scope.reset(); //để có hình mây lyc1 mới đầu
+		$scope.loadCurrentUser();
 	}
+	$scope.loadCurrentUser = function() {
+    $http.get("/rest/accounts/current-account").then(resp => {
+        $scope.account = resp.data;
+    }); 
+};
 	$scope.edit = function(item) {
 		$scope.form = angular.copy(item);
 		$scope.form.images = []; // Khởi tạo thuộc tính images là một mảng trống
@@ -102,7 +108,21 @@ app.controller("product-ctrl", function($scope, $http) {
 				console.log("Error", error);
 			});
 	}
-
+	
+$scope.deleteReal = function(item) {
+    if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này vĩnh viễn?")) {
+        $http.delete(`/rest/products/${item.id}/real`).then(resp => {
+            var index = $scope.items.findIndex(p => p.id === item.id);
+            $scope.items.splice(index, 1);
+            $scope.reset();
+            $scope.items[index] = item;
+            alert("Xóa sản phẩm vĩnh viễn thành công");
+        }).catch(error => {
+            alert("Lỗi xóa sản phẩm");
+            console.log("Error", error);
+        });
+    }
+}
 
 	$scope.editImg = function(image) {
 		$scope.formImg = angular.copy(image);

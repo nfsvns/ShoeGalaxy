@@ -1,23 +1,44 @@
 package com.poly.service.impl;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.poly.dao.AccountDAO;
+import com.poly.dao.AddressDAO;
+import com.poly.dao.OrderDAO;
+import com.poly.dao.OrderDetailDAO;
 import com.poly.entity.Account;
+import com.poly.entity.Address;
+import com.poly.entity.Order;
+import com.poly.entity.OrderDetail;
 import com.poly.entity.Product;
 import com.poly.service.AccountService;
+import com.poly.service.OrderService;
 
 
 @Service
 public class AccountServiceImpl implements AccountService{
 	@Autowired
 	AccountDAO dao;
-	
+	@Autowired
+	BCryptPasswordEncoder passwordEncoder;
+	@Autowired
+	AddressDAO addressdao;
+	@Autowired
+    OrderDAO orderDAO;
+	@Autowired
+	OrderService OrderService;
+	@Autowired
+	OrderDetailDAO orderdetailDAO;
 	public List<Account> findAll() {
 		return dao.findAll();
 	}
@@ -70,6 +91,7 @@ public class AccountServiceImpl implements AccountService{
 	@Override
 	public Account create(Account account) {
 		// TODO Auto-generated method stub
+		
 		return dao.save(account);
 	}
 
@@ -84,7 +106,7 @@ public class AccountServiceImpl implements AccountService{
 		Account account = dao.findById(username).orElse(null);
 
         if (account != null) {
-            // Cập nhật thông tin cá nhân
+      
             account.setFullname(newFullname);
             account.setEmail(newEmail);
             dao.save(account);
@@ -93,6 +115,58 @@ public class AccountServiceImpl implements AccountService{
 
         return false;
     }
+	
+	@Override
+	public List<Account> findAllWithPasswordEncoder() {
+		// TODO Auto-generated method stub
+		 List<Account> accounts = dao.findAll();
+	        for (Account account : accounts) {
+	        String encryptedPassword = passwordEncoder.encode(account.getPassword());
+	   	    account.setPassword(encryptedPassword.substring(0, 25));
+	        }
+	        Collections.reverse(accounts);
+	        return accounts;
+	
+	}
 
+	@Override
+	 public void deleteAddressesByAccount(Account account) {
+        List<Address> addressesToDelete = addressdao.findByAccount(account);
+        for (Address address : addressesToDelete) {
+        	addressdao.delete(address);
+        }
+    }
+
+	@Override
+	@Transactional
+	public void deleteAccountAndRelatedData(String username) {
+		dao.DeleteAccountAndRelatedData(username);
+
+	}
+
+	@Override
+    public Account findByEmail(String email) {
+        return dao.getAccountByEmail(email);
+    }
+
+	@Override
+    public List<String> findAllAccountEmails() {
+        List<Account> accounts = dao.findAll(); 
+        List<String> emails = accounts.stream().map(Account::getEmail).collect(Collectors.toList()); 
+        return emails;
+    }
+	
+	@Override
+	public boolean isEmailExists(String email) {
+	    List<Account> accounts = dao.findAll();
+	    for (Account account : accounts) {
+	        if (email.equals(account.getEmail())) {
+	            return true; // Email đã tồn tại trong hệ thống
+	        }
+	    }
+	    return false; // Email chưa tồn tại
+	}
+
+	
 	
 }

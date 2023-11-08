@@ -2,12 +2,15 @@ package com.poly.dao;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import com.poly.entity.Order;
 import com.poly.entity.OrderDetail;
-
+@Repository
 public interface OrderDetailDAO extends JpaRepository<OrderDetail, Long> {
 
 	@Query("SELECT o FROM OrderDetail o WHERE o.order.id=?1")
@@ -16,10 +19,13 @@ public interface OrderDetailDAO extends JpaRepository<OrderDetail, Long> {
 	@Query("SELECT o.product.id, o.product.name, o.product.price, SUM(o.quantity) FROM OrderDetail o GROUP BY o.product.id,o.product.name, o.product.price ORDER BY SUM(o.quantity) DESC")
 	List<Object[]> findByAllTopProductOrderDetail();
 
-	// Tổng số lượng sản phẩm bán ra trong tháng
 	@Query(value = "SELECT SUM(od.quantity) FROM OrderDetails od " 
 			+ "JOIN Orders o ON od.order_id = o.id "
 			+ "WHERE MONTH(o.create_date) = MONTH(CURRENT_TIMESTAMP) AND YEAR(o.create_date) = YEAR(CURRENT_TIMESTAMP)", nativeQuery = true)
 	Integer getTotalQuantitySoldThisMonth();
+	
+	@Transactional
+	List<OrderDetail> findByOrder(Order order);
+	
 
 }

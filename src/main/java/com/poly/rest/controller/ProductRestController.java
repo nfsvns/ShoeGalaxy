@@ -52,6 +52,7 @@ public class ProductRestController {
 	public Product getOne(@PathVariable("id") Integer id) {
 		return productService.findById(id);
 	}
+	
 
 	@GetMapping("/{id}/images")
 	public List<Image> getProductImages(@PathVariable("id") Integer id) {
@@ -87,6 +88,7 @@ public class ProductRestController {
 		return product;
 	}
 
+	
 	@RequestMapping(value = "{id}", method = {RequestMethod.PUT, RequestMethod.DELETE})
 	public Product putOrDelete(@PathVariable("id") Integer id, @RequestBody Product product, 
 			HttpServletRequest request) {
@@ -98,9 +100,13 @@ public class ProductRestController {
 		return product;
 
 	}
-
-	@GetMapping("/counts")
-	public ResponseEntity<Map<String, Integer>> getProductCounts() {
+	
+	@DeleteMapping("{id}/real") 
+	public void deleteProduct(@PathVariable("id") Integer id) {
+	    productService.DeleteProductAndRelatedData(id);
+	}
+           	@GetMapping("/counts")
+    	public ResponseEntity<Map<String, Integer>> getProductCounts() {
 		Map<String, Integer> productCounts = new HashMap<>();
 		productCounts.put("MLB", productService.countMlBProducts());
 		productCounts.put("ADIDAS", productService.countADProducts());

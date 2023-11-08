@@ -21,50 +21,70 @@
 		<div class="container">
 			<!-- Form-->
 			<div class="form">
-				<div class="form-toggle"></div>
-				<div class="form-panel one">
-					<div class="form-header">
-						<h1>Account Login</h1>
-					</div>
-					<div class="form-content">
-						<form action="/login/success" method="post">
-							<p class="text-danger">[[${message}]] [[${param.error}]]</p>
-							<div class="form-group">
-								<label for="username">Username</label> <input id="username"
-									type="text" name="username" required="required" />
-							</div>
-							<div class="form-group">
-								<label for="password">Password</label> <input id="password"
-									type="password" name="password" required="required" />
-							</div>
-							<div class="form-group">
-								<label class="form-remember"> <input type="checkbox" />Remember
-									Me
-								</label><a class="form-recovery" href="/forgetPassword">Forgot
-									Password?</a>
-							</div>
-							<div class="form-group">
-								<label class="form-remember">Don't have account ? <a
-									class="form-recovery" href="/register.html"
-									th:text="#{nav.register}">Register</a> now
-								</label>
+    <div class="form-toggle"></div>
+    <div class="form-panel one">
+        <div class="form-header">
+            <h1>Account Login</h1>
+        </div>
+        <div class="form-content">
+            <form action="/login/success" method="post">
+                <p class="text-danger">[[${message}]] [[${param.error}]]</p>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input id="username" type="text" name="username" required="required" />
+                </div>
+                
+         <div class="form-group" style="position: relative;">
+              <label for="password">Password</label>
+          <input id="password" type="password" name="password" required="required" />
+           <i class="" id="password-toggle" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); cursor: pointer;"></i>
+                 </div>
 
-							</div>
+                <div class="form-group">
+                    <label class="form-remember">
+                        <input type="checkbox" />Remember Me
+                    </label>
+                    <a class="form-recovery" href="/forgetPassword">Forgot Password?</a>
+                </div>
+                <div class="form-group">
+                    <label class="form-remember">
+                        Don't have an account? <a class="form-recovery" href="/register.html" th:text="#{nav.register}">Register</a> now
+                    </label>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Log In</button>
+                </div>
+                <a type="button" class="btn btn-outline-danger w-100 mb-3" href="/oauth2/authorization/google">Google</a>
+                <a type="button" class="btn btn-outline-primary w-100" href="/oauth2/authorization/facebook">Facebook</a>
+            </form>
+        </div>
+    </div>
+</div>
 
-							<div class="form-group">
-								<button type="submit">Log In</button>
-							</div>
-							<a type="button" class="btn btn-outline-danger w-100 mb-3"
-								href="/oauth2/authorization/google">Google</a> <a type="button"
-								class="btn btn-outline-primary  w-100"
-								href="/oauth2/authorization/facebook">Facebook</a>
-
-						</form>
-					</div>
-				</div>
-
-			</div>
 		</div>
 	</div>
+	
+	
+	
+	
+	<script>
+    const passwordInput = document.getElementById("password");
+    const passwordToggle = document.getElementById("password-toggle");
+
+    passwordToggle.addEventListener("click", () => {
+        if (passwordInput.getAttribute("type") === "password") {
+            passwordInput.setAttribute("type", "text");
+            passwordToggle.classList.remove("fa-eye-slash");
+            passwordToggle.classList.add("fa-eye");
+        } else {
+            passwordInput.setAttribute("type", "password");
+            passwordToggle.classList.remove("fa-eye");
+            passwordToggle.classList.add("fa-eye-slash");
+        }
+    });
+</script>
+	
 </body>
+
+
 </html>
