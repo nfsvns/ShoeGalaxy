@@ -251,12 +251,13 @@
 				class="btn btn-success me-2">
 				<b class="bi bi-save"></b> Update
 			</button>
-			  <!--modalvan  -->
-			<button class="btn btn-danger me-2" 
-			     data-bs-toggle="modal" data-bs-target="#secondModal" onclick="openSecondModal()"ng-disabled="!form.id">
+			
+			
+            <button ng-click="delete(form)" class="btn btn-danger me-2" 
+			     data-bs-toggle="modal" ng-disabled="!form.id">
                 <b class="bi bi-trash"></b> Delete
             </button>
-                   <!--modalvan  -->
+                  
 			<button ng-click="reset()" class="btn btn-info">
 				<b class="bi bi-arrow-clockwise"></b> Reset
 			</button>
