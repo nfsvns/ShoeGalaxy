@@ -45,10 +45,13 @@ public interface OrderDAO extends JpaRepository<Order, Long> {
 
 	
 	//Phan tich city
-	@Query(value = "SELECT o.city AS cityName, SUM(o.tongtien) AS totalSales, COUNT(o.id) AS orderCount, ROUND( SUM(o.tongtien)/COUNT(o.id) , 2) AS aov " +
+	@Query(value = "SELECT TOP 5 o.city AS cityName, SUM(o.tongtien) AS totalSales, COUNT(o.id) AS orderCount, ROUND( SUM(o.tongtien)/COUNT(o.id) , 2) AS aov " +
             "FROM Orders o " +
             "WHERE o.city IS NOT NULL " +
-            "GROUP BY o.city", nativeQuery = true)
+            "GROUP BY o.city " +
+            "ORDER BY totalSales DESC" 
+      
+            , nativeQuery = true)
 
 	List<Object[]> getCityOrderStatistics();
 
