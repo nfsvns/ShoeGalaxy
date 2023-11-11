@@ -133,7 +133,7 @@
 			<div class="card">
 
 				<div class="card-body">
-					<div class="text-center text-secondary">DISCOUNT EDITION</div>
+					<div class="text-center text-secondary">CATEGORY EDITION</div>
 					<div class="row">
 						<div class="col-sm-10 mx-auto">
 							<div></div>
@@ -154,17 +154,17 @@
 							</div>
 
 							<div class="form-group col-sm-6">
-									<div>Available?</div>
-									<div class="form-control">
-										<label class="radio-inline"> <input
-											ng-model="form.available" ng-value="true" name="available"
-											type="radio">Yes
-										</label> <label class="radio-inline"> <input
-											ng-model="form.available" ng-value="false" name="available"
-											type="radio">No
-										</label>
-									</div>
+								<div>Available?</div>
+								<div class="form-control">
+									<label class="radio-inline"> <input
+										ng-model="form.available" ng-value="true" name="available"
+										type="radio">Yes
+									</label> <label class="radio-inline"> <input
+										ng-model="form.available" ng-value="false" name="available"
+										type="radio">No
+									</label>
 								</div>
+							</div>
 
 						</div>
 
@@ -203,7 +203,7 @@
 		<div class="col-12">
 			<div class="card ">
 				<div class="card-header pb-0">
-					<h6>Discount Product</h6>
+					<h6>LIST CATEGORY</h6>
 				</div>
 				<div class="card-body px-0 pt-0 pb-2">
 					<div class="table-responsive p-0">
@@ -214,12 +214,12 @@
 										class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
 										Id</th>
 									<th
-										class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+										class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
 										Name</th>
 									<th
 										class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
 										Available</th>
-	<th
+									<th
 										class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
 										Action</th>
 
@@ -228,15 +228,15 @@
 							<tbody>
 								<tr ng-repeat="item in pager.items">
 
-									<td class="align-middle  text-sm"><span
+									<td class="align-middle text-sm"><span
 										class="badge badge-sm bg-gradient-secondary">{{item.id}}</span></td>
 
-									<td class="align-middle text-center text-sm"><span
+									<td class="align-middle text-sm"><span
 										class="badge badge-sm bg-gradient-success">{{item.name}}</span></td>
-									<td class="align-middle text-center text-sm"><span
+									<td class="align-middle text-sm"><span
 										class="badge badge-sm bg-gradient-success">{{item.available}}</span></td>
 
-									<td class="align-middle text-center   text-sm">
+									<td class="align-middle text-sm">
 
 										<div class="btn-group btn-group-xs">
 											<a ng-click="edit(item)" href="" class="btn btn-warning">

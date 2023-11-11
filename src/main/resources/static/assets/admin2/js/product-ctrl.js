@@ -88,20 +88,42 @@ app.controller("product-ctrl", function($scope, $http) {
 	}
 
 	$scope.delete = function(item) {
-		var item = angular.copy(item);
-		item.available = false;
-		$http.put(`/rest/products/${item.id}`, item).then(resp => {
-			var index = $scope.items.findIndex(p => p.id == item.id);
-			$scope.items.splice(index, 1);
-			$scope.reset();
-			$scope.items[index] = item;
-			alert("Xóa sản phẩm thành công!");
-		})
-			.catch(error => {
-				alert("Lỗi xóa sản phẩm!");
-				console.log("Error", error);
+		var itemCopy = angular.copy(item);
+
+		$http({
+			method: 'DELETE',
+			url: '/rest/products/' + itemCopy.id
+		}).then(function successCallback(response) {
+			var index = $scope.items.findIndex(p => p.id === itemCopy.id);
+			if (index !== -1) {
+				$scope.items.splice(index, 1);
+				$scope.reset();
+				alert("Xóa sản phẩm thành công!");
+			}
+		}, function errorCallback(error) {
+			// Nếu không xóa được, thực hiện cập nhật trạng thái
+			itemCopy.available = false;
+			$http({
+				method: 'PUT',
+				url: `/rest/products/${itemCopy.id}`,
+				data: itemCopy
+			}).then(function successCallback(response) {
+				var index = $scope.items.findIndex(p => p.id === itemCopy.id);
+				if (index !== -1) {
+					$scope.items[index] = itemCopy;
+					alert("Cập nhật trạng thái thành công!");
+				}
+			}, function errorCallback(updateError) {
+				// Handle the error for the status update here if needed
+				alert("Cập nhật trạng thái không thành công!");
 			});
-	}
+		});
+	};
+
+
+
+
+
 
 
 	$scope.editImg = function(image) {
@@ -302,48 +324,48 @@ app.controller("product-ctrl", function($scope, $http) {
 		});
 	}*/
 
-/*	$http.get("/rest/products/quantities")
-		.then(function(response) {
-			console.log(response.data); // Log the response data to check for any issues
-
-			var data = response.data;
-			var labelsBar = data.map(function(product) {
-				return product.name;
+	/*	$http.get("/rest/products/quantities")
+			.then(function(response) {
+				console.log(response.data); // Log the response data to check for any issues
+	
+				var data = response.data;
+				var labelsBar = data.map(function(product) {
+					return product.name;
+				});
+				var valuesBar = data.map(function(product) {
+					return product.quantity;
+				});
+				var backgroundColorsBar = [
+					'#FF6384',
+					'#36A2EB',
+					'#FFCE56',
+					'#33FF99',
+					'#FF99FF',
+					'#9966FF',
+					'#FF9933',
+					'#99CCFF',
+					'#FF6699',
+					'#66FF99',
+					'#FFCC99',
+					'#66CCFF',
+					'#FF99CC',
+					'#99FFCC',
+					'#FF6666'
+				]; // Colors can be customized
+	
+				var ctxBar = document.getElementById('myChartBar').getContext('2d');
+				var myChartBar = new Chart(ctxBar, {
+					type: 'bar', // Change the type to 'bar' for quantities
+					data: {
+						labels: labelsBar,
+						datasets: [{
+							data: valuesBar,
+							backgroundColor: backgroundColorsBar
+						}]
+					}
+				});
 			});
-			var valuesBar = data.map(function(product) {
-				return product.quantity;
-			});
-			var backgroundColorsBar = [
-				'#FF6384',
-				'#36A2EB',
-				'#FFCE56',
-				'#33FF99',
-				'#FF99FF',
-				'#9966FF',
-				'#FF9933',
-				'#99CCFF',
-				'#FF6699',
-				'#66FF99',
-				'#FFCC99',
-				'#66CCFF',
-				'#FF99CC',
-				'#99FFCC',
-				'#FF6666'
-			]; // Colors can be customized
-
-			var ctxBar = document.getElementById('myChartBar').getContext('2d');
-			var myChartBar = new Chart(ctxBar, {
-				type: 'bar', // Change the type to 'bar' for quantities
-				data: {
-					labels: labelsBar,
-					datasets: [{
-						data: valuesBar,
-						backgroundColor: backgroundColorsBar
-					}]
-				}
-			});
-		});
-*/
+	*/
 	$http.get("http://localhost:8080/rest/products/counts")
 		.then(function(response) {
 			var data = response.data;

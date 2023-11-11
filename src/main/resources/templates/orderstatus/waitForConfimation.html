@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	th:replace="~{/layout/layout.html::dynamic(~{::title}, ~{::body})}">
+
+
 <head>
-<title>Đã Giao</title>
+<title>Wait for confirmation</title>
 <meta charset="UTF-8">
 </head>
 <body>
+	
 <div class="container">
 		<div class="row p-4">
 
@@ -27,10 +30,11 @@
 			</div>
 		</div>
 	</div>
+
 	<section class="vh-90" style="margin-bottom: 100px">
 		<div class="container-fluid">
 			<div class="row d-flex justify-content-center align-items-center"
-				th:each="order: ${order}" th:if="${order.status} == 'Đã Giao'">
+				th:each="order: ${order}" th:if="${order.status} == 'Đang Xác Nhận'">
 				<div class="col">
 					<div class="card mb-4 t-2">
 						<div class="card-body p-4">
@@ -40,7 +44,7 @@
 										<div>
 											<p class="small text-muted">Date</p>
 											<p class="lead fw-normal mb-0"
-												th:text="${#dates.format(order.createDate, 'dd-MM-yyyy')}"></p>
+												th:text="${#dates.format(order.createDate, 'MM-dd-yyyy')}"></p>
 										</div>
 									</div>
 									<div class="col-md-2">
@@ -69,14 +73,17 @@
 										</div>
 									</div>
 									<div class="col-md-2">
-										<input type="hidden" id="orderId" th:value="${order.id}">
-										<p class="small text-muted">Action</p>
-										<button class="btn btn-secondary" ng-click="getOrderDetails()">Repurchase</button>
+										<form method="post" action="/updateOrder">
+											<input type="hidden" name="orderId" th:value="${order.id}">
+											<p class="small text-muted">Action</p>
+											<button type="submit" class="btn btn-secondary">Cancel order</button>
+										</form>
 									</div>
-									<button class="btn btn-secondary btn-sm mt-2 reply-btn"
-											data-comment-id="${order.id}">View Product Details</button>
 
-								
+									<button class="btn btn-secondary btn-sm mt-2 reply-btn"
+										data-comment-id="${order.id}">View Product Details</button>
+
+
 
 									<br>
 
