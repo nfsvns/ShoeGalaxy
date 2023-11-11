@@ -28,6 +28,7 @@ public class Product implements Serializable {
 	private Double price;
 	private Integer quantity;
 	private Boolean available;
+	private String decription;
 
 	@ManyToOne
 	@JoinColumn(name = "category_id")
@@ -59,7 +60,7 @@ public class Product implements Serializable {
 	private List<DiscountProduct> discountProduct;
 	@Override
 	public String toString() {
-	    return "Product [id=" + id + ", name=" + name + ", price=" + price + ", quantity=" + quantity + ", available=" + available
+	    return "Product [id=" + id + ", name=" + name + ", price=" + price + ", quantity=" + quantity + ", available=" + available + ", decription=" + decription
 	            + ", category=" + category
 	            + ", orderDetails size=" + (orderDetails != null ? orderDetails.size() : "null")
 	            + ", sizes size=" + (sizes != null ? sizes.size() : "null")

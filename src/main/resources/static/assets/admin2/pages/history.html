@@ -177,30 +177,42 @@
 										</div>
 										<div
 											class="form-group col-sm-6 text-uppercase text-secondary text-xs font-weight-bolder opacity-7">
-											<div>Available?</div>
+											<div>Payment orders?</div>
 											<div class="form-control">
 												<label
 													class="radio-inline text-uppercase text-secondary text-xxs font-weight-bolder">
 													<input ng-model="form.available" ng-value="true"
-													name="available" type="radio">Đã giao hàng
+													name="available" type="radio">Paid
 												</label> <label
 													class="radio-inline text-uppercase text-secondary text-xxs font-weight-bolder">
 													<input ng-model="form.available" ng-value="false"
-													name="available" type="radio">Chưa giao hàng
+													name="available" type="radio">Unpaid
 												</label>
 											</div>
 										</div>
 										<div
 											class="form-group col-sm-6 text-uppercase text-secondary text-xs font-weight-bolder opacity-7">
-											<label for="formDiscountAmount" class="form-label">Product
-												Id</label> <select ng-model="form.status" class="form-control">
-												<option value="" disabled selected>Select Product
-													Id</option>
-												<option value="Đang Xác Nhận">Đang Xác Nhận</option>
-												<option value="Đang Giao">Đang Giao</option>
-												<option value="Đã Giao">Đã Giao</option>
-												<option value="Đã Hủy">Đã Hủy</option>
-											</select>
+											<div>Status?</div>
+											<div class="form-control">
+												<label
+													class="radio-inline text-uppercase text-secondary text-xxs font-weight-bolder">
+													<input ng-model="form.status" ng-value="'Đang Giao'"
+													name="available" type="radio">Delivered
+												</label> <label
+													class="radio-inline text-uppercase text-secondary text-xxs font-weight-bolder">
+													<input ng-model="form.status" ng-value="'Đang Xác Nhận'"
+													name="available" type="radio">Confirm
+												</label> <label
+													class="radio-inline text-uppercase text-secondary text-xxs font-weight-bolder">
+													<input ng-model="form.status" ng-value="'Đã Giao'"
+													name="available" type="radio">Completed
+												</label> <label
+													class="radio-inline text-uppercase text-secondary text-xxs font-weight-bolder">
+													<input ng-model="form.status" ng-value="'Đã Hủy'"
+													name="available" type="radio" disabled="true">Canceled
+												</label>
+											</div>
+										</div>
 										</div>
 
 									</div>
@@ -241,11 +253,9 @@
 		<div class="card mb-4">
 			<div class="card-header pb-0">
 				<h6>List of History</h6>
-				<select class="form-select" ng-model="selectedDate"
-					ng-change="filterByDate(selectedDate)">
-					<option value="">Select a date</option>
-					<option ng-repeat="date in uniqueDates" value="{{date}}">{{date|date:'dd-MM-yyyy'}}</option>
-				</select>
+				<i class="fas fa-calendar" id="calendar" ng-model="selectedDate"></i>
+					<input type="text"ng-model="selectedDate"style="border: none" disabled="true"
+						placeholder="Select a date">
 			</div>
 			<div class="card-body px-0 pt-0 pb-2 w-100">
 				<div class="table-responsive p-0">
@@ -297,11 +307,17 @@
 								<td>{{item.tongtien}}</td>
 								<td>{{ item.discountCode.id }} {{ item.discountCode.code ||
 									'Discount Null' }}</td>
-								<td>{{item.status || 'NULL'}}</td>
+								<td
+											ng-class="{'btn-show': item.status == 'Đã Giao', 'btn-hide': item.status == 'Đang Giao','btn-cancel': item.status == 'Đã Hủy'}">
+											<span ng-if="item.status == 'Đang Xác Nhận'">Chờ xác
+												nhận</span> <span ng-if="item.status == 'Đã Hủy'">Đã
+												hủy</span> <span ng-if="item.status == 'Đã Giao'">Đã
+												hoàn thành</span> <span ng-if="item.status == 'Đang Giao'">Đang
+												giao hàng</span>
+										</td>
 
 								<td
-									ng-class="{'btn-show':item.available,'btn-hide':!item.available}">{{item.available?'Đã
-									giao hàng':'Chưa giao hàng'}}</td>
+									ng-class="{'btn-show':item.available,'btn-cancel':!item.available}">{{item.available?'Đã thanh toán':'Chưa thanh toán'}}</td>
 								<td><button ng-click="getDetailData(item)"
 										class="btn btn-primary">{{item.showDetail ? 'Hide' :
 										'Show'}}</button></td>

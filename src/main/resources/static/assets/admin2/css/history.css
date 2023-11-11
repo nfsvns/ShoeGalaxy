@@ -3,12 +3,14 @@
     position: relative;
 }
 .btn-show{
-	color: blue;
+	color: green;
 }
 .btn-hide{
+	color:blue;
+}
+.btn-cancel{
 	color:red;
 }
-
 /* CSS cho bảng chi tiết */
 .detail-table {
     opacity: 0.9;

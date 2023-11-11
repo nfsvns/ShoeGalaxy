@@ -1,32 +1,45 @@
-app.controller("history-ctrl", function($scope, $http) {
+
+app.controller("history-ctrl", function($scope, $http,$timeout) {
 	$scope.selectedDate = "";
 	$scope.filteredItems = [];
 	$scope.uniqueDates = [];
-
-	// Tính toán mảng uniqueDates từ items
-	function computeUniqueDates() {
-		var uniqueSet = new Set();
-		$scope.items.forEach(function(item) {
-			var date = new Date(item.createDate).toLocaleDateString();
-			uniqueSet.add(date);
-		});
-		$scope.uniqueDates = Array.from(uniqueSet);
-	}
-
-	// Thêm hàm filterByDate
-	$scope.filterByDate = function(selectedDate) {
-		if (selectedDate) {
-			$scope.filteredItems = $scope.items.filter(function(item) {
-				var itemDate = new Date(item.createDate).toLocaleDateString();
-				return itemDate === selectedDate;
-			});
-		} else {
-			$scope.filteredItems = $scope.items;
-		}
-	};
 	$scope.items = [];
 	$scope.form = {};
 	$scope.showDetail = false;
+
+
+	// Tính toán mảng uniqueDates từ items
+	$scope.filterByDate = function(selectedDate) {
+    if (selectedDate) {
+        $scope.filteredItems = $scope.items.filter(function(item) {
+            var itemDate = new Date(item.createDate).toLocaleDateString('en-GB');
+            return itemDate === selectedDate;
+        });
+    } else {
+        $scope.filteredItems = $scope.items;
+    }
+};
+
+$scope.computeUniqueDatesAndInitDate = function() {
+    flatpickr("#calendar", {
+        dateFormat: "d-m-Y",
+        defaultDate: $scope.selectedDate,
+        onChange: function(selectedDate) {
+            $timeout(function() {
+                $scope.selectedDate = new Date(selectedDate).toLocaleDateString('en-GB');
+                $scope.filterByDate($scope.selectedDate);
+        
+            });
+        }
+    });
+};
+
+
+
+
+
+
+
 	$scope.getDetailData = function(item) {
 		if (item.showDetail) {
 			item.showDetail = false;
@@ -45,14 +58,15 @@ app.controller("history-ctrl", function($scope, $http) {
 	$scope.initialize = function() {
 		$http.get("/rest/historys").then(resp => {
 			$scope.items = resp.data;
-			computeUniqueDates(); // tính toán mảng uniqueDates
+			$scope.computeUniqueDatesAndInitDate();
 			$scope.filterByDate($scope.selectedDate);
 			$scope.form = {
-				available: true,
+				available: null,
 			};
-		})
+		});
 		$scope.reset(); //để có hình mây lyc1 mới đầu
-	}
+	};
+
 	$scope.edit = function(item) {
 		$scope.form = angular.copy(item);
 		$(".nav-tabs a:eq(0)").tab("show");
@@ -60,7 +74,7 @@ app.controller("history-ctrl", function($scope, $http) {
 
 	$scope.reset = function() {
 		$scope.form = {
-			available: true,
+
 		}
 	}
 
@@ -70,6 +84,7 @@ app.controller("history-ctrl", function($scope, $http) {
 			var index = $scope.items.findIndex(p => p.id == item.id);
 			$scope.items[index] = item;
 			alert("Cập nhật lịch sử đơn hàng thành công!");
+			$scope.initialize();
 		})
 			.catch(error => {
 				alert("Lỗi cập nhật lịch sử đơn hàng!");
@@ -82,17 +97,24 @@ app.controller("history-ctrl", function($scope, $http) {
 			$http.delete(`/rest/historys/${item.id}`).then(resp => {
 				var index = $scope.items.findIndex(p => p.id == item.id);
 				$scope.items.splice(index, 1);
-				$scope.reset();
 				alert("Xóa lịch sử đơn hàng thành công!");
+				$scope.initialize();
 			}).catch(error => {
 				alert("Lỗi xóa lịch sử đơn hàng!");
 				console.log("Error", error);
 			})
 		}
 	}
+	$scope.filteredItems = {
+		remove(id) { // xóa sản phẩm khỏi giỏ hàng
+			var index = this.items.findIndex(item => item.id == id);
+			this.items.splice(index, 1);
+			this.saveToLocalStorage();
+		}
+	}
 	$scope.pager = {
 		page: 0,
-		size: 4,
+size: 10,
 		get items() {
 			if (this.page < 0) {
 				this.last();
