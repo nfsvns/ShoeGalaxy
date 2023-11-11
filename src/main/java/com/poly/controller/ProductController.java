@@ -2,6 +2,7 @@ package com.poly.controller;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -64,25 +66,21 @@ public class ProductController {
 
 	@RequestMapping("/shop.html")
 	public String list(Model model, @RequestParam("p") Optional<Integer> p) {
-		Pageable pageable = PageRequest.of(p.orElse(0), 6);
-//		Page<Product> page = dao.findAll(pageable);
-		Page<Product> page = dao.findDelete(pageable);
-		
-		// Lấy danh sách DiscountProduct
-		List<DiscountProduct> discountProducts = dpDAO.findAll();
-		model.addAttribute("discountProducts", discountProducts);
-		model.addAttribute("products", page);
-	
+	    Pageable pageable = PageRequest.of(p.orElse(0), 6);
+	    Page<Product> page = dao.findDelete(pageable);
+	    
+	    // Lấy danh sách DiscountProduct
+	    List<DiscountProduct> discountProducts = dpDAO.findAll();
+	    model.addAttribute("discountProducts", discountProducts);
+	    model.addAttribute("products", page);
+	    
+	    // Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
+	    List<Object[]> results = dao.countProductsByCategory();
+	    model.addAttribute("results", results);
 
-		int count = dao.countMlBProducts();
-		model.addAttribute("count", count);
-		int countAD = dao.countADProducts();
-		model.addAttribute("countAD", countAD);
-		int countNK = dao.countNKProducts();
-		model.addAttribute("countNK", countNK);
-
-		return "shop";
+	    return "shop";
 	}
+
 
 	@RequestMapping("/shop.html/search")
 	public String searchAndPage(Model model, @RequestParam("keywords") Optional<String> kw,
@@ -97,35 +95,30 @@ public class ProductController {
 		List<DiscountProduct> discountProducts = dpDAO.findAll();
 		model.addAttribute("discountProducts", discountProducts);
 		model.addAttribute("check", "1");
-		int count = dao.countMlBProducts();
-		model.addAttribute("count", count);
-		int countAD = dao.countADProducts();
-		model.addAttribute("countAD", countAD);
-		int countNK = dao.countNKProducts();
-		model.addAttribute("countNK", countNK);
+		 // Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
+	    List<Object[]> results = dao.countProductsByCategory();
+	    model.addAttribute("results", results);
 		return "shop";
 	}
 
 	@RequestMapping("shop.html/findByPrice")
-	public String findByPrice(Model model, @RequestParam("min") Optional<Double> min,
-			@RequestParam("max") Optional<Double> max, @RequestParam("p") Optional<Integer> p) {
-		double minPrice = min.orElse(sessionService.getAttribute("minPrice"));
-		double maxPrice = max.orElse(sessionService.getAttribute("maxPrice"));
-		sessionService.setAttribute("minPrice", minPrice);
-		sessionService.setAttribute("maxPrice", maxPrice);
-		List<DiscountProduct> discountProducts = dpDAO.findAll();
-		model.addAttribute("discountProducts", discountProducts);
-		Pageable pageable = PageRequest.of(p.orElse(0), 6);
-		Page<Product> item = dao.findByPriceBetween(minPrice, maxPrice, pageable);
-		model.addAttribute("products", item);
-		model.addAttribute("check", "2");
-		int count = dao.countMlBProducts();
-		model.addAttribute("count", count);
-		int countAD = dao.countADProducts();
-		model.addAttribute("countAD", countAD);
-		int countNK = dao.countNKProducts();
-		model.addAttribute("countNK", countNK);
-		return "shop";
+	public String findByPrice(Model model, @RequestParam("priceRange") String priceRange,
+	                          @RequestParam("p") Optional<Integer> p) {
+	    String[] priceValues = priceRange.split("-");
+	    double minPrice = Double.parseDouble(priceValues[0]);
+	    double maxPrice = Double.parseDouble(priceValues[1]);
+	    sessionService.setAttribute("minPrice", minPrice);
+	    sessionService.setAttribute("maxPrice", maxPrice);
+	    List<DiscountProduct> discountProducts = dpDAO.findAll();
+	    model.addAttribute("discountProducts", discountProducts);
+	    Pageable pageable = PageRequest.of(p.orElse(0), 6);
+	    Page<Product> item = dao.findByPriceBetween(minPrice, maxPrice, pageable);
+	    model.addAttribute("products", item);
+	    model.addAttribute("check", "2");
+	    // Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
+	    List<Object[]> results = dao.countProductsByCategory();
+	    model.addAttribute("results", results);
+	    return "shop";
 	}
 
 
@@ -140,12 +133,9 @@ public class ProductController {
 		Page<Product> page = dao.findAll(pageable);
 		model.addAttribute("products", page);
 		model.addAttribute("check", "4");
-		int count = dao.countMlBProducts();
-		model.addAttribute("count", count);
-		int countAD = dao.countADProducts();
-		model.addAttribute("countAD", countAD);
-		int countNK = dao.countNKProducts();
-		model.addAttribute("countNK", countNK);
+		 // Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
+	    List<Object[]> results = dao.countProductsByCategory();
+	    model.addAttribute("results", results);
 		List<DiscountProduct> discountProducts = dpDAO.findAll();
 		model.addAttribute("discountProducts", discountProducts);
 		return "shop";
@@ -163,14 +153,18 @@ public class ProductController {
 		model.addAttribute("discountProducts", discountProducts);
 		
 		model.addAttribute("check", "5");
-		int count = dao.countMlBProducts();
-		model.addAttribute("count", count);
-		int countAD = dao.countADProducts();
-		model.addAttribute("countAD", countAD);
-		int countNK = dao.countNKProducts();
-		model.addAttribute("countNK", countNK);
+		 // Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
+	    List<Object[]> results = dao.countProductsByCategory();
+	    model.addAttribute("results", results);
 		return "shop";
 	}
+	
+	
+	
+	
+	
+	
+	
 	@RequestMapping("/shop.html/searchBrand")
 	public String brand(Model model, @RequestParam("brand") Optional<String> br,
 			@RequestParam("p") Optional<Integer> p) {
@@ -183,15 +177,42 @@ public class ProductController {
 		model.addAttribute("check", "3");
 		List<DiscountProduct> discountProducts = dpDAO.findAll();
 		model.addAttribute("discountProducts", discountProducts);
-		int count = dao.countMlBProducts();
-		model.addAttribute("count", count);
-		int countAD = dao.countADProducts();
-		model.addAttribute("countAD", countAD);
-		int countNK = dao.countNKProducts();
-		model.addAttribute("countNK", countNK);
+		 // Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
+	    List<Object[]> results = dao.countProductsByCategory();
+	    model.addAttribute("results", results);
 		return "shop";
 	}
 
+	
+	@RequestMapping("/findSizeProducts")
+	public String getProductsBySize(@RequestParam("size") String size, Model model, Pageable pageable) {
+	    Page<Product> page;
+	 // Trong phương thức controller của bạn
+	    if (size.equals("small")) {
+	        page = dao.findProductSizeSmall(pageable);
+	    } else if (size.equals("medium")) {
+	        page = dao.findProductSizeMedium(pageable);
+	    } else if (size.equals("large")) {
+	        page = dao.findProductSizeLarge(pageable);
+	    } else {
+	        page = new PageImpl<>(Collections.emptyList()); // Trả về một Page trống nếu không phù hợp
+	    }
+
+	    model.addAttribute("products", page);
+
+	    
+		model.addAttribute("check", "1");
+		List<DiscountProduct> discountProducts = dpDAO.findAll();
+		model.addAttribute("discountProducts", discountProducts);
+		 // Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
+	    List<Object[]> results = dao.countProductsByCategory();
+	    model.addAttribute("results", results);
+		return "shop";
+	    // Xử lý logic cho các kích thước khác (nếu có)
+
+	}
+
+	
 
 	@RequestMapping("/shop-single.html/{productId}")
 	public String getProduct(Model model, @PathVariable("productId") int productId) {
@@ -263,7 +284,9 @@ public class ProductController {
 		model.addAttribute("reply", reply);
 		// Add a success message to the model
 		model.addAttribute("message", "Comment added successfully!");
-
+		 // Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
+	    List<Object[]> results = dao.countProductsByCategory();
+	    model.addAttribute("results", results);
 		// Return the name of your success template
 		return "shop-single.html";
 	}
@@ -324,9 +347,15 @@ public class ProductController {
 		model.addAttribute("reply", reply);
 		// Add a success message to the model
 		model.addAttribute("message", "Comment added successfully!");
-
+		 // Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
+	    List<Object[]> results = dao.countProductsByCategory();
+	    model.addAttribute("results", results);
 		// Return the name of your success template
 		return "shop-single.html";
 	}
+	
+	
+	
+	
 
 }
