@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	th:fragment="dynamic(title, view)">
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="dynamic(title, view)">
 
 <head>
+
 <meta charset="UTF-8">
 <title th:replace="${title}">Shoe Galaxy</title>
 <meta name="viewport"
@@ -58,6 +58,7 @@
 	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 <script src="https://kit.fontawesome.com/2ddd33de1c.js"
 	crossorigin="anonymous"></script>
+
 </head>
 
 <body ng-app="app" ng-controller="cart-ctrl">
@@ -65,6 +66,7 @@
 		<header class="site-navbar" role="banner">
 			<div class="site-navbar-top">
 				<div class="container">
+
 					<div class="row mt-5 ">
 						<div
 							class="col-6 col-md-4 order-2 order-md-1 site-search-icon text-left">
@@ -73,16 +75,18 @@
 								<span class="icon icon-search2"></span> <input type="text"
 									name="keywords" th:value="${keywords}"
 									th:onblur="$(this).closest('form').submit()"
+
 									class="form-control border-0" placeholder="Search">
 							</form>
 						</div>
 
-						<div
-							class="col-12 mb-md-0 col-md-4 order-1 order-md-2 text-center">
+						<div class="col-12 mb-md-0 col-md-4 order-1 order-md-2 text-center">
 							<div class="site-logo">
+
 								<img th:src="@{../../images/logowebsite.jpg}"
 									alt="Image placeholder" class="img-fluid rounded"
 									style="width: 40%; height: 10%">
+
 
 							</div>
 						</div>
@@ -93,14 +97,18 @@
 									<li>
 										<div style="text-decoration: none" class="dropdown"
 											th:if="${#request.remoteUser != null}">
-											<span th:text="${#request.remoteUser}"></span> <span
-												data-bs-toggle="dropdown"><i
-												class="fa-solid fa-user c"></i></span>
+											<span th:if="${#strings.contains(#request.remoteUser, '@')}"
+												th:text="${#strings.substring(#request.remoteUser, 0, #strings.indexOf(#request.remoteUser, '@'))}"></span>
+											<span th:unless="${#strings.contains(#request.remoteUser, '@')}"
+												th:text="${#request.remoteUser}"></span>
+										
+											<span data-bs-toggle="dropdown"><i class="fa-solid fa-user c"></i></span>
 
 											<ul class="dropdown-menu">
 												<li
 													th:if="${#request.isUserInRole('DIRE') or #request.isUserInRole('STAF')}">
 													<a class="dropdown-item" th:href="@{/admin2}"
+
 													th:text="#{nav.admin}">Admin</a>
 												</li>
 
@@ -116,16 +124,18 @@
 													th:text="#{nav.logout}">Logout</a></li>
 
 
+
 											</ul>
 
 										</div>
 
 									</li>
 									<li><a href="/login" style="text-decoration: none"
-										th:unless="${#request.remoteUser != null}"> <span
-											class="icon icon-person"></span>
-									</a></li>
+											th:unless="${#request.remoteUser != null}"> <span
+												class="icon icon-person"></span>
+										</a></li>
 									<li><a href="#" style="text-decoration: none"><span
+
 											class="icon icon-heart-o c"></span></a></li>
 
 
@@ -134,6 +144,7 @@
 											class="fa-solid fa-cart-shopping c"></i>
 											<p class="cart">{{cart.count}}</p>
 									</a></li>
+
 									<li>
 										<div style="text-decoration: none" class="dropdown">
 											<span data-bs-toggle="dropdown"><i
@@ -147,8 +158,10 @@
 									</li>
 
 									<li class="d-inline-block d-md-none ml-md-0"><a href="#"
+
 										class="site-menu-toggle js-menu-toggle"><span
 											class="icon-menu"></span></a></li>
+
 
 								</ul>
 							</div>
@@ -158,30 +171,34 @@
 			</div>
 
 
+
 			<nav class="site-navigation mt-4 mb-3 text-right text-md-center"
 				role="navigation">
+
 				<div class="container">
 					<ul class="site-menu js-clone-nav d-none d-md-block">
 						<li><a href="/index.html" th:text="#{nav.home}">Home</a>
 						<li><a href="/about.html" th:text="#{nav.about}">About</a></li>
-						<li class="has-children"><a href="/shop.html"
-							th:text="#{nav.shop}">Shop</a>
+						<li class="has-children"><a href="/shop.html" th:text="#{nav.shop}">Shop</a>
 							<ul class="dropdown">
+
 								<li th:each="result : ${results}" th:if="${result[2]}"><a
 									th:href="@{'/shop.html/searchBrand?brand=' + ${result[0]}}"
 									th:text="${result[0]}"></a></li>
 							</ul></li>
+
 
 						<li><a href="#" th:text="#{nav.newarrivals}">New Arrivals</a></li>
 						<li><a href="/contact.html" th:text="#{nav.contact}">Contact</a></li>
 
 
 
-						<li th:unless="${#request.remoteUser}" class="has-children"><a
-							href="/login" th:text="#{nav.login}">Login</a>
+						<li th:unless="${#request.remoteUser}" class="has-children"><a href="/login"
+								th:text="#{nav.login}">Login</a>
 							<ul class="dropdown">
 								<li><a href="/register.html" th:text="#{nav.register}">Register</a></li>
-							</ul></li>
+							</ul>
+						</li>
 
 						<!--<li th:if="${#request.isUserInRole('DIRE') or #request.isUserInRole('STAF')}"
 							class="has-children"><a href="/account.html">Admin</a>
@@ -219,6 +236,7 @@
 			style="background-color: #0000; color: black; bottom: 0px; margin-top:20px">
 			<div class="container">
 				<div class="row">
+
 					<div class="col-md-3">
 						<h5 class="font-weight-bold text-uppercase mt-3 mb-4">Shoe
 							Galaxy</h5>
@@ -267,6 +285,7 @@
 								8888
 							</p>
 						
+
 					</div>
 				</div>
 				<div class="row">
@@ -296,9 +315,6 @@
 			</div>
 		</footer>
 
-
-
-
 		<script
 			src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
 			integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
@@ -320,6 +336,7 @@
 		<script src="../../js/script.js"></script>
 		<script src="../../js/main.js"></script>
 		<script type="text/javascript" src="../../static/js/img-zoom.js"></script>
+
 </body>
 
 </html>
