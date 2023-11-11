@@ -71,7 +71,7 @@ public class ShoppingCartRestController {
 	
 	@DeleteMapping("/delete/status/{username}")
 	public void deleteByUsernameWithStatus(@PathVariable("username") String username) {
-		shoppingCartService.deleteByUsernameWithStatus(username);
+		shoppingCartService.deleteShoppingCartByUserAndStatus(username);
 	}
 
 }

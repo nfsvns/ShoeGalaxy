@@ -222,7 +222,7 @@ app.controller("cart-ctrl", function($scope, $http) {
 					console.error('Lỗi khi xóa sản phẩm khỏi giỏ hàng: ', error);
 				});
 		},
-		clear() { // Xóa sạch các mặt hàng trong giỏ
+		clearAll() { // Xóa sạch các mặt hàng trong giỏ
 			var spanElement = document.getElementById('remoteU');
 			var spanText = spanElement !== null ? spanElement.innerText : null;
 			if (!spanText) {
@@ -261,6 +261,25 @@ app.controller("cart-ctrl", function($scope, $http) {
 				.catch(error => {
 					console.error("Lỗi khi tải dữ liệu từ cơ sở dữ liệu: ", error);
 				});
+		},
+		clear(){
+			var spanElement = document.getElementById('remoteU');
+			var spanText = spanElement !== null ? spanElement.innerText : null;
+			if (!spanText) {
+				console.error('Không thể xác định tên người dùng.');
+				return;
+			}
+			$http.delete(`/rest/carts/delete/status/${spanText}`).then(response => {
+					if (response.status === 200) {
+						this.items = [];
+						this.loadFromDatabase();
+						console.log('Đã xóa tất cả sản phẩm có trạng thái là true trong giỏ hàng thành công.');
+					} else {
+						console.error('Xảy ra lỗi khi xóa sản phẩm trong giỏ hàng.');
+					}
+			}).catch(error => {
+				console.error('Lỗi khi xóa sản phẩm trong giỏ hàng: ', error);
+			});
 		}
 	}
 	$cart.loadFromDatabase();
@@ -291,7 +310,7 @@ app.controller("cart-ctrl", function($scope, $http) {
 				$cart.clear();
 				location.href = "/order/detail/" + resp.data.id;
 			}).catch(error => {
-				alert("Đặt hàng lỗi!")
+				alert("Đặt hàng lỗi!");
 				console.log(error)
 			})
 		}
@@ -325,7 +344,7 @@ var renderData = (array, select) => {
 	array.forEach(element => {
 		row += `<option data-code="${element.code}" value="${element.name}">${element.name}</option>`
 	});
-	document.querySelector("#" + select).innerHTML = row
+	document.querySelector("#" + select).innerHTML = row;
 }
 
 $("#province").change(() => {

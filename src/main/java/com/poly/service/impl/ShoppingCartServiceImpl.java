@@ -59,8 +59,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 		shoppingCartDAO.deleteAll(shoppingCarts);
 	}
 	
+	@Transactional
 	@Override
-	public void deleteByUsernameWithStatus(String username) {
-		shoppingCartDAO.deleteByUsernameWithStatus(username);
+	public void deleteShoppingCartByUserAndStatus(String username) {
+		List<ShoppingCart> shoppingCarts = shoppingCartDAO.findByUsernameWithStatus(username);
+		shoppingCartDAO.deleteAll(shoppingCarts);
 	}
+
 }

@@ -20,6 +20,6 @@ public interface ShoppingCartService {
 
 	ShoppingCart findByProductIdAndUsernameAndSize(Integer id, String username, Integer size);
 	
-	void deleteByUsernameWithStatus(String username);
+	void deleteShoppingCartByUserAndStatus(String username);
 
 }
