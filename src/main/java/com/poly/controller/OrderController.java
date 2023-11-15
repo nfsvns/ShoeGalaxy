@@ -134,8 +134,6 @@ public class OrderController {
 		return "forward:/check";
 	}
 
-	
-
 	@PostMapping("checkout.html")
 	public String checkout1(Model model, @RequestParam String address, @RequestParam String[] productId,
 			@RequestParam(value = "address2", required = false) Integer address2, @RequestParam String[] sizeId,
@@ -219,6 +217,7 @@ public class OrderController {
 				order.setAccount(user);
 				order.setAvailable(false);
 				order.setNguoinhan(fullname);
+				order.setStatus("Đang Xác Nhận");
 				order.setTongtien(total);
 				order.setAvailable(false);
 				order.setCity(a.get().getCity());
@@ -240,7 +239,7 @@ public class OrderController {
 					}
 				}
 			} else {
-				 request.getSession().setAttribute("messagesAddress", "Vui lòng thêm địa chỉ");
+				request.getSession().setAttribute("messagesAddress", "Vui lòng thêm địa chỉ");
 				return "redirect:/check";
 			}
 
@@ -277,8 +276,8 @@ public class OrderController {
 				// với thông báo lỗi
 				return "cart.html";
 			}
-			
-			if(address2!= null) {
+
+			if (address2 != null) {
 				// Create a new order
 				Order order = new Order();
 				Timestamp now = new Timestamp(new Date().getTime());
@@ -296,6 +295,7 @@ public class OrderController {
 				order.setAvailable(false);
 				order.setAccount(user);
 				order.setNguoinhan(fullname);
+				order.setStatus("Đang Xác Nhận");
 				order.setTongtien(total);
 				order.setAvailable(false);
 				order.setCity(a.get().getCity());
@@ -314,11 +314,11 @@ public class OrderController {
 						orderDetailDAO.save(orderDetail);
 					}
 				}
-			}else {
-				 request.getSession().setAttribute("messagesAddress", "Vui lòng thêm địa chỉ");
+			} else {
+				request.getSession().setAttribute("messagesAddress", "Vui lòng thêm địa chỉ");
 				return "redirect:/check";
-				}
-			
+			}
+
 		}
 
 		//// GỬI MAIL ////

@@ -6,6 +6,10 @@ app.controller("cart-ctrl", function($scope, $http) {
 	$scope.selectedSize = '';
 
 
+
+
+
+
 	function displayModal() {
 		var modal = document.getElementById('myModal');
 		modal.classList.add('show');
@@ -43,6 +47,40 @@ app.controller("cart-ctrl", function($scope, $http) {
 
 	}
 	$scope.totalCount = 0; // Khai báo biến totalCount trong $scope
+$scope.getOrderDetails = function() {
+    var buttons = document.getElementsByClassName('btn-secondary');
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener('click', function(event) {
+            var orderId = event.currentTarget.parentNode.querySelector('#orderId').value;
+
+            $http.get(`/rest/products/repurchase/${orderId}`)
+                .then(function(response) {
+                    var orderDetails = response.data.orderDetails;
+                    $scope.cart.items = [];
+                    if (orderDetails && orderDetails.length > 0) {
+                        for (var j = 0; j < orderDetails.length; j++) {
+                            var orderDetail = orderDetails[j];
+                            $scope.cart.items.push(orderDetail);
+                        }
+                    } else {
+                        console.log("No order details found");
+                    }
+                    $scope.cart.saveToLocalStorage();
+                    window.location.href = 'http://localhost:8080/cart.html';
+                })
+                .catch(function(error) {
+                    console.error(error);
+                });
+            event.currentTarget.removeEventListener('click', this);
+        });
+    }
+};
+
+
+
+
+
+
 
 	var $cart = $scope.cart = {
 		items: [],
@@ -315,7 +353,16 @@ app.controller("cart-ctrl", function($scope, $http) {
 			})
 		}
 	}
+
+
+
 })
+
+
+
+
+
+
 
 
 const host = "https://provinces.open-api.vn/api/";

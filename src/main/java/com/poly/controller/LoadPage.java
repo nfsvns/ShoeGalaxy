@@ -81,18 +81,22 @@ public class LoadPage {
 		List<Product> pro = productDAO.topProduct();
 		List<Image> images = imageDAO.findAll();
 		List<Product> products = productDAO.findAll();
-		List<Object[]> orderDetails = orderDetailDAO.findByAllTopProductOrderDetail();
+
 		List<DiscountProduct> discountProducts = dpDAO.findAll();
 
 		List<Product> newProduct = productDAO.NewProduct();
-		
-
+		List<Object[]> orderDetails = orderDetailDAO.findByAllTopProductOrderDetail();
+        model.addAttribute("orderDetails", orderDetails);
 		model.addAttribute("pro", pro);
 		model.addAttribute("newProduct", newProduct);
 		model.addAttribute("images", images);
 		model.addAttribute("products", products);
 		model.addAttribute("discountProducts", discountProducts);
-		model.addAttribute("orderDetails", orderDetails);
+		
+		  // Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
+	    List<Object[]> results = productDAO.countProductsByCategory();
+	    model.addAttribute("results", results);
+	
 		
 
 		return "index";
