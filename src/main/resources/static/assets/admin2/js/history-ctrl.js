@@ -74,7 +74,6 @@ $scope.computeUniqueDatesAndInitDate = function() {
 
 	$scope.reset = function() {
 		$scope.form = {
-
 		}
 	}
 
@@ -93,18 +92,27 @@ $scope.computeUniqueDatesAndInitDate = function() {
 	}
 
 	$scope.delete = function(item) {
-		if (confirm("Bạn muốn xóa lịch sử đơn hàng này?")) {
-			$http.delete(`/rest/historys/${item.id}`).then(resp => {
-				var index = $scope.items.findIndex(p => p.id == item.id);
-				$scope.items.splice(index, 1);
-				alert("Xóa lịch sử đơn hàng thành công!");
-				$scope.initialize();
-			}).catch(error => {
-				alert("Lỗi xóa lịch sử đơn hàng!");
-				console.log("Error", error);
-			})
-		}
-	}
+    if (confirm("Bạn muốn xóa lịch sử đơn hàng này?")) {
+        // Check if 'status' property exists in the item object
+        if (!item.hasOwnProperty('status')) {
+            item.status = "Đã Hủy";
+        } else {
+            // Update order status to "Đã Hủy" and set available to false
+            item.status = "Đã Hủy";
+            item.available = false;
+        }
+
+        $http.put(`/rest/historys/${item.id}`, item).then(resp => {
+            console.log("Update successful:", resp.data);
+            alert("Xóa lịch sử đơn hàng thành công!");
+            $scope.initialize();
+        }).catch(error => {
+            console.error("Update error:", error);
+            alert("Lỗi xóa lịch sử đơn hàng!");
+        });
+    }
+}
+
 	$scope.filteredItems = {
 		remove(id) { // xóa sản phẩm khỏi giỏ hàng
 			var index = this.items.findIndex(item => item.id == id);

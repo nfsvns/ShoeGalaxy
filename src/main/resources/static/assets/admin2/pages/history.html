@@ -213,30 +213,29 @@
 												</label>
 											</div>
 										</div>
-										</div>
-
 									</div>
 
+								</div>
 
 
 
-									<div class="panel-footer text-center">
-										<button ng-click="create()" ng-disabled="form.id"
-											class="btn btn-primary">
-											<b class="glyphicon glyphicon-plus"></b> Create
-										</button>
-										<button ng-click="update()" ng-disabled="!form.id"
-											class="btn btn-success">
-											<b class="glyphicon glyphicon-save"></b> Update
-										</button>
-										<button ng-click="delete(form)" ng-disabled="!form.id"
-											class="btn btn-danger">
-											<b class="glyphicon glyphicon-trash"></b> Delete
-										</button>
-										<button ng-click="reset()" class="btn btn-info">
-											<b class="glyphicon glyphicon-refresh"></b> Reset
-										</button>
-									</div>
+
+								<div class="panel-footer text-center">
+									<button ng-click="create()" ng-disabled="form.id"
+										class="btn btn-primary">
+										<b class="glyphicon glyphicon-plus"></b> Create
+									</button>
+									<button ng-click="update()" ng-disabled="!form.id"
+										class="btn btn-success">
+										<b class="glyphicon glyphicon-save"></b> Update
+									</button>
+									<button ng-click="delete(form)" ng-disabled="!form.id"
+										class="btn btn-danger">
+										<b class="glyphicon glyphicon-trash"></b> Delete
+									</button>
+									<button ng-click="reset()" class="btn btn-info">
+										<b class="glyphicon glyphicon-refresh"></b> Reset
+									</button>
 								</div>
 							</div>
 						</div>
@@ -246,6 +245,7 @@
 		</div>
 	</div>
 </div>
+</div>
 
 
 <div class="row">
@@ -254,8 +254,8 @@
 			<div class="card-header pb-0">
 				<h6>List of History</h6>
 				<i class="fas fa-calendar" id="calendar" ng-model="selectedDate"></i>
-					<input type="text"ng-model="selectedDate"style="border: none" disabled="true"
-						placeholder="Select a date">
+				<input type="text" ng-model="selectedDate" style="border: none"
+					disabled="true" placeholder="Select a date">
 			</div>
 			<div class="card-body px-0 pt-0 pb-2 w-100">
 				<div class="table-responsive p-0">
@@ -306,30 +306,33 @@
 								<td>{{item.nguoinhan}}</td>
 								<td>{{item.tongtien}}</td>
 								<td>{{ item.discountCode.id }} {{ item.discountCode.code ||
-									'Discount Null' }}</td>
+									'No Discount' }}</td>
 								<td
-											ng-class="{'btn-show': item.status == 'Đã Giao', 'btn-hide': item.status == 'Đang Giao','btn-cancel': item.status == 'Đã Hủy'}">
-											<span ng-if="item.status == 'Đang Xác Nhận'">Chờ xác
-												nhận</span> <span ng-if="item.status == 'Đã Hủy'">Đã
-												hủy</span> <span ng-if="item.status == 'Đã Giao'">Đã
-												hoàn thành</span> <span ng-if="item.status == 'Đang Giao'">Đang
-												giao hàng</span>
-										</td>
+									ng-class="{'btn-show': item.status == 'Đã Giao', 'btn-hide': item.status == 'Đang Giao','btn-cancel': item.status == 'Đã Hủy'}">
+									<span ng-if="item.status == 'Đang Xác Nhận'">Chờ xác
+										nhận</span> <span ng-if="item.status == 'Đã Hủy'">Đã hủy</span> <span
+									ng-if="item.status == 'Đã Giao'">Đã hoàn thành</span> <span
+									ng-if="item.status == 'Đang Giao'">Đang giao hàng</span>
+								</td>
 
 								<td
-									ng-class="{'btn-show':item.available,'btn-cancel':!item.available}">{{item.available?'Đã thanh toán':'Chưa thanh toán'}}</td>
+									ng-class="{'btn-show':item.available,'btn-cancel':!item.available}">{{item.available?'Đã
+									thanh toán':'Chưa thanh toán'}}</td>
 								<td><button ng-click="getDetailData(item)"
 										class="btn btn-primary">{{item.showDetail ? 'Hide' :
 										'Show'}}</button></td>
 								<td>
 									<div class="btn-group btn-group-xs">
-										<a ng-click="edit(item)" href="" class="btn btn-warning">
-											<i class="fa-solid fa-pen-to-square"></i>
-										</a> <a ng-click="delete(item)" href="" class="btn btn-danger">
-											<i class="fa-solid fa-trash"></i>
+										<a ng-click="edit(item)" href="" class="btn btn-warning"
+											ng-if="item.status == 'Đang Giao' || item.status=='Đang Xác Nhận' || item.status=='Đã Giao'"> <i
+											class="fa-solid fa-pen-to-square"></i>
+										</a> <a ng-click="delete(item)" href="" class="btn btn-danger"
+											ng-if="item.status == 'Đang Giao' || item.status=='Đang Xác Nhận'"> <i
+											class="fa-solid fa-trash"></i>
 										</a>
 									</div>
 								</td>
+
 							</tr>
 						</tbody>
 					</table>

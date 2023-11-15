@@ -21,49 +21,50 @@ import lombok.Data;
 @Entity
 @Table(name = "Products")
 public class Product implements Serializable {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	private String name;
-	private Double price;
-	private Integer quantity;
-	private Boolean available;
-	private String decription;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    private String name;
+    private Double price;
+    private Integer quantity;
+    private Boolean available;
+    private String description; // Corrected field name
 
-	@ManyToOne
-	@JoinColumn(name = "category_id")
-	private Category category;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "product")
-	private List<OrderDetail> orderDetails;
-	
-	@JsonIgnore
-	@OneToMany(mappedBy = "product")
+    @JsonIgnore
+    @OneToMany(mappedBy = "product")
+    private List<OrderDetail> orderDetails;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "product")
     private List<Comment> comments;
-	
-	@JsonIgnore
+
+    @JsonIgnore
     @OneToMany(mappedBy = "product")
     private List<Reply> replyComments;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "product")
-	private List<Size> sizes;
+    @JsonIgnore
+    @OneToMany(mappedBy = "product")
+    private List<Size> sizes;
 
-	
-	@JsonIgnore
-	@OneToMany(mappedBy = "product")
-	private List<Image> images;
+    @JsonIgnore
+    @OneToMany(mappedBy = "product")
+    private List<Image> images;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "product")
-	private List<DiscountProduct> discountProduct;
-	@Override
-	public String toString() {
-	    return "Product [id=" + id + ", name=" + name + ", price=" + price + ", quantity=" + quantity + ", available=" + available + ", decription=" + decription
-	            + ", category=" + category
-	            + ", orderDetails size=" + (orderDetails != null ? orderDetails.size() : "null")
-	            + ", sizes size=" + (sizes != null ? sizes.size() : "null")
-	            + ", images size=" + (images != null ? images.size() : "null") + "]";
-	}
+    @JsonIgnore
+    @OneToMany(mappedBy = "product")
+    private List<DiscountProduct> discountProduct;
+
+    @Override
+    public String toString() {
+        return "Product [id=" + id + ", name=" + name + ", price=" + price + ", quantity=" + quantity + ", available=" + available + ", description=" + description
+                + ", category=" + category
+                + ", orderDetails size=" + (orderDetails != null ? orderDetails.size() : "null")
+                + ", sizes size=" + (sizes != null ? sizes.size() : "null")
+                + ", images size=" + (images != null ? images.size() : "null") + "]";
+    }
 }
+
