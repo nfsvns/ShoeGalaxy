@@ -22,11 +22,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.poly.dao.OrderDetailDAO;
+import com.poly.entity.Category;
 import com.poly.entity.DiscountProduct;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.poly.entity.Image;
+import com.poly.entity.OrderDetail;
 import com.poly.entity.Product;
 import com.poly.service.DiscountProductService;
 import com.poly.service.ImageService;
@@ -43,6 +48,9 @@ public class ProductRestController {
 	@Autowired
 	DiscountProductService dcService;
 
+	@Autowired
+	OrderDetailDAO orderDetailDAO;
+
 	@GetMapping
 	public List<Product> getAll() {
 		return productService.findAll();
@@ -52,7 +60,6 @@ public class ProductRestController {
 	public Product getOne(@PathVariable("id") Integer id) {
 		return productService.findById(id);
 	}
-	
 
 	@GetMapping("/{id}/images")
 	public List<Image> getProductImages(@PathVariable("id") Integer id) {
@@ -88,26 +95,8 @@ public class ProductRestController {
 		return product;
 	}
 
-	
-	@RequestMapping(value = "{id}", method = {RequestMethod.PUT, RequestMethod.DELETE})
-	public Product putOrDelete(@PathVariable("id") Integer id, @RequestBody Product product, 
-			HttpServletRequest request) {
-		if (request.getMethod().equals(RequestMethod.DELETE.toString())) {
-			return productService.deletu(product);
-		} else if (request.getMethod().equals(RequestMethod.PUT.toString())) {
-			return productService.update(product);
-		}
-		return product;
-
-	}
-	/*
-	@DeleteMapping("{id}/real") 
-	public void deleteProduct(@PathVariable("id") Integer id) {
-	    productService.DeleteProductAndRelatedData(id);
-	}
-	*/
-           	@GetMapping("/counts")
-    	public ResponseEntity<Map<String, Integer>> getProductCounts() {
+	@GetMapping("/counts")
+	public ResponseEntity<Map<String, Integer>> getProductCounts() {
 		Map<String, Integer> productCounts = new HashMap<>();
 		productCounts.put("MLB", productService.countMlBProducts());
 		productCounts.put("ADIDAS", productService.countADProducts());
@@ -130,5 +119,64 @@ public class ProductRestController {
 
 		return ResponseEntity.ok(productDTOs);
 	}
+
+	@PutMapping("/{id}")
+	public Product put(@PathVariable("id") Integer id, @RequestBody Product product) {
+		return productService.update(product);
+	}
+
+	@DeleteMapping("/{id}")
+	public void delete(@PathVariable("id") Integer id) {
+		Product productGet = productService.findById(id);
+		if (productGet != null) {
+			if (productGet.getOrderDetails() == null || productGet.getOrderDetails().isEmpty()) {
+				productService.delete(id);
+			} else {
+				productGet.setAvailable(Boolean.FALSE);
+				productService.update(productGet);
+			}
+		}
+	}
+
+	@GetMapping("/repurchase/{orderId}")
+	@ResponseBody
+	public Map<String, Object> repurchase(@PathVariable("orderId") Integer orderId) {
+	    Map<String, Object> response = new HashMap<>();
+	    try {
+	        Long id = orderId.longValue();
+	        System.out.println("Order ID: " + id);
+	        List<OrderDetail> orderDetails = orderDetailDAO.findByOrderDetailId(id);
+
+	        if (!orderDetails.isEmpty()) {
+	            // Xử lý dữ liệu và đưa vào response
+	            List<Map<String, Object>> orderDetailsWithImages = new ArrayList<>();
+	            for (OrderDetail orderDetail : orderDetails) {
+	                Map<String, Object> orderDetailMap = new HashMap<>();
+	                
+	                orderDetailMap.put("id", orderDetail.getProduct().getId());
+	                orderDetailMap.put("name", orderDetail.getProduct().getName());
+	                orderDetailMap.put("price", orderDetail.getProduct().getPrice());
+	                orderDetailMap.put("sizes", orderDetail.getSize());
+	                orderDetailMap.put("qty", orderDetail.getQuantity());
+	                orderDetailMap.put("image", orderDetail.getProduct().getImages().get(0).getImage()); // Lấy hình ảnh đầu tiên từ danh sách hình ảnh của sản phẩm
+	                // Thêm các trường khác tùy thuộc vào cấu trúc của đối tượng OrderDetail
+
+	                orderDetailsWithImages.add(orderDetailMap);
+	                
+	            }
+	            response.put("orderDetails", orderDetailsWithImages);
+	        } else {
+	            System.out.println("Order details not found for ID: " + id); // Log the error
+	            response.put("error", "Order details not found");
+	        }
+	    } catch (NumberFormatException e) {
+	        System.out.println("Error: Invalid orderId format");
+	        response.put("error", "Invalid orderId format");
+	    }
+
+	    return response;
+	}
+
+
 
 }

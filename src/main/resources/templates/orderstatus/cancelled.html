@@ -2,11 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	th:replace="~{/layout/layout.html::dynamic(~{::title}, ~{::body})}">
 <head>
-<title>Đã Giao</title>
+<title>Đã Hủy</title>
 <meta charset="UTF-8">
 </head>
 <body>
-<div class="container">
+	<div class="container">
 		<div class="row p-4">
 
 			<div class="col-3 text-center ">
@@ -27,10 +27,11 @@
 			</div>
 		</div>
 	</div>
+
 	<section class="vh-90" style="margin-bottom: 100px">
 		<div class="container-fluid">
 			<div class="row d-flex justify-content-center align-items-center"
-				th:each="order: ${order}" th:if="${order.status} == 'Đã Giao'">
+				th:each="order: ${order}" th:if="${order.status} == 'Đã Hủy'">
 				<div class="col">
 					<div class="card mb-4 t-2">
 						<div class="card-body p-4">
@@ -68,18 +69,25 @@
 											<p class="lead fw-normal mb-0" th:text="${order.status}"></p>
 										</div>
 									</div>
+									<!-- <div class="col-md-2">
+										<form method="get" action="/repurchase/${order.id}">
+											<input type="text" name="orderId"  id="orderId" th:value="${order.id}">
+											<p class="small text-muted">Action</p>
+											<button type="submit" class="btn btn-secondary" onclick="getOrderDetails()">Repurchase</button>
+										</form>
+									</div> -->
+
 									<div class="col-md-2">
 										<input type="hidden" id="orderId" th:value="${order.id}">
 										<p class="small text-muted">Action</p>
 										<button class="btn btn-secondary" ng-click="getOrderDetails()">Repurchase</button>
+
 									</div>
+
+
 									<button class="btn btn-secondary btn-sm mt-2 reply-btn"
-											data-comment-id="${order.id}">View Product Details</button>
-
-								
-
+										data-comment-id="${order.id}">View Product Details</button>
 									<br>
-
 									<div class="reply-form card border-0"
 										data-comment-id="${order.id}" style="display: none;">
 										<div class="row col-sm-12 align-items-center"

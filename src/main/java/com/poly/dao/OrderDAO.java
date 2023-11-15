@@ -48,21 +48,24 @@ public interface OrderDAO extends JpaRepository<Order, Long> {
 
 	
 	//Phan tich city
-	@Query(value = "SELECT o.city AS cityName, SUM(o.tongtien) AS totalSales, COUNT(o.id) AS orderCount, ROUND( SUM(o.tongtien)/COUNT(o.id) , 2) AS aov " +
+	@Query(value = "SELECT TOP 5 o.city AS cityName, SUM(o.tongtien) AS totalSales, COUNT(o.id) AS orderCount, ROUND( SUM(o.tongtien)/COUNT(o.id) , 2) AS aov " +
             "FROM Orders o " +
             "WHERE o.city IS NOT NULL " +
-            "GROUP BY o.city", nativeQuery = true)
+            "GROUP BY o.city " +
+            "ORDER BY totalSales DESC" 
+      
+            , nativeQuery = true)
 
 	List<Object[]> getCityOrderStatistics();
 
-	@Query(value = "SELECT o.id as order_id, o.username, o.tongtien, od.id as order_detail_id, od.quantity,od.size, p.image, p.name, p.price,p.id "
+	@Query(value = "SELECT o.id as order_id, o.username, o.tongtien, od.id as order_detail_id, od.quantity,od.size, p.name, p.price,p.id "
 			+ "FROM Orders o " + "INNER JOIN OrderDetails od ON o.id = od.order_id "
 			+ "INNER JOIN Products p ON od.product_id = p.id "
 			+ "WHERE o.username = ?1 AND o.available = 1 "
 			+ "order by o.id DESC;", nativeQuery = true)
 	List<Object[]> findShippedOrdersByAccount(String username);
 
-	@Query(value = "SELECT o.id as order_id, o.username, o.tongtien, od.id as order_detail_id, od.quantity,od.size, p.image, p.name, p.price "
+	@Query(value = "SELECT distinct o.id as order_id, o.username, o.tongtien, od.id as order_detail_id, od.quantity,od.size,p.id, p.name, p.price "
 			+ "FROM Orders o " + "INNER JOIN OrderDetails od ON o.id = od.order_id "
 			+ "INNER JOIN Products p ON od.product_id = p.id "
 			+ "WHERE o.username = ?1 AND o.available = 0 "

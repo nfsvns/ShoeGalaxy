@@ -197,9 +197,15 @@
 									</select>
 								</div>
 							</div>
-							 <div class="row">
-								
+							<!-- <div class="row">
 								<div class="form-group col-sm-6">
+									<div>Sale ID</div>
+									<select ng-model="form.discount_sale.id" class="form-control">
+										<option value="" disabled selected>Chọn mã khuyến mãi</option>
+										<option ng-repeat="d in discountSale" ng-value="d.id">{{d.name}}</option>
+									</select>
+								</div>-->
+								<!-- <div class="form-group col-sm-6">
 									<div>Available?</div>
 									<div class="form-control">
 										<label class="radio-inline"> <input
@@ -210,21 +216,8 @@
 											type="radio">No
 										</label>
 									</div>
-								</div>
-								
-								<!--<div class="form-group col-sm-6">
-									<div>Kiểu xóa</div>
-									<div class="form-control">
-										<label class="radio-inline"> <input
-											ng-model="form.available" ng-value="true" name="available"
-											type="radio">Xóa vĩnh viễn
-										</label> <label class="radio-inline"> <input
-											ng-model="form.available" ng-value="false" name="available"
-											type="radio">Xóa lưu trữ
-										</label>
-									</div>
-								</div>  -->
-								
+								</div> -->
+
 							</div> 
 							
 						</div>
@@ -319,19 +312,19 @@
 
 						</table>
 
-
-						<div class="container">
-							<div class="row">
-								<div class="col-sm-4">
+	<!-- 
+							<div class="container">
+								<div class="row">
+									<div class="col-sm-4">
+										
+										<canvas id="myChartPie" width="400" height="400"></canvas>
+									</div>
+									<div class="col-sm-8">
 									
-									<canvas id="myChartPie" width="400" height="400"></canvas>
+										<canvas id="myChartBar" width="400" height="400"></canvas>
+									</div>
 								</div>
-								<!-- <div class="col-sm-8">
-								
-									<canvas id="myChartBar" width="400" height="400"></canvas>
-								</div> -->
-							</div>
-						</div>
+							</div> -->
 
 
 						<div class="panel-footer text-center">

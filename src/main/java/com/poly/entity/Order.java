@@ -36,6 +36,7 @@ public class Order implements Serializable {
 	private Double tongtien;
 	private Boolean available;
 	private String city;
+	private String status; 
 
 	@ManyToOne
 	@JoinColumn(name = "username")
@@ -48,4 +49,6 @@ public class Order implements Serializable {
 	@JsonIgnore
 	@OneToMany(mappedBy = "order")
 	List<OrderDetail> orderDetails;
+	
+	
 }

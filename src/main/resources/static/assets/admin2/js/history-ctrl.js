@@ -98,7 +98,7 @@ app.controller("history-ctrl", function($scope, $http) {
 	}
 	$scope.pager = {
 		page: 0,
-		size: 10,
+		size: 4,
 		get items() {
 			if (this.page < 0) {
 				this.last();

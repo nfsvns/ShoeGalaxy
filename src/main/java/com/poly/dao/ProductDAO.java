@@ -1,4 +1,4 @@
-   package com.poly.dao;
+package com.poly.dao;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.context.annotation.SessionScope;
 
 import com.poly.entity.Product;
@@ -19,7 +20,8 @@ import com.poly.entity.Report;
 public interface ProductDAO extends JpaRepository<Product, Integer> {
 
 	@Query("SELECT p FROM Product p WHERE p.price BETWEEN :minPrice AND :maxPrice ORDER BY p.price ASC")
-	Page<Product> findByPriceBetween(Double minPrice, Double maxPrice, Pageable pageable);
+	Page<Product> findByPriceBetween(@Param("minPrice") Double minPrice, @Param("maxPrice") Double maxPrice,
+			Pageable pageable);
 
 	@Query("SELECT o FROM Product o WHERE o.category.name LIKE ?1 and o.available = True ")
 	Page<Product> findByBrand(String brand, Pageable pageable);
@@ -59,6 +61,10 @@ public interface ProductDAO extends JpaRepository<Product, Integer> {
 	@Query("SELECT COUNT(p) FROM Product p WHERE p.category.id = 'NK' and p.available = True")
 	Integer countNKProducts();
 
+// hàm COALESCE sẽ đặt giá trị là 0 thay vì NULL. Điều này đảm bảo rằng ngay cả khi không có sản phẩm, số lượng sẽ vẫn là 0.
+	@Query("SELECT c.name, COALESCE(COUNT(p), 0) , c.available FROM Category c LEFT JOIN Product p ON c.id = p.category.id GROUP BY c.name, c.available")
+	List<Object[]> countProductsByCategory();
+
 	@Query(value = "SELECT * FROM Products WHERE Products.available = 'true' ORDER BY NEWID()", nativeQuery = true)
 
 	List<Product> topProduct();
@@ -78,4 +84,15 @@ public interface ProductDAO extends JpaRepository<Product, Integer> {
 	
 	@Procedure
     void DeleteProductAndRelatedData(Integer id);
+
+	@Query(value = "SELECT distinct p.* FROM Products p JOIN Sizes s ON p.id = s.product_id WHERE s.size IN (36,37,38) ", nativeQuery = true)
+	Page<Product> findProductSizeSmall(Pageable pageable);
+
+	@Query(value = "SELECT distinct p.* FROM Products p JOIN Sizes s ON p.id = s.product_id WHERE s.size IN (40,41,42) ", nativeQuery = true)
+	Page<Product> findProductSizeMedium(Pageable pageable);
+
+	@Query(value = "SELECT distinct p.* FROM Products p JOIN Sizes s ON p.id = s.product_id WHERE s.size IN (42,43,44) ", nativeQuery = true)
+	Page<Product> findProductSizeLarge(Pageable pageable);
+
+	
 }
