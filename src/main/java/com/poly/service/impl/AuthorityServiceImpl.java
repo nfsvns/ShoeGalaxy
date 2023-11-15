@@ -36,4 +36,18 @@ public class AuthorityServiceImpl implements AuthorityService{
 		List<Account> accounts = accountDAO.getAdministrators();
 		return dao.authoritiesOf(accounts);
 	}
+
+	@Override
+	public List<Authority> findAuthoritiesByUsername(String username) {
+	    return dao.findAuthoritiesByUsername(username);
+	
+	}
+	@Override
+	public boolean revokeAuthoritiesByUsername(String username) {
+        List<Authority> authorities = dao.findAuthoritiesByUsername(username);
+        for (Authority authority : authorities) {
+            dao.delete(authority);
+        }
+		return true;
+    }
 }

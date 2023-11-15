@@ -32,5 +32,8 @@ public interface OrderService {
 	public List<OrderDetail> getDetailDataById(Long id);
 	public List<Object[]> getShippedOrdersForCurrentAccount(String username);
 	public List<Object[]> getUnshippedOrdersForCurrentAccount(String username);
+	
+	public List<Order> findOrdersByAccount(String username);
 
+	
 }
