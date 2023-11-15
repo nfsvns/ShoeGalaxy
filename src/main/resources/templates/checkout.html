@@ -73,7 +73,7 @@
 
 										<td><input class="text-black font-weight-bold border border-light" type="text"
 												name="total"
-												th:value="${calculatedValue != null ?  + calculatedValue : '{{cart.amount | number : 2}}'}" />
+												th:value="${calculatedValue != null ?  + calculatedValue : '{{cart.amount}}'}" />
 
 											<input style="text-decoration: line-through;"
 												class="text-black font-weight-bold border border-light" type="text"
@@ -110,6 +110,10 @@
 							<div class="form-group">
 								<button class="btn btn-primary btn-lg py-3 btn-block">Place
 									Order</button>
+							</div>
+							<div class="form-group">
+								<button class="btn btn-primary btn-lg py-3 btn-block" formaction="/VnPay"
+									formmethod="get">VN Pay</button>
 							</div>
 							<div class="form-group">
 								<button class="btn btn-primary btn-lg py-3 btn-block" formaction="/paypal"
