@@ -98,9 +98,9 @@
 										<div style="text-decoration: none" class="dropdown"
 											th:if="${#request.remoteUser != null}">
 											<span th:if="${#strings.contains(#request.remoteUser, '@')}"
-												th:text="${#strings.substring(#request.remoteUser, 0, #strings.indexOf(#request.remoteUser, '@'))}"></span>
+												id="remoteU" th:text="${#strings.substring(#request.remoteUser, 0, #strings.indexOf(#request.remoteUser, '@'))}"></span>
 											<span th:unless="${#strings.contains(#request.remoteUser, '@')}"
-												th:text="${#request.remoteUser}"></span>
+												id="remoteU" th:text="${#request.remoteUser}"></span>
 										
 											<span data-bs-toggle="dropdown"><i class="fa-solid fa-user c"></i></span>
 
@@ -199,30 +199,6 @@
 								<li><a href="/register.html" th:text="#{nav.register}">Register</a></li>
 							</ul>
 						</li>
-
-						<!--<li th:if="${#request.isUserInRole('DIRE') or #request.isUserInRole('STAF')}"
-							class="has-children"><a href="/account.html">Admin</a>
-							<ul class="dropdown">
-								<li><a href="/history">History</a></li>
-								<li><a href="/revenue">Doanh thu năm</a></li>
-								<li><a href="/account.html">Account</a></li>
-								<li><a href="/orderDetail">OrderDetail</a></li>
-								<li><a href="/productAdmin">Product</a></li>
-								<li><a href="/categoryAdmin">Category</a></li>
-								<li><a href="/report">Report</a></li>
-							</ul>
-						</li>-->
-
-
-						<!-- <th:block th:with="showVietnamese=${false}">
-							<li th:if="${lang != 'en' && showVietnamese == true}"><a
-								href="?lang=vi" th:attr="onclick='|${showVietnamese} = false|'">Tiếng
-									Việt</a></li>
-							<li th:if="${lang != 'vi' && showVietnamese == false}"><a
-								href="?lang=en" th:attr="onclick='|${showVietnamese} = true|'">English</a>
-							</li>
-						</th:block> -->
-
 
 					</ul>
 				</div>

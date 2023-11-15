@@ -5,11 +5,6 @@ app.controller("cart-ctrl", function($scope, $http) {
 
 	$scope.selectedSize = '';
 
-
-
-
-
-
 	function displayModal() {
 		var modal = document.getElementById('myModal');
 		modal.classList.add('show');
@@ -47,39 +42,34 @@ app.controller("cart-ctrl", function($scope, $http) {
 
 	}
 	$scope.totalCount = 0; // Khai báo biến totalCount trong $scope
-$scope.getOrderDetails = function() {
-    var buttons = document.getElementsByClassName('btn-secondary');
-    for (var i = 0; i < buttons.length; i++) {
-        buttons[i].addEventListener('click', function(event) {
-            var orderId = event.currentTarget.parentNode.querySelector('#orderId').value;
+	$scope.getOrderDetails = function() {
+		var buttons = document.getElementsByClassName('btn-secondary');
+		for (var i = 0; i < buttons.length; i++) {
+			buttons[i].addEventListener('click', function(event) {
+				var orderId = event.currentTarget.parentNode.querySelector('#orderId').value;
 
-            $http.get(`/rest/products/repurchase/${orderId}`)
-                .then(function(response) {
-                    var orderDetails = response.data.orderDetails;
-                    $scope.cart.items = [];
-                    if (orderDetails && orderDetails.length > 0) {
-                        for (var j = 0; j < orderDetails.length; j++) {
-                            var orderDetail = orderDetails[j];
-                            $scope.cart.items.push(orderDetail);
-                        }
-                    } else {
-                        console.log("No order details found");
-                    }
-                    $scope.cart.saveToLocalStorage();
-                    window.location.href = 'http://localhost:8080/cart.html';
-                })
-                .catch(function(error) {
-                    console.error(error);
-                });
-            event.currentTarget.removeEventListener('click', this);
-        });
-    }
-};
-
-
-
-
-
+				$http.get(`/rest/products/repurchase/${orderId}`)
+					.then(function(response) {
+						var orderDetails = response.data.orderDetails;
+						$scope.cart.items = [];
+						if (orderDetails && orderDetails.length > 0) {
+							for (var j = 0; j < orderDetails.length; j++) {
+								var orderDetail = orderDetails[j];
+								$scope.cart.items.push(orderDetail);
+							}
+						} else {
+							console.log("No order details found");
+						}
+						$scope.cart.saveToLocalStorage();
+						window.location.href = 'http://localhost:8080/cart.html';
+					})
+					.catch(function(error) {
+						console.error(error);
+					});
+				event.currentTarget.removeEventListener('click', this);
+			});
+		}
+	};
 
 
 	var $cart = $scope.cart = {
@@ -171,8 +161,10 @@ $scope.getOrderDetails = function() {
 		amt_of(item) { // tính thành tiền của 1 sản phẩm
 			return item.price * item.qty;
 		},
-		get count() { // tính tổng số lượng các mặt hàng trong giỏ
-			return this.items.reduce((total, currentItem) => total + currentItem.qty, 0);
+		get count() {
+			return this.items
+				.map(item => item.qty)
+				.reduce((total, qty) => total += qty, 0);
 		},
 		get amount() { // tổng thành tiền các mặt hàng trong giỏ
 			return this.items
@@ -211,6 +203,7 @@ $scope.getOrderDetails = function() {
 						data: data
 					}).then(function(response) {
 						console.log("Dữ liệu đã được lưu vào cơ sở dữ liệu", response.data);
+						this.get();
 					}).catch(function(error) {
 						console.error("Lỗi khi lưu dữ liệu vào cơ sở dữ liệu: ", error);
 					});
@@ -229,6 +222,8 @@ $scope.getOrderDetails = function() {
 							console.log("Dữ liệu đã được cập nhật trong cơ sở dữ liệu", response.data);
 							// Reload cart data after successful update
 							this.loadFromDatabase(); // Sử dụng arrow function để giữ nguyên ngữ cảnh
+							this.get();
+							console.log(this.count);
 						})
 						.catch(error => {
 							console.error("Lỗi khi cập nhật dữ liệu trong cơ sở dữ liệu: ", error);
@@ -300,7 +295,7 @@ $scope.getOrderDetails = function() {
 					console.error("Lỗi khi tải dữ liệu từ cơ sở dữ liệu: ", error);
 				});
 		},
-		clear(){
+		clear() {
 			var spanElement = document.getElementById('remoteU');
 			var spanText = spanElement !== null ? spanElement.innerText : null;
 			if (!spanText) {
@@ -308,13 +303,13 @@ $scope.getOrderDetails = function() {
 				return;
 			}
 			$http.delete(`/rest/carts/delete/status/${spanText}`).then(response => {
-					if (response.status === 200) {
-						this.items = [];
-						this.loadFromDatabase();
-						console.log('Đã xóa tất cả sản phẩm có trạng thái là true trong giỏ hàng thành công.');
-					} else {
-						console.error('Xảy ra lỗi khi xóa sản phẩm trong giỏ hàng.');
-					}
+				if (response.status === 200) {
+					this.items = [];
+					this.loadFromDatabase();
+					console.log('Đã xóa tất cả sản phẩm có trạng thái là true trong giỏ hàng thành công.');
+				} else {
+					console.error('Xảy ra lỗi khi xóa sản phẩm trong giỏ hàng.');
+				}
 			}).catch(error => {
 				console.error('Lỗi khi xóa sản phẩm trong giỏ hàng: ', error);
 			});
@@ -357,12 +352,6 @@ $scope.getOrderDetails = function() {
 
 
 })
-
-
-
-
-
-
 
 
 const host = "https://provinces.open-api.vn/api/";

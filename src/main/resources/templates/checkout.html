@@ -58,7 +58,7 @@
 											style="width: 100%"><br></td>
 
 										<td>${{cart.price_product(item)}}</td>
-										<td><input ng-change="cart.saveToLocalStorage()"
+										<td><input ng-change="cart.updateQtyDatabase(item.id,  item.qty)"
 											name="countProduct" ng-model="item.qty" type="number" min="1"
 											style="width: 30px" class="border border-light" /></td>
 
