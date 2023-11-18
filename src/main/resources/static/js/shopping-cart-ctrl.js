@@ -74,7 +74,7 @@ app.controller("cart-ctrl", function($scope, $http) {
 
 	var $cart = $scope.cart = {
 		items: [],
-		add(id) {
+		async add(id) {
 			if (!$scope.selectedSize) {
 				alert('Vui lòng chọn size.');
 				return;
@@ -91,9 +91,11 @@ app.controller("cart-ctrl", function($scope, $http) {
 					// Xử lý lỗi ở đây, ví dụ: ghi lỗi vào một file log
 				}
 			}
-			$http.get(`/rest/carts/username/${spanText}`).then(response => {
+			
+			await $http.get(`/rest/carts/username/${spanText}`).then(response => {
 				var cartItems = response.data;
 				var existingItem = cartItems.find(item => item.product.id == id && item.size == $scope.selectedSize);
+				console.log($scope.selectedSize);
 				if (existingItem) {
 					existingItem.qty += $scope.quantity;
 					existingItem.total = existingItem.qty * existingItem.price;
@@ -131,6 +133,7 @@ app.controller("cart-ctrl", function($scope, $http) {
 										this.items.push(resp.data);
 									} else {
 										alert('Số lượng vượt quá số lượng tồn kho.');
+										return;
 									}
 								});
 								// Set the quantity and selected size based on user input
@@ -175,6 +178,7 @@ app.controller("cart-ctrl", function($scope, $http) {
 		saveToDatabase(item) {
 			var spanElement = document.getElementById('remoteU');
 			var spanText = spanElement !== null ? spanElement.innerText : null;
+			console.log(spanText);
 			var accountData = null;
 			var productData = null;
 			$http.get(`/rest/accounts/${spanText}`).then(account => {
@@ -203,7 +207,6 @@ app.controller("cart-ctrl", function($scope, $http) {
 						data: data
 					}).then(function(response) {
 						console.log("Dữ liệu đã được lưu vào cơ sở dữ liệu", response.data);
-						this.get();
 					}).catch(function(error) {
 						console.error("Lỗi khi lưu dữ liệu vào cơ sở dữ liệu: ", error);
 					});
@@ -222,8 +225,6 @@ app.controller("cart-ctrl", function($scope, $http) {
 							console.log("Dữ liệu đã được cập nhật trong cơ sở dữ liệu", response.data);
 							// Reload cart data after successful update
 							this.loadFromDatabase(); // Sử dụng arrow function để giữ nguyên ngữ cảnh
-							this.get();
-							console.log(this.count);
 						})
 						.catch(error => {
 							console.error("Lỗi khi cập nhật dữ liệu trong cơ sở dữ liệu: ", error);
@@ -353,7 +354,7 @@ app.controller("cart-ctrl", function($scope, $http) {
 
 })
 
-
+/*
 const host = "https://provinces.open-api.vn/api/";
 var callAPI = (api) => {
 	return axios.get(api)
@@ -395,4 +396,4 @@ $("#district").change(() => {
 });
 $("#ward").change(() => {
 	// printResult();
-})
+})*/
