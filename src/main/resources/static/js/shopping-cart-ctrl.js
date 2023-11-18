@@ -17,6 +17,10 @@ app.controller("cart-ctrl", function($scope, $http) {
 	$scope.selectedSize = '';
 
 
+
+
+
+
 	function displayModal() {
 		var modal = document.getElementById('myModal');
 		modal.classList.add('show');
@@ -53,6 +57,37 @@ app.controller("cart-ctrl", function($scope, $http) {
 
 
 	}
+$scope.getOrderDetails = function() {
+    var buttons = document.getElementsByClassName('btn-secondary');
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener('click', function(event) {
+            var orderId = event.currentTarget.parentNode.querySelector('#orderId').value;
+
+            $http.get(`/rest/products/repurchase/${orderId}`)
+                .then(function(response) {
+                    var orderDetails = response.data.orderDetails;
+                    $scope.cart.items = [];
+                    if (orderDetails && orderDetails.length > 0) {
+                        for (var j = 0; j < orderDetails.length; j++) {
+                            var orderDetail = orderDetails[j];
+                            $scope.cart.items.push(orderDetail);
+                        }
+                    } else {
+                        console.log("No order details found");
+                    }
+                    $scope.cart.saveToLocalStorage();
+                    window.location.href = 'http://localhost:8080/cart.html';
+                })
+                .catch(function(error) {
+                    console.error(error);
+                });
+            event.currentTarget.removeEventListener('click', this);
+        });
+    }
+};
+
+
+
 
 
 
@@ -82,36 +117,39 @@ app.controller("cart-ctrl", function($scope, $http) {
 							// Set a default image URL if no images are available
 							resp.data.image = 'url_to_default_image.jpg';
 						}
+
+						$http.get(`/rest/products/${id}/price`).then(totalAmount => {
+							if (totalAmount.data.length > 0) {
+								resp.data.percentage = totalAmount.data[0].percentage;
+
+							} else {
+								resp.data.percetage = 0;
+							}
+
+
+							resp.data.qty = $scope.quantity;
+							resp.data.sizes = $scope.selectedSize;
+							// Check stock quantity before adding to cart
+							$http.get(`/rest/sizeManager/checkQuantity/${id}/${$scope.selectedSize}`).then(stockResp => {
+								var availableStock = stockResp.data;
+
+								if (availableStock >= resp.data.qty) {
+									this.items.push(resp.data);
+
+									resp.data.qty = $scope.quantity;
+									resp.data.sizes = $scope.selectedSize;
+									this.saveToLocalStorage();
+									displayModal();
+								} else {
+									alert('Số lượng vượt quá số lượng tồn kho.');
+									return; // Stop execution if the stock quantity is insufficient
+								}
+							});
+							// Set the quantity and selected size based on user input
+
+
+						});
 					});
-					$http.get(`/rest/products/${id}/price`).then(totalAmount => {
-						if (totalAmount.data.length > 0) {
-							resp.data.percentage = totalAmount.data[0].percentage;
-
-						} else {
-							resp.data.percetage = 1;
-						}
-
-					});
-					resp.data.qty = $scope.quantity;
-					resp.data.sizes = $scope.selectedSize;
-					// Check stock quantity before adding to cart
-					$http.get(`/rest/sizeManager/checkQuantity/${id}/${$scope.selectedSize}`).then(stockResp => {
-						var availableStock = stockResp.data;
-
-						if (availableStock >= resp.data.qty) {
-							this.items.push(resp.data);
-							this.saveToLocalStorage();
-							displayModal();
-						} else {
-							alert('Số lượng vượt quá số lượng tồn kho.');
-							return; // Stop execution if the stock quantity is insufficient
-						}
-					});
-					// Set the quantity and selected size based on user input
-
-
-
-
 				});
 			}
 		},
@@ -192,7 +230,16 @@ app.controller("cart-ctrl", function($scope, $http) {
 			})
 		}
 	}
+
+
+
 })
+
+
+
+
+
+
 
 
 const host = "https://provinces.open-api.vn/api/";

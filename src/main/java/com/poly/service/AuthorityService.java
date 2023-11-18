@@ -16,4 +16,6 @@ public interface AuthorityService {
 	public List<Authority> findAuthoritiesOfAdministrators() ;
 	public List<Authority> findUsername(String username);
 
+	public List<Authority> findAuthoritiesByUsername(String username);
+	 public boolean revokeAuthoritiesByUsername(String username);
 }

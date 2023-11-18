@@ -40,14 +40,16 @@ public class AuthorityServiceImpl implements AuthorityService{
 	}
 
 	@Override
-	public Authority findById(Integer id) {
-		// TODO Auto-generated method stub
-		return authorityService.findById(id);
+	public List<Authority> findAuthoritiesByUsername(String username) {
+	    return dao.findAuthoritiesByUsername(username);
+	
 	}
-
 	@Override
-	public List<Authority> findUsername(String username) {
-		// TODO Auto-generated method stub
-		return dao.findByUsername(username);
-	}
+	public boolean revokeAuthoritiesByUsername(String username) {
+        List<Authority> authorities = dao.findAuthoritiesByUsername(username);
+        for (Authority authority : authorities) {
+            dao.delete(authority);
+        }
+		return true;
+    }
 }

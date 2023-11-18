@@ -83,6 +83,7 @@ public class LoginController2 {
 			user.setPassword(password);
 			user.setFullname(fullname);
 			user.setEmail(email);
+			user.setPhoto("nv01.jpg");
 			accountDAO.save(user);
 
 			Authority authority = new Authority();

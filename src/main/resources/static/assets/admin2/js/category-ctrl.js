@@ -9,6 +9,7 @@ app.controller("category-ctrl", function($scope, $http) {
 			$scope.items = resp.data;
 		});
 		$scope.reset(); //để có hình mây lyc1 mới đầu
+		$scope.loadCurrentUser();
 	}
 	$scope.create = function() {
 		var item = angular.copy($scope.form);
@@ -25,7 +26,11 @@ app.controller("category-ctrl", function($scope, $http) {
 			console.log("Error", error);
 		});
 	}
-
+$scope.loadCurrentUser = function() {
+    $http.get("/rest/accounts/current-account").then(resp => {
+        $scope.account = resp.data;
+    }); 
+};
 
 	$scope.edit = function(item) {
 		$scope.form = angular.copy(item);
@@ -53,20 +58,36 @@ app.controller("category-ctrl", function($scope, $http) {
 	}
 
 	$scope.delete = function(item) {
-		var item = angular.copy(item);
-		item.available = false;
-		$http.put(`/rest/categories/${item.id}`, item).then(resp => {
-			var index = $scope.items.findIndex(p => p.id == item.id);
-			$scope.items.splice(index, 1);
-			$scope.reset();
-			$scope.items[index] = item;
-			alert("Xóa sản phẩm thành công!");
-		})
-			.catch(error => {
-				alert("Lỗi xóa sản phẩm!");
-				console.log("Error", error);
+		var itemCopy = angular.copy(item);
+
+		$http({
+			method: 'DELETE',
+			url: '/rest/categories/' + itemCopy.id
+		}).then(function successCallback(response) {
+			var index = $scope.items.findIndex(p => p.id === itemCopy.id);
+			if (index !== -1) {
+				$scope.items.splice(index, 1);
+				$scope.reset();
+				alert("Xóa sản phẩm thành công!");
+			}
+		}, function errorCallback(error) {
+			// Nếu không xóa được, thực hiện cập nhật trạng thái
+			itemCopy.available = false;
+			$http({
+				method: 'PUT',
+				url: `/rest/categories/${itemCopy.id}`,
+				data: itemCopy
+			}).then(function successCallback(response) {
+				var index = $scope.items.findIndex(p => p.id === itemCopy.id);
+				if (index !== -1) {
+					$scope.items[index] = itemCopy;
+					alert("Cập nhật trạng thái thành công!");
+				}
 			});
-	}
+		});
+	};
+
+
 
 
 
