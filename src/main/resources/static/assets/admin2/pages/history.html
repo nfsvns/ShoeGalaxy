@@ -302,17 +302,18 @@
 								<td
 									ng-class="{'btn-show':item.available,'btn-hide':!item.available}">{{item.available?'Đã
 									giao hàng':'Chưa giao hàng'}}</td>
-								<td><button ng-click="getDetailData(item)"
-										class="btn btn-primary">{{item.showDetail ? 'Hide' :
-										'Show'}}</button></td>
 								<td>
-									<div class="btn-group btn-group-xs">
-										<a ng-click="edit(item)" href="" class="btn btn-warning">
-											<i class="fa-solid fa-pen-to-square"></i>
-										</a> <a ng-click="delete(item)" href="" class="btn btn-danger">
-											<i class="fa-solid fa-trash"></i>
-										</a>
-									</div>
+									<button ng-click="getCommentDetail(comment)"
+										class="btn btn-primary">{{comment.showCommentDetail ?
+										'Hide' : 'Show'}}</button>
+								</td>
+								<div class="btn-group btn-group-xs">
+									<a ng-click="edit(item)" href="" class="btn btn-warning"> <i
+										class="fa-solid fa-pen-to-square"></i>
+									</a> <a ng-click="delete(item)" href="" class="btn btn-danger">
+										<i class="fa-solid fa-trash"></i>
+									</a>
+								</div>
 								</td>
 							</tr>
 						</tbody>
