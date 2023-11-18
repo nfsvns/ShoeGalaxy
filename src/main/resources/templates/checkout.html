@@ -39,7 +39,7 @@
 						<h2 class="h3 mb-3 text-black">Your Order</h2>
 
 						<div class="p-3 p-lg-5 border">
-							<table class="table site-block-order-table mb-5">
+							<table class="table site-block-order-table">
 								<thead>
 									<th>Id</th>
 									<th>Image</th>
@@ -58,63 +58,60 @@
 										<td><img style="width: 50%" src="/images/{{item.image}}"></td>
 
 										<td><input ng-model="item.sizes" type="text"
-											name="sizeId" 
+											name="sizeId"
 											style="width: 100%; border: none; outline: none;"><br></td>
 
 										<td>${{cart.price_product(item)}}</td>
-
-
-
-
-
-
 										<td><input ng-change="cart.saveToLocalStorage()"
 											name="countProduct" ng-model="item.qty" type="number" min="1"
-											style="width: 30px; border: none; outline: none;"  class="border border-light" /></td>
+											style="width: 30px; border: none; outline: none;"
+											class="border border-light" /></td>
 
 										<td><input type="text" name="priceTotal"
 											style="width: 100%; border: none;"
 											value="{{ cart.amtt_of(item)}}"></td>
-
-
-
 									</tr>
+								</tbody>
+
+
+							</table>
+
+							<table class="table site-block-order-table mb-5">
+								<thead>
+									<th>Total order amount</th>
+									<th
+										th:if="${discountCodes != null and calculatedValue != null}">Discount</th>
+									<th
+										th:if="${discountCodes != null and calculatedValue != null}">Price
+										after discount</th>
+
+								</thead>
+								<tbody>
 									<tr>
-										<td class="text-black font-weight-bold"><strong>Total
-												order amount</strong></td>
+
 
 										<td><input type="text" id="inputAmount"
-											style="width:100%; border: none; outline: none;"
+											style="width: 100%; border: none; outline: none;"
 											name="totalAmount" class="text-black font-weight-bold"
 											value="{{cart.amount}}" /></td>
-									</tr>
-									<tr
-										th:if="${discountCodes != null and calculatedValue != null}">
-										<td class="text-black font-weight-bold"><strong>Discount</strong></td>
-										<td><input
+
+										<td
+											th:if="${discountCodes != null and calculatedValue != null}"><input
 											style="width: 100%; border: none; outline: none;"
 											class="text-black font-weight-bold border border-light"
 											type="text"
 											th:value="${#numbers.formatDecimal(priceVoucher, 2, 'COMMA', 2, 'POINT')}" />
 										</td>
-									<tr
-										th:if="${discountCodes != null and calculatedValue != null}">
-										<td class="text-black font-weight-bold"><strong>Price
-												after discount</strong></td>
-										<td>
+										<td
+											th:if="${discountCodes != null and calculatedValue != null}">
 											<!-- Kiểm tra xem có mã giảm giá và calculatedValue có giá trị hay không -->
-											<input
-											th:if="${discountCodes != null and calculatedValue != null}"
-											style="width: 100%; border: none; outline: none;"
+											<input style="width: 100%; border: none; outline: none;"
 											class="text-black font-weight-bold border border-light"
 											type="text" name="total"
 											th:value="${calculatedValue != null ? +calculatedValue : '{{cart.amount | number : 2}}'}" />
 										</td>
 
-
-
 									</tr>
-
 								</tbody>
 							</table>
 
@@ -189,7 +186,8 @@
 											</select>
 										</div>
 
-										<a class="mt-4" id="editButton">Edit</a>
+									
+										<a class="btn btn-dark mt-4 col-sm-2 text-light" id="editButton">Edit</a>
 
 										<div class="col-md-12 mt-3 address-div" style="display: none;">
 											<label for="c_fname" class="text-black">Province/City<span

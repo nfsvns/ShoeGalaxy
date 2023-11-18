@@ -258,19 +258,19 @@
 								<tr ng-repeat="contact in pager.items">
 									<td class="align-middle text-sm"><span
 										class="badge badge-sm text-dark">{{contact.id}}</span></td>
-									<td class="align-middle text-sm">{{contact.fullname}}<span
-										class="badge badge-sm text-dark"></span></td>
-									<td class="align-middle text-center text-sm">{{contact.phone}}<span
-										class="badge badge-sm text-dark"></span></td>
+									<td class="align-middle text-sm"><span
+										class="badge badge-sm text-dark">{{contact.fullname}}</span></td>
+									<td class="align-middle text-center text-sm"><span
+										class="badge badge-sm text-dark">{{contact.phone}}</span></td>
 
-									<td class="align-middle text-center text-sm">{{contact.subject}}<span
-										class="badge badge-sm text-dark"></span></td>
+									<td class="align-middle text-center text-sm"><span
+										class="badge badge-sm text-dark">{{contact.subject}}</span></td>
 									<td class="align-middle text-center text-sm"><span
 										class="badge badge-sm text-dark">{{ contact.createDate
 											| date:'dd/MM/yyyy' }}</span></td>
 
-									<td class="align-middle text-center text-sm">{{contact.message}}
-										<span class="badge badge-sm text-dark"></span>
+									<td class="align-middle text-center text-sm">
+										<span class="badge badge-sm text-dark">{{contact.message}}</span>
 									</td>
 									<td class="align-middle text-center text-sm">
 										<div class="btn-group btn-group-xs">
