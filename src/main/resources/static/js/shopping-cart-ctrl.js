@@ -15,7 +15,7 @@ app.controller("cart-ctrl", function($scope, $http) {
 			modal.style.display = 'none';
 			var modalBackdrop = document.querySelector('.modal-backdrop');
 			modalBackdrop.parentNode.removeChild(modalBackdrop);
-		}, 3000);
+		}, 700);
 	}
 
 
@@ -32,10 +32,11 @@ app.controller("cart-ctrl", function($scope, $http) {
 		for (var i = 0; i < buttons.length; i++) {
 			if (buttons[i].innerText.trim() === size) {
 				buttons[i].classList.remove('btn-dark');
-				buttons[i].classList.add('btn-primary'); // Chọn màu sắc mong muốn cho button được chọn
+				buttons[i].classList.add('btn-danger'); // Chọn màu sắc mong muốn cho button được chọn
 			} else {
-				buttons[i].classList.remove('btn-primary'); // Chọn màu sắc mặc định cho các button không được chọn
+				buttons[i].classList.remove('btn-danger'); // Chọn màu sắc mặc định cho các button không được chọn
 				buttons[i].classList.add('btn-dark');
+				buttons[i].classList.add('text-light');
 			}
 		}
 

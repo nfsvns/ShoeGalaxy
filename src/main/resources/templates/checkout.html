@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="~{/layout/layout.html::dynamic(~{::title}, ~{::body})}"
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/layout/layout.html::dynamic(~{::title}, ~{::body})}"
 	encoding="UTF-8">
 
 <head>
@@ -38,7 +39,7 @@
 						<h2 class="h3 mb-3 text-black">Your Order</h2>
 
 						<div class="p-3 p-lg-5 border">
-							<table class="table site-block-order-table mb-5">
+							<table class="table site-block-order-table">
 								<thead>
 									<th>Id</th>
 									<th>Image</th>
@@ -46,6 +47,7 @@
 									<th>Price</th>
 									<th>Count</th>
 									<th>Total</th>
+
 								</thead>
 								<tbody>
 									<tr ng-repeat="item in cart.items | filter : { status: true }">
@@ -67,10 +69,28 @@
 
 
 
+										<td><input type="text" name="priceTotal"
+											style="width: 100%; border: none;"
+											value="{{ cart.amtt_of(item)}}"></td>
 									</tr>
+								</tbody>
+
+
+							</table>
+
+							<table class="table site-block-order-table mb-5">
+								<thead>
+									<th>Total order amount</th>
+									<th
+										th:if="${discountCodes != null and calculatedValue != null}">Discount</th>
+									<th
+										th:if="${discountCodes != null and calculatedValue != null}">Price
+										after discount</th>
+
+								</thead>
+								<tbody>
 									<tr>
-										<td class="text-black font-weight-bold"><strong>Order
-												Total</strong></td>
+
 
 										<td><input class="text-black font-weight-bold border border-light" type="text"
 												name="total"
@@ -82,15 +102,34 @@
 										<td><input type="hidden" id="inputAmount"
 											name="totalAmount" value="{{cart.amount}}" /></td>
 
+										<td><input type="text" id="inputAmount"
+											style="width: 100%; border: none; outline: none;"
+											name="totalAmount" class="text-black font-weight-bold"
+											value="{{cart.amount}}" /></td>
 
+										<td
+											th:if="${discountCodes != null and calculatedValue != null}"><input
+											style="width: 100%; border: none; outline: none;"
+											class="text-black font-weight-bold border border-light"
+											type="text"
+											th:value="${#numbers.formatDecimal(priceVoucher, 2, 'COMMA', 2, 'POINT')}" />
+										</td>
+										<td
+											th:if="${discountCodes != null and calculatedValue != null}">
+											<!-- Kiểm tra xem có mã giảm giá và calculatedValue có giá trị hay không -->
+											<input style="width: 100%; border: none; outline: none;"
+											class="text-black font-weight-bold border border-light"
+											type="text" name="total"
+											th:value="${calculatedValue != null ? +calculatedValue : '{{cart.amount | number : 2}}'}" />
+										</td>
 
 									</tr>
-
 								</tbody>
 							</table>
 
 							<input class="text-black font-weight-bold border border-light"
-								type="text" th:value="${{idCode}}" name="IdCode" />
+								type="hidden" th:value="${{idCode}}" name="IdCode" />
+
 
 							<div class="btn-group btn-group-toggle d-flex flex-column mb-4"
 								data-toggle="buttons">
@@ -109,27 +148,12 @@
 								<button class="btn btn-primary btn-lg py-3 btn-block" id="placeOrderButton" onclick="placeOrder()">Place
 									Order</button>
 							</div>
-
-							<!--<div class="form-group">
-								<button class="btn btn-primary btn-lg py-3 btn-block"  formaction="/checkout.html"
-									formmethod="post">Place
-									Order</button>
-							</div>
-							<div class="form-group">
-								<button class="btn btn-primary btn-lg py-3 btn-block" formaction="/VnPay"
-									formmethod="get">VN Pay</button>
-							</div>
-							<div class="form-group">
-								<button class="btn btn-primary btn-lg py-3 btn-block" formaction="/paypal"
-									formmethod="post">Paypal</button>
-							</div>-->
-
 						</div>
 					</div>
 
 					<div class="col-md-6">
 
-						<div class="row mb-5">
+						<div class="row mb-2">
 							<div class="col-md-12">
 								<h2 class="h3 mb-3 text-black">Billing Details</h2>
 								<div class="p-3 p-lg-5 border">
@@ -146,13 +170,14 @@
 										<div class="col-md-12 pt-4">
 											<label for="c_email_address" class="text-black">Email
 												Address <span class="text-danger">*</span>
-											</label> <input type="text" class="form-control" id="email" name="email"
-												th:value="${user.email}" required>
+											</label> <input type="text" class="form-control" id="email"
+												name="email" th:value="${user.email}" required>
 										</div>
 
 										<div class="col-md-12 pt-4">
-											<label class="text-danger" th:text="${session.messagesAddress}"></label>
-											<select class="form-select" name="address2" id="address2">
+											<label class="text-danger"
+												th:text="${session.messagesAddress}"></label> <select
+												class="form-select" name="address2" id="address2">
 												<option selected disabled>Open address menu</option>
 												<!-- Kiểm tra điều kiện userAddresses null hoặc trống -->
 												<th:block
@@ -163,49 +188,44 @@
 												<th:block
 													th:if="${userAddresses != null and not #lists.isEmpty(userAddresses)}">
 													<option th:each="address : ${userAddresses}"
-														th:value="${address.id}" th:text="${address.addressDetail}">
-													</option>
+														th:value="${address.id}"
+														th:text="${address.addressDetail}"></option>
 											</select>
 										</div>
 
-										<a class="mt-4" id="editButton">Edit</a>
+									
+										<a class="btn btn-dark mt-4 col-sm-2 text-light" id="editButton">Edit</a>
 
 										<div class="col-md-12 mt-3 address-div" style="display: none;">
 											<label for="c_fname" class="text-black">Province/City<span
-													class="text-danger">*</span>
-											</label>
-											<select class="form-select mb-3" name="provinceLabel" id="province">
+												class="text-danger">*</span>
+											</label> <select class="form-select mb-3" name="provinceLabel"
+												id="province">
 												<!--<option value="">chọn tỉnh/thành phố</option>-->
-											</select>
-
-											<label for="c_fname" class="text-black">District<span
-													class="text-danger">*</span>
-											</label>
-											<select class="form-select mb-3" name="districtLabel" id="district">
+											</select> <label for="c_fname" class="text-black">District<span
+												class="text-danger">*</span>
+											</label> <select class="form-select mb-3" name="districtLabel"
+												id="district">
 												<option value="">chọn quận</option>
-											</select>
-
-											<label for="c_fname" class="text-black">Ward<span
-													class="text-danger">*</span>
-											</label>
-											<select class="form-select mb-3" name="wardLabel" id="ward">
+											</select> <label for="c_fname" class="text-black">Ward<span
+												class="text-danger">*</span>
+											</label> <select class="form-select mb-3" name="wardLabel" id="ward">
 												<option value="">chọn phường</option>
-											</select>
+											</select> <label for="c_address" class="text-black">Street
+												Name <span class="text-danger">*</span>
+											</label> <input type="text" class="form-control" id="address"
+												name="address" placeholder="Street Name">
 
-
-											<label for="c_address" class="text-black">Street Name <span
-													class="text-danger">*</span></label> <input type="text"
-												class="form-control" id="address" name="address"
-												placeholder="Street Name">
-
-											<div class="btn-group w-100" role="group" aria-label="Basic example">
+											<div class="btn-group w-100" role="group"
+												aria-label="Basic example">
 												<button class="btn btn-primary my-3  py-3 btn-block  mx-1"
-													formaction="/addAddress1" formmethod="post">Thêm</button>
+													formaction="/addAddress" formmethod="post">Thêm</button>
 													
 												<button class="btn my-3  py-3 btn-block  mx-1 "
 													formaction="/updateAddress" formmethod="post">Sửa</button>
 												<button class="btn my-3  py-3 btn-block  mx-1 "
-													formaction="/deleteAddress" formmethod="post">Xóa</a>
+													formaction="/deleteAddress" formmethod="post">
+													Xóa</a>
 											</div>
 
 										</div>
@@ -216,35 +236,26 @@
 							</div>
 						</div>
 
-						<div class="row mb-5">
+
+						<div class="row mb-5 border ">
 							<div class="col-md-12">
-								<h2>Quantities:</h2>
-								<ul>
-									<li th:each="quantity : ${quantities}" th:text="${quantity}"></li>
-								</ul>
-								<ul>
-									<li th:each="remainingQuantities : ${remainingQuantities}"
-										th:text="${remainingQuantities}"></li>
-								</ul>
 
 								<div th:if="${error}" class="alert alert-danger">
 									<p th:text="${error}"></p>
 								</div>
-								<h2 class="h3 mb-3 text-black">Coupon Code</h2>
-								<div class="p-3 p-lg-5 border">
-									<label for="c_code" class="text-black mb-3">Enter your
-										coupon code if you have one</label>
-									<div class="input-group w-75">
-										<input type="text" name="code" placeholder="Nhập mã giảm giá"
-											th:value="${code}">
 
-										<div class="input-group-append">
-											<button type="submit" formaction="/searchCodee">Tìm
-												kiếm</button>
-
-										</div>
-
-
+								<div class="row">
+									<div class="col-md-12">
+										<label class="text-black h4" for="coupon">Coupon</label>
+										<p>Enter your coupon code if you have one.</p>
+									</div>
+									<div class="col-md-8 mb-5 mb-md-0">
+										<input type="text" name="code" class="form-control py-3"
+											placeholder="Nhập mã giảm giá" th:value="${code}">
+									</div>
+									<div class="col-md-4 mb-5">
+										<button type="submit" class="btn btn-dark btn-sm"
+											formaction="/searchCodee">Tìm kiếm</button>
 									</div>
 								</div>
 							</div>
@@ -258,7 +269,7 @@
 		// Thêm sự kiện click ẩn hiện vào nút "Edit"
 		var addressDiv = document.querySelector('.address-div');
 		var editButton = document.getElementById("editButton");
-		editButton.addEventListener("click", function () {
+		editButton.addEventListener("click", function() {
 			var isHidden = addressDiv.style.display === "none";
 			if (isHidden) {
 				addressDiv.style.display = "block";
@@ -266,7 +277,6 @@
 				addressDiv.style.display = "none";
 			}
 		});
-
 		// SỰ KIỆN NÚT PLACE ORDER
 		function placeOrder(){
 			var option1 = document.getElementById("option1");
@@ -286,9 +296,6 @@
             	placeOrderButton.click();
 			}
 		}
-		
-		
-
 
 	</script>
 </body>
