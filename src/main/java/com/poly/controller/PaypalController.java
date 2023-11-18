@@ -194,6 +194,7 @@ public class PaypalController {
 				order.setStatus("Đang Xác Nhận");
 				order.setCity(a.get().getCity());
 				order.setAvailable(true);
+				System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 				try {
 					double totalAmountDouble = Double.parseDouble(totalAmountString);
 					order.setTongtien(totalAmountDouble);
