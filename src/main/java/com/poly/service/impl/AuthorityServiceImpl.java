@@ -19,6 +19,8 @@ public class AuthorityServiceImpl implements AuthorityService{
 	AuthorityDAO dao;
 	@Autowired
 	AccountDAO accountDAO;
+	@Autowired
+	AuthorityService authorityService;
 
 	public List<Authority> findAll() {
 		return dao.findAll();
@@ -35,5 +37,17 @@ public class AuthorityServiceImpl implements AuthorityService{
 	public List<Authority> findAuthoritiesOfAdministrators() {
 		List<Account> accounts = accountDAO.getAdministrators();
 		return dao.authoritiesOf(accounts);
+	}
+
+	@Override
+	public Authority findById(Integer id) {
+		// TODO Auto-generated method stub
+		return authorityService.findById(id);
+	}
+
+	@Override
+	public List<Authority> findUsername(String username) {
+		// TODO Auto-generated method stub
+		return dao.findByUsername(username);
 	}
 }

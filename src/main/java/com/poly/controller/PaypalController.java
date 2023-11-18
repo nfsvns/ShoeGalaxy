@@ -140,10 +140,13 @@ public class PaypalController {
 //        }
 		
 		try {
+		
 			Payment payment = service.createPayment(total, "USD", "paypal", "sale", "test", fullname, addressNoCity, a.get().getCity(),
 					"http://localhost:8080/" + CANCEL_URL, "http://localhost:8080/" + SUCCESS_URL);
+			
 			for (Links link : payment.getLinks()) {
 				if (link.getRel().equals("approval_url")) {
+					System.out.println(link.getHref());
 					return "redirect:" + link.getHref();
 				}
 			}
@@ -206,6 +209,7 @@ public class PaypalController {
 				order.setNguoinhan(recipientName);
 				order.setCity(a.get().getCity());
 				order.setAvailable(true);
+				System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 				try {
 					double totalAmountDouble = Double.parseDouble(totalAmountString);
 					order.setTongtien(totalAmountDouble);

@@ -27,7 +27,6 @@ import com.poly.entity.Product;
 import com.poly.service.AccountService;
 import com.poly.service.ImageService;
 
-
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/rest/accounts")
@@ -36,36 +35,37 @@ public class AccountRestController {
 	AccountService accountService;
 	@Autowired
 	ImageService imageService;
-	
-/*	@GetMapping
-	public List<Account> getAll() {
-		return accountService.findAll();
-	}*/
-	
+
+	/*
+	 * @GetMapping public List<Account> getAll() { return accountService.findAll();
+	 * }
+	 */
+
 	@GetMapping
 	public List<Account> getAccounts(@RequestParam("admin") Optional<Boolean> admin) {
-		if(admin.orElse(false)) {
+		if (admin.orElse(false)) {
 			return accountService.getAdministrators();
 		}
 		return accountService.findAll();
 	}
-	
-	 
+
+
 	@GetMapping("{username}")
 	public Account getOne(@PathVariable("username") String username) {
 		return accountService.findById(username);
 	}
-	
+
 	@PutMapping("{username}")
 	public Account put(@PathVariable("username") String username, @RequestBody Account account) {
 		return accountService.update(account);
 	}
-	
+
 	@DeleteMapping("{username}")
 	public void delete(@PathVariable("username") String username) {
-		
+
 		accountService.delete(username);
 	}
+
 	@PostMapping
 	public Account post(@RequestBody Account account) {
 		accountService.create(account);

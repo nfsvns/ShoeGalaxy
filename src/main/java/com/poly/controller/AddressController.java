@@ -46,7 +46,13 @@ public class AddressController {
 		} else {
 			String username = request.getRemoteUser();
 			Account user = accountDAO.findById(username).orElse(null);
-
+			
+			boolean addressExists = addressDAO.existsByAccountAndAddressDetail(user, address + ", " + wardLabel + ", " + districtLabel + ", " + provinceLabel);
+	        if (addressExists) {
+	            model.addAttribute("messages", "Địa chỉ đã tồn tại. Vui lòng chọn địa chỉ khác.");
+	            return "forward:/check";
+	        }
+			
 			Address ad = new Address();
 			ad.setAccount(user);
 			ad.setAddressDetail(address + ", " + wardLabel + ", " + districtLabel + ", " + provinceLabel);

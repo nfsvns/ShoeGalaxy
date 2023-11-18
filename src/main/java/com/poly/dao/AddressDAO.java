@@ -14,5 +14,6 @@ public interface AddressDAO extends JpaRepository<Address, Integer> {
 	List<Address> getAddressesByUsername(String username);
 	
 	Optional<Address> findByAddressDetail(String addressDetail);
+	boolean existsByAccountAndAddressDetail(Account account, String addressDetail);
 
 }
