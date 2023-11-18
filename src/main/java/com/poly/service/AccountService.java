@@ -15,9 +15,15 @@ public interface AccountService {
 	 public boolean updateProfile(String username, String newFullname, String newEmail, String photo);
 	 public boolean updateProfileWithoutPhoto(String username, String newFullname, String newEmail);
 	 public Account getCurrentAccount();
-	 
-	 
+	 public void deleteAddressesByAccount(Account account);
+	 public List<Account> findAllWithPasswordEncoder();
 	 public Account update(Account account) ;
 	 public Account create(Account account);
 	 public void delete(String username);
+	 Account findByEmail(String email);
+	 public List<String> findAllAccountEmails();
+	 public boolean isEmailExists(String email);
+	 public void deleteAccountAndRelatedData(String username);
+	 
+
 }

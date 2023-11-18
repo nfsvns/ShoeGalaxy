@@ -72,15 +72,18 @@ public class LoginController2 {
 
 	@RequestMapping("/register/success")
 	public String register1(Model model, @RequestParam String username, @RequestParam String password,
-			@RequestParam String fullname, @RequestParam String email) {
-		if (!accountDAO.findById(username).isEmpty()) {
-			model.addAttribute("error", "Vui lòng đặt tên username khác!");
-		} else {
+			@RequestParam String fullname, @RequestParam String email,@RequestParam String confirmPassword) {
+		 if (!accountDAO.findById(username).isEmpty()) {
+		        model.addAttribute("error", "Vui lòng đặt tên username khác!");
+		    } else if (!password.equals(confirmPassword)) {
+		        model.addAttribute("error", "Mật khẩu và xác nhận mật khẩu không khớp. Vui lòng nhập lại.");
+		    }  else {
 			Account user = new Account();
 			user.setUsername(username);
 			user.setPassword(password);
 			user.setFullname(fullname);
 			user.setEmail(email);
+			user.setPhoto("nv01.jpg");
 			accountDAO.save(user);
 
 			Authority authority = new Authority();
@@ -91,7 +94,7 @@ public class LoginController2 {
 			authorityDAO.save(authority);
 			model.addAttribute("message", "Đăng kí thành công");
 		}
-		return "redirect:/login";
+		return "register";
 	}
 
 }
