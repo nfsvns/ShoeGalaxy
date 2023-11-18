@@ -52,4 +52,16 @@ public class AuthorityServiceImpl implements AuthorityService{
         }
 		return true;
     }
+
+	@Override
+	public Authority findById(Integer id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Authority> findUsername(String username) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

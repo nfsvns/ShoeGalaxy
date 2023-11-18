@@ -37,13 +37,11 @@ import com.poly.entity.Product;
 import com.poly.service.AccountService;
 import com.poly.service.AuthorityService;
 import com.poly.service.ImageService;
-<<<<<<< HEAD
-=======
 import com.poly.service.MailerService;
 import com.poly.service.OrderService;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
->>>>>>> main
+
 
 @CrossOrigin("*")
 @RestController
@@ -53,23 +51,7 @@ public class AccountRestController {
 	AccountService accountService;
 	@Autowired
 	ImageService imageService;
-<<<<<<< HEAD
 
-	/*
-	 * @GetMapping public List<Account> getAll() { return accountService.findAll();
-	 * }
-	 */
-
-	@GetMapping
-	public List<Account> getAccounts(@RequestParam("admin") Optional<Boolean> admin) {
-		if (admin.orElse(false)) {
-			return accountService.getAdministrators();
-		}
-		return accountService.findAll();
-	}
-
-
-=======
 	@Autowired
 	AuthorityService authorityService;
 
@@ -86,7 +68,7 @@ public class AccountRestController {
 	    return accountService.findAllWithPasswordEncoder();
 	}
 	 
->>>>>>> main
+
 	@GetMapping("{username}")
 	public Account getOne(@PathVariable("username") String username) {
 		return accountService.findById(username);
@@ -99,17 +81,12 @@ public class AccountRestController {
 
 	@DeleteMapping("{username}")
 	public void delete(@PathVariable("username") String username) {
-<<<<<<< HEAD
 
-		accountService.delete(username);
-	}
-
-=======
 	    accountService.deleteAccountAndRelatedData(username);
 	}
 
 
->>>>>>> main
+
 	@PostMapping
 	public Account post(@RequestBody Account account) {   
       accountService.create(account);
