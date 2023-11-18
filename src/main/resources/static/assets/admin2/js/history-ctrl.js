@@ -51,6 +51,7 @@ app.controller("history-ctrl", function($scope, $http, $timeout,$window) {
 		}
 	};
 
+
 	$scope.computeUniqueDatesAndInitDate = function() {
 		flatpickr("#calendar", {
 			dateFormat: "d-m-Y",
@@ -64,12 +65,6 @@ app.controller("history-ctrl", function($scope, $http, $timeout,$window) {
 			}
 		});
 	};
-
-
-
-
-
-
 
 	$scope.getDetailData = function(item) {
 		if (item.showDetail) {

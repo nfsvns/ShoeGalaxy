@@ -5,25 +5,23 @@
 <title>Shoe Galaxy</title>
 <meta charset="utf-8">
 
-
-
 </head>
 <body>
 
-	<div class="site-section mt-5">
+	<div class="site-sectionn" >
 		<div class="container ">
 			<div class="row">
 				<div class="col-md-9 order-2">
 					<div class="row">
 						<div class="col-md-12">
-							<div class="float-md-left mt-2 " style="margin-left:30px">
+							<div class="float-md-left " style="margin-left: 30px">
 								<h2 class="text-black h5">Shop All</h2>
 							</div>
 							<div class="d-flex">
 								<div class="dropdown mr-1 ml-md-auto"
 									style="text-decoration: none">
 									<button type="button"
-										class="btn btn-secondary btn-sm dropdown-toggle"
+										class="btn btn-dark btn-sm dropdown-toggle"
 										id="dropdownMenuOffset" data-toggle="dropdown"
 										aria-haspopup="true" aria-expanded="false">Brand</button>
 									<div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
@@ -35,7 +33,7 @@
 
 								<div class="btn-group">
 									<button type="button"
-										class="btn btn-secondary btn-sm dropdown-toggle"
+										class="btn btn-dark btn-sm dropdown-toggle"
 										id="dropdownMenuReference" data-toggle="dropdown">Reference</button>
 									<div class="dropdown-menu"
 										aria-labelledby="dropdownMenuReference">
@@ -61,7 +59,7 @@
 									<div class="product-image-container">
 										<a th:href="@{|/shop-single.html/${product.id}|}"> <img
 											th:if="${not #lists.isEmpty(product.images)}"
-											class="product-image-shoe"
+											class="product-image-shoe img-fluid"
 											th:src="@{|/images/${product.images[0].image}|}"
 											alt="Product Image">
 										</a>
@@ -117,7 +115,7 @@
 							<div class="site-block-27 ">
 
 								<!-- ĐIỀU HƯỚNG -->
-								<div th:switch="${check}">
+								<div th:switch="${check}" class="pagination-center">
 									<ul th:case="1">
 										<li><a th:href="@{|/shop.html/search?p=0|}">&lt;</a></li>
 										<li th:each="i : ${#numbers.sequence(1, products.totalPages)}">
@@ -126,16 +124,22 @@
 										<li><a
 											th:href="@{|/shop.html/search?p=${products.totalPages - 1}|}">&gt;</a></li>
 									</ul>
-
 									<ul th:case="2">
-										<li><a th:href="@{|/shop.html/search?p=0|}">&lt;</a></li>
+										<li><a
+											th:href="@{|/shop.html/findByPrice?p=0&priceRange=${priceRange}|}">&lt;</a></li>
 										<li th:each="i : ${#numbers.sequence(1, products.totalPages)}">
-											<a th:href="@{|/shop.html/findByPrice?p=${i-1}|}"
+											<a
+											th:href="@{|/shop.html/findByPrice?p=${i-1}&priceRange=${priceRange}|}"
 											th:text="${i}"></a>
 										</li>
 										<li><a
-											th:href="@{|/shop.html/findByPrice?p=${products.totalPages - 1}|}">&gt;</a></li>
+											th:href="@{|/shop.html/findByPrice?p=${products.totalPages - 1}&priceRange=${priceRange}|}">&gt;</a></li>
 									</ul>
+
+
+
+
+
 
 									<ul th:case="3">
 										<li><a th:href="@{|/shop.html/searchBrand?p=0|}">&lt;</a></li>
@@ -164,6 +168,21 @@
 										<li><a
 											th:href="@{|/shop.html/sort1?p=${products.totalPages - 1}|}">&gt;</a></li>
 									</ul>
+
+									<ul th:case="6">
+										<li><a
+											th:href="@{|/findSizeProducts?size=${size}&page=0|}">&lt;</a></li>
+										<li
+											th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}">
+											<a th:href="@{|/findSizeProducts?size=${size}&page=${i}|}"
+											th:text="${i + 1}"></a>
+										</li>
+										<li><a
+											th:href="@{|/findSizeProducts?size=${size}&page=${products.totalPages - 1}|}">&gt;</a></li>
+									</ul>
+ 	
+
+
 
 									<ul th:case="*">
 										<li><a th:href="@{|/shop.html?p=0|}">&lt;</a></li>
@@ -264,59 +283,58 @@
 			</div>
 		</div>
 
+	</div>
 
 
-		<div class="row">
-			<div class="col-md-12">
-				<div class="site-section site-blocks-2">
-					<div class="row justify-content-center text-center mb-5">
-						<div class="col-md-7 site-section-heading pt-4">
-							<h2>Categories</h2>
-						</div>
+
+
+	<div class="container-fluid col-sm-10 mt-5"  data-aos="fade-up">
+		<img src="/images/bannerIndex.jpg" style="height: 350px; width: 100%"
+			alt="...">
+	</div>
+
+
+
+
+	<div class="site-section site-section-sm site-blocks-1 border-0"
+		data-aos="fade">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 col-lg-4 d-lg-flex mb-4 mb-lg-0 pl-4"
+					data-aos="fade-up" data-aos-delay="">
+					<div class="icon mr-4 align-self-start">
+						<span class="icon-truck"></span>
 					</div>
-					<div class="row">
-						<div class="col-sm-6 col-md-6 col-lg-4 mb-4 mb-lg-0"
-							data-aos="fade" data-aos-delay="">
-							<a class="block-2-item" href="#">
-								<figure class="image">
-									<img src="images/b1.webp" alt="" class="img-fluid">
-								</figure>
-								<div class="text">
-									<span class="text-uppercase">Collections</span>
-									<h3>Women</h3>
-								</div>
-							</a>
-						</div>
-						<div class="col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0"
-							data-aos="fade" data-aos-delay="100">
-							<a class="block-2-item" href="#">
-								<figure class="image">
-									<img src="images/b3.webp" alt="" class="img-fluid">
-								</figure>
-								<div class="text">
-									<span class="text-uppercase">Collections</span>
-									<h3>Children</h3>
-								</div>
-							</a>
-						</div>
-						<div class="col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0"
-							data-aos="fade" data-aos-delay="200">
-							<a class="block-2-item" href="#">
-								<figure class="image">
-									<img src="images/b2.webp" alt="" class="img-fluid">
-								</figure>
-								<div class="text">
-									<span class="text-uppercase">Collections</span>
-									<h3>Men</h3>
-								</div>
-							</a>
-						</div>
+					<div class="text">
+						<h2 class="text-uppercase">Free Shipping</h2>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+							Phasellus at iaculis quam. Integer accumsan tincidunt fringilla.</p>
 					</div>
-
+				</div>
+				<div class="col-md-6 col-lg-4 d-lg-flex mb-4 mb-lg-0 pl-4"
+					data-aos="fade-up" data-aos-delay="100">
+					<div class="icon mr-4 align-self-start">
+						<span class="icon-refresh2"></span>
+					</div>
+					<div class="text">
+						<h2 class="text-uppercase">Free Returns</h2>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+							Phasellus at iaculis quam. Integer accumsan tincidunt fringilla.</p>
+					</div>
+				</div>
+				<div class="col-md-6 col-lg-4 d-lg-flex mb-4 mb-lg-0 pl-4"
+					data-aos="fade-up" data-aos-delay="200">
+					<div class="icon mr-4 align-self-start">
+						<span class="icon-help"></span>
+					</div>
+					<div class="text">
+						<h2 class="text-uppercase">Customer Support</h2>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+							Phasellus at iaculis quam. Integer accumsan tincidunt fringilla.</p>
+					</div>
 				</div>
 			</div>
 		</div>
-
 	</div>
 
 	<!-- 	<script>
@@ -335,8 +353,11 @@
 		function submitPriceForm() {
 			document.getElementById("priceForm").submit();
 			document.getElementById("buttonDiv").style.display = "none";
+
 		}
 	</script>
+
+
 
 
 	<script>
@@ -344,8 +365,5 @@
 			document.getElementById("sizeForm").submit();
 		}
 	</script>
-
-
-
 </body>
 </html>

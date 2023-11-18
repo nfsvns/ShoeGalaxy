@@ -11,9 +11,14 @@ app.controller("discountProduct-ctrl", function($scope, $http) {
 			$scope.items = resp.data;
 		});
 		$scope.reset(); // đặt lại form để có hình mẫu mới đầu
+		$scope.loadCurrentUser();
 	}
 	
-
+$scope.loadCurrentUser = function() {
+    $http.get("/rest/accounts/current-account").then(resp => {
+        $scope.account = resp.data;
+    }); 
+};
 
 
 function hasOverlappingPeriod(item) {

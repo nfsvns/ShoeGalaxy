@@ -2,6 +2,8 @@ package com.poly.service.impl;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -86,6 +88,14 @@ public class ProductServiceImpl implements ProductService {
 	public List<Object[]> getProductQuantity() {
 		// TODO Auto-generated method stub
 		return dao.getProductQuantity();
+	}
+
+	@Override
+	@Transactional
+	public void DeleteProductAndRelatedData(Integer id) {
+		// TODO Auto-generated method stub
+		dao.DeleteProductAndRelatedData(id);
+		
 	}
 
 	

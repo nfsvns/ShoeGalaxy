@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	th:replace="~{/layout/layout.html::dynamic(~{::title}, ~{::body})}">
-
-
 <head>
 <title th:text=" ${prod.name}"></title>
 
@@ -49,6 +47,7 @@
 				</div>
 				<div class="col-md-6 mt-5" style="border-left: 1px dashed wheat; ">
 					<h3 th:text="${prod.name}" class="mb-3"></h3>
+
 					 <div class=" mt-4 mb-3 " th:if="${prod.discountProduct != null and not #lists.isEmpty(prod.discountProduct)}">
 					 <div class="d-flex flex-row align-items-center" th:if="${T(java.time.LocalDate).now().isAfter(prod.discountProduct[0].start_Date) and T(java.time.LocalDate).now().isBefore(prod.discountProduct[0].end_Date)
 						or  T(java.time.LocalDate).now() == prod.discountProduct[0].start_Date or T(java.time.LocalDate).now() == prod.discountProduct[0].end_Date}">
@@ -64,6 +63,7 @@
 					 </div>
 					 
                                     </div>
+
 
 					<!-- Check if there are discount products -->
 					<div class="product-price mt-3">
@@ -177,6 +177,7 @@
 
 
 
+
 			</div>
 <div style="border-bottom: groove;" class="mt-5"></div>
 <div class="container my-5">
@@ -261,98 +262,103 @@
 				</div>
 
 
-			<!-- 	<div class="container">
 
-					The Modal
-					<div class="modal" id="myModal">
-						<div class="modal-dialog"
-							style="margin-left: auto; margin-right: 0; margin-top: 200px;">
-							<div class="modal-content">
+			</div>
+			<div style="border-bottom: groove;" class="mt-5"></div>
+			<div class="container my-5">
+				<h2>Comments</h2>
+				<form action="/shop.html/addComments" method="post">
+					<input type="hidden" name="productId" th:value="${prod.id}"
+						class="form-control mb-3" />
+					<div class="form-group">
+						<label for="comment">Comment:</label>
+						<textarea class="form-control" id="comment" name="description"
+							rows="4" required></textarea>
+					</div>
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
 
-								Modal body
-								<div class="modal-body">
-									<table class="table table-bordered" style="width: 100%;">
-										<thead>
-											<tr>
-												<th class="product-name" style="font-weight: bold;">Product</th>
-												<th class="product-size" style="font-weight: bold;">Size</th>
-												<th class="product-price" style="font-weight: bold;">Price</th>
-												<th class="product-quantity" style="font-weight: bold;">Quantity</th>
-												<th class="product-total" style="font-weight: bold;">Total</th>
-
-											</tr>
-										</thead>
-										<tbody>
-											<tr ng-repeat="item in cart.items">
-												<td class="text-truncate"
-													style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{item.name}}</td>
-												<td>{{item.sizes}}</td>
-												<td>${{cart.price_product(item)}}</td>
-												<td><input ng-change="cart.saveToLocalStorage()"
-													name="count" ng-model="item.qty" type="number" min="1"
-													style="width: 60px;"></td>
-												<td>${{cart.amtt_of(item) | number : 2}}</td>
-												<td>
-												<button ng-click="cart.remove(item.id)"
-													class="btn btn-sm btn-danger">
-													<i class="fas fa-trash"></i>
-												</button>
-											</td>
-											</tr>
-											Your ng-repeat content here
-										</tbody>
-									</table>
+				<div id="comments-container">
+					<div th:each="cmt, iterStat : ${comment}"
+						class="card my-3 border-0" th:if="${iterStat.index < 20}">
+						<div class="card-body comment-body">
+							<div class="row">
+								<div class="col-md-1">
+									<img th:src="@{|/images/${cmt.account.photo}|}"
+										class="img-fluid rounded-circle comment-user-img" alt="User">
 								</div>
+								<div class="col-md-11">
+									<h5 th:text="${cmt.account.fullname}" class="comment-user-name"></h5>
+									<p th:text="${#dates.format(cmt.create_Date, 'dd-MM-yyyy')}"
+										class="comment-date"></p>
+									<p th:text="${cmt.description}" class="comment-description"></p>
+									<button class="btn btn-secondary btn-sm mt-2 reply-btn"
+										data-comment-id="${cmt.id}">Reply</button>
+									<div
+										th:if="${#authentication.principal.username == cmt.account.username}">
+										<!-- Render the delete button only for the logged-in user's comments -->
+										<button class="btn btn-danger btn-sm mt-2 delete-comment-btn"
+											data-comment-id="${cmt.id}">Delete</button>
+									</div>
 
+									<div class="reply-form card border-0"
+										data-comment-id="${cmt.id}" style="display: none;">
+										<form action="/shop.html/replyComments" method="post"
+											onsubmit="hideOtherReplyForms('replyForm-${cmt.id}')">
+											<input type="hidden" name="productIdReply"
+												th:value="${prod.id}" class="form-control mb-3" /> <input
+												type="hidden" name="parentId" th:value="${cmt.id}"
+												class="form-control mb-3" />
+											<div class="form-group">
+												<label for="comment">Comment:</label>
+												<textarea class="form-control" name="descriptionReply"
+													rows="4" required></textarea>
+											</div>
+											<button type="submit" class="btn btn-primary">Submit</button>
+
+										</form>
+									</div>
+
+									<!-- Display replies -->
+									<div class="replies-container-${cmt.id}">
+										<div th:each="rpl : ${reply}"
+											th:if="${rpl.comment.id} == ${cmt.id}"
+											class="card my-3 reply-card border-0">
+											<div class="card-body">
+												<div class="row">
+													<div class="col-md-1">
+														<img th:src="@{|/images/${rpl.account.photo}|}"
+															class="img-fluid rounded-circle reply-user-img"
+															alt="User">
+													</div>
+													<div class="col-md-11">
+														<h5 th:text="${rpl.account.fullname}"
+															class="reply-user-name"></h5>
+														<p
+															th:text="${#dates.format(rpl.create_date, 'dd-MM-yyyy')}"
+															class="reply-date"></p>
+														<p th:text="${rpl.description}" class="reply-description"></p>
+													</div>
+													<div
+														th:if="${#authentication.principal.username == rpl.account.username}">
+														<!-- Render the delete button only for the logged-in user's comments -->
+														<button
+															class="btn btn-danger btn-sm mt-2 delete-comment-btn"
+															data-comment-id="${cmt.id}">Delete</button>
+													</div>
+
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- End of displaying replies -->
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
- -->
 
-				<!--  tab -->
-				<div style="border-bottom: groove;" class="mt-5"></div>
-				<h1 style="text-align: center;">Mặt hàng liên quan</h1>
-
-				<!-- 		<div class="container">
-				<div id="productCarousel" class="carousel slide"
-					data-bs-ride="carousel">
-					<div class="carousel-inner">
-						Duyệt qua danh sách sản phẩm
-						<th:block th:each="group, groupIndex : ${productGroups}"
-							th:classappend="${groupIndex == 0} ? 'carousel-item active' : 'carousel-item'">
-							<div class="row">
-								Duyệt qua sản phẩm trong từng nhóm
-								<th:block th:each="product : ${group}" class="col-lg-3">
-									<div class="list-item wsk-cp-product">
-										Hiển thị thông tin sản phẩm
-										<div class="block-4-image wsk-cp-image">
-											<a th:href="@{|/shop-single.html/${product.id}|}"> <img
-												th:src="@{|/images/${product.image}|}" 
-												alt="Image placeholder" class="img-thumb">
-											</a>
-										</div>
-										<div class="item-details">
-											<h3 class="text-truncate" th:text="${product.name}"></h3>
-											<p class="price"
-												th:text="${'Giá: ' + product.price + ' VNĐ'}"></p>
-										</div>
-									</div>
-								</th:block>
-							</div>
-						</th:block>
-					</div>
-					<a class="carousel-control-prev" href="#productCarousel"
-						role="button" data-bs-slide="prev"> <span
-						class="carousel-control-prev-icon" aria-hidden="true"></span> <span
-						class="visually-hidden">Previous</span>
-					</a> <a class="carousel-control-next" href="#productCarousel"
-						role="button" data-bs-slide="next"> <span
-						class="carousel-control-next-icon" aria-hidden="true"></span> <span
-						class="visually-hidden">Next</span>
-					</a>
-				</div>
-			</div> -->
+			</div> 
 
 				<!-- Bootstrap 5.3.1 JavaScript (Popper.js là một phần bắt buộc của Bootstrap) -->
                   
@@ -369,6 +375,7 @@
                              (T(java.time.LocalDate).now().isBefore(pro.discountProduct[0].end_Date) or
                              T(java.time.LocalDate).now().isEqual(pro.discountProduct[0].end_Date)))} and ${pro.discountProduct[0].active}">
 							<span th:text="${pro.discountProduct[0].percentage + '%'}"></span>
+
 						</div>
 					</div>
 					<div class="product-details-shoe">
@@ -399,9 +406,9 @@
 				</div>
 			</div>
 				</div>
-
-
 			</div>
+
+
 		</div>
 		<script
 			src="https://cdn.jsdelivr.net/npm/popper.js@2.11.6/dist/umd/popper.min.js"></script>
@@ -411,16 +418,16 @@
 
 
 
-		<script
-			src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-		<script>
-			$(document).ready(function() {
-				$(".reply-btn").click(function() {
-					var commentId = $(this).data('comment-id');
-					$('.reply-form').hide();
-					$(this).siblings('.reply-form').show();
-				});
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script>
+		$(document).ready(function() {
+			$(".reply-btn").click(function() {
+				var commentId = $(this).data('comment-id');
+				$('.reply-form').hide();
+				$(this).siblings('.reply-form').show();
 			});
-		</script>
+		});
+	</script>
 </body>
 </html>

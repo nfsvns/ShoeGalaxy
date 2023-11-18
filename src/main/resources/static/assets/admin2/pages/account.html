@@ -22,6 +22,12 @@
 					<ul class="navbar-nav  justify-content-end">
 						<li class="nav-item d-flex align-items-center">
 							<a href="javascript:;" class="nav-link text-white font-weight-bold px-0">
+							<img style="max-width: 50%; height: 50px" class="border-radius-lg shadow-sm" id="imagePreview" ng-src="{{'/images/'+account.photo}}"  alt="Avatar">
+								
+								
+	
+								
+								
 								<i class="fa fa-user me-sm-1"></i>
 								<span class="d-sm-inline d-none">Sign In</span>
 							</a>
@@ -165,8 +171,9 @@
 								</div>
 								<div class="form-group col-sm-4">
 									<div>Password</div>
-									<input ng-model="form.password" class="form-control">
-								</div>
+									<input ng-value=" " type="password" disabled class="form-control" > 
+									
+								</div>			
 								<div class="row"></div>
 								<div class="form-group col-sm-4">
 									<div>Fullname</div>
@@ -174,7 +181,7 @@
 								</div>
 								<div class="form-group col-sm-4">
 									<div>Email</div>
-									<input ng-model="form.email" class="form-control">
+									<input id="email" type="email" ng-model="form.email" class="form-control">
 								</div>
 							
 							<div class="row">
@@ -194,21 +201,23 @@
 		</div>
 	</div>
 		<div class="panel-footer text-center">
-		<button ng-click="create()"
+		<button ng-click="create()" ng-disabled="!form.username"
 			class="btn btn-primary">
 			<b class="glyphicon glyphicon-plus"></b> Create
 		</button>
-		<button ng-click="update()"
+		<button ng-click="update()" ng-disabled="!form.username"
 			class="btn btn-success">
 			<b class="glyphicon glyphicon-save"></b> Update
 		</button>
-		<button ng-click="delete(form)"
+		<button ng-click="delete(form)" ng-disabled="!form.username"
 			class="btn btn-danger">
 			<b class="glyphicon glyphicon-trash"></b> Delete
-		</button>
-		<button ng-click="reset()" class="btn btn-info">
-			<b class="glyphicon glyphicon-refresh"></b> Reset
-		</button>
+		</button>	
+		<button class="btn btn-info me-2" 
+			     data-bs-toggle="modal" data-bs-target="#secondModal">
+                <b class="glyphicon glyphicon-refresh"></b> Reset
+            </button>
+            
 	</div>
 				</div>
 			</div>
@@ -267,21 +276,6 @@
 								</table>
 									<div ng-repeat="item in pager.items">		
 		
-		<!-- 
-				<td>
-					<div class="btn-group btn-group-xs">
-						<a ng-click="edit(item)" href="" class="btn btn-warning">
-							<i class="fa-solid fa-pen-to-square fa-2xs"></i>
-						</a>
-						<a ng-click="delete(item)" href="" class="btn btn-danger">
-							<i class="fa-solid fa-trash fa-2xs"></i>
-						</a>
-					</div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	 -->
 </div>
 <div class="panel-footer text-center">
 		<button ng-click="pager.first()" class="btn " style="width: 60px;">
@@ -345,4 +339,26 @@
 				</div>
 			</footer>
 		</div>
+	<!--modal van  -->
+<div class="modal fade" id="secondModal" tabindex="-1" aria-labelledby="secondModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+        <h5 class="modal-title"id="resetPasswordModalLabel" style="text-align:center">Reset Form</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        
+        <button type="button" class="btn btn-danger" ng-click="reset()" data-dismiss="modal">Reset Form</button>
+      <form action="/sendEmail">
+    <button type="button" ng-click="sendEmail()" class="btn btn-secondary">Reset Password</button>
+</form>
+      </div>
+        </div>
+    </div>
+</div>
+<!--modal van  -->
 	
+			
