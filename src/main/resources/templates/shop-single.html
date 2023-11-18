@@ -179,66 +179,66 @@
 
 
 			</div>
-<!--<div style="border-bottom: groove;" class="mt-5"></div>-->
-<!--<div class="container my-5">-->
-<!--    <h2>Comments</h2>-->
-<!--    <form action="/shop.html/addComments" method="post">-->
-<!--        <input type="hidden" name="productId" th:value="${prod.id}" class="form-control mb-3" />-->
-<!--        <div class="form-group">-->
-<!--            <label for="comment">Comment:</label>-->
-<!--            <textarea class="form-control" id="comment" name="description" rows="4" required></textarea>-->
-<!--        </div>-->
-<!--        <button type="submit" class="btn btn-dark">Submit</button>-->
-<!--    </form>-->
+<div style="border-bottom: groove;" class="mt-5"></div>
+<div class="container my-5">
+    <h2>Comments</h2>
+    <form action="/shop.html/addComments" method="post">
+        <input type="hidden" name="productId" th:value="${prod.id}" class="form-control mb-3" />
+        <div class="form-group">
+            <label for="comment">Comment:</label>
+            <textarea class="form-control" id="comment" name="description" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-dark">Submit</button>
+    </form>
 
-<!--    <div id="comments-container">-->
-<!--        <div th:each="cmt, iterStat : ${comment}" class="card my-3 border-0" th:if="${iterStat.index < 20}">-->
-<!--            <div class="card-body comment-body">-->
-<!--                <div class="row">-->
-<!--                    <div class="col-md-1">-->
-<!--                        <img th:src="@{|/images/${cmt.account.photo}|}" class="img-fluid rounded-circle comment-user-img" alt="User">-->
-<!--                    </div>-->
-<!--                    <div class="col-md-11">-->
-<!--                        <h5 th:text="${cmt.account.fullname}" class="comment-user-name"></h5>-->
-<!--                        <p th:text="${#dates.format(cmt.create_Date, 'dd-MM-yyyy')}" class="comment-date"></p>-->
-<!--                        <p th:text="${cmt.description}" class="comment-description"></p>-->
-<!--                        <button class="btn btn-secondary btn-sm mt-2 reply-btn" data-comment-id="${cmt.id}">Reply</button>-->
-<!--                        <div class="reply-form card border-0" data-comment-id="${cmt.id}" style="display: none;">-->
-<!--                            <form action="/shop.html/replyComments" method="post" onsubmit="hideOtherReplyForms('replyForm-${cmt.id}')">-->
-<!--                                <input type="hidden" name="productIdReply" th:value="${prod.id}" class="form-control mb-3" />-->
-<!--                                <input type="hidden" name="parentId" th:value="${cmt.id}" class="form-control mb-3" />-->
-<!--                                <div class="form-group">-->
-<!--                                    <label for="comment">Comment:</label>-->
-<!--                                    <textarea class="form-control" name="descriptionReply" rows="4" required></textarea>-->
-<!--                                </div>-->
-<!--                                <button type="submit" class="btn btn-primary">Submit</button>-->
-<!--                            </form>-->
-<!--                        </div>-->
+    <div id="comments-container">
+        <div th:each="cmt, iterStat : ${comment}" class="card my-3 border-0" th:if="${iterStat.index < 20}">
+            <div class="card-body comment-body">
+                <div class="row">
+                    <div class="col-md-1">
+                        <img th:src="@{|/images/${cmt.account.photo}|}" class="img-fluid rounded-circle comment-user-img" alt="User">
+                    </div>
+                    <div class="col-md-11">
+                        <h5 th:text="${cmt.account.fullname}" class="comment-user-name"></h5>
+                        <p th:text="${#dates.format(cmt.create_Date, 'dd-MM-yyyy')}" class="comment-date"></p>
+                        <p th:text="${cmt.description}" class="comment-description"></p>
+                        <button class="btn btn-secondary btn-sm mt-2 reply-btn" data-comment-id="${cmt.id}">Reply</button>
+                        <div class="reply-form card border-0" data-comment-id="${cmt.id}" style="display: none;">
+                            <form action="/shop.html/replyComments" method="post" onsubmit="hideOtherReplyForms('replyForm-${cmt.id}')">
+                                <input type="hidden" name="productIdReply" th:value="${prod.id}" class="form-control mb-3" />
+                                <input type="hidden" name="parentId" th:value="${cmt.id}" class="form-control mb-3" />
+                                <div class="form-group">
+                                    <label for="comment">Comment:</label>
+                                    <textarea class="form-control" name="descriptionReply" rows="4" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </form>
+                        </div>
 
-<!--                         Display replies -->
-<!--                        <div class="replies-container-${cmt.id}">-->
-<!--                            <div th:each="rpl : ${reply}" th:if="${rpl.comment.id} == ${cmt.id}" class="card my-3 reply-card border-0">-->
-<!--                                <div class="card-body">-->
-<!--                                    <div class="row">-->
-<!--                                        <div class="col-md-1">-->
-<!--                                            <img th:src="@{|/images/${rpl.account.photo}|}" class="img-fluid rounded-circle reply-user-img" alt="User">-->
-<!--                                        </div>-->
-<!--                                        <div class="col-md-11">-->
-<!--                                            <h5 th:text="${rpl.account.fullname}" class="reply-user-name"></h5>-->
-<!--                                            <p th:text="${#dates.format(rpl.create_date, 'dd-MM-yyyy')}" class="reply-date"></p>-->
-<!--                                            <p th:text="${rpl.description}" class="reply-description"></p>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                         End of displaying replies -->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
+                         Display replies 
+                        <div class="replies-container-${cmt.id}">
+                            <div th:each="rpl : ${reply}" th:if="${rpl.comment.id} == ${cmt.id}" class="card my-3 reply-card border-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-1">
+                                            <img th:src="@{|/images/${rpl.account.photo}|}" class="img-fluid rounded-circle reply-user-img" alt="User">
+                                        </div>
+                                        <div class="col-md-11">
+                                            <h5 th:text="${rpl.account.fullname}" class="reply-user-name"></h5>
+                                            <p th:text="${#dates.format(rpl.create_date, 'dd-MM-yyyy')}" class="reply-date"></p>
+                                            <p th:text="${rpl.description}" class="reply-description"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                         End of displaying replies 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
