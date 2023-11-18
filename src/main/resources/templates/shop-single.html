@@ -117,8 +117,8 @@
 						type="number" min="1" style="width: 60px; border: none" ng-model="quantity"
 						ng-init="quantity = 1" />
 						<div class="cart mt-4 align-items-center">
-                            <button th:attr="ng-click=@{|cart.add(${prod.id})|}"
-                             class="addCart btn btn-outline-dark text-uppercase mr-2 px-4" style="font-weight: bold" ng-click="saveToLocalStorage()">Thêm vào giỏ hàng</button>
+                            <button th:attr="ng-click=@{|cart.add(${prod.id})|}" 
+                             class="addCart btn btn-outline-dark text-uppercase mr-2 px-4" style="font-weight: bold" >Thêm vào giỏ hàng</button>
                             </div>
                       <div class="cart mt-4 align-items-center">
                       <a href="/shop.html" style="font-weight: bold" class="addCart btn btn-outline-dark text-uppercase mr-2 px-4">Tiếp tục mua sắm

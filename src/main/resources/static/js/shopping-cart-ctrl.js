@@ -1,6 +1,6 @@
 
 const app = angular.module("app", [])
-app.controller("cart-ctrl", function($scope, $http) {
+app.controller("cart-ctrl", function($scope, $http, $window) {
 	$scope.cart = [];
 
 	$scope.selectedSize = '';
@@ -104,6 +104,8 @@ app.controller("cart-ctrl", function($scope, $http) {
 						.then(response => {
 							console.log("Dữ liệu đã được cập nhật trong cơ sở dữ liệu", response.data);
 							this.loadFromDatabase();
+							$window.location.reload();
+					
 						})
 						.catch(error => {
 							console.error("Lỗi khi cập nhật dữ liệu trong cơ sở dữ liệu: ", error);
@@ -141,12 +143,17 @@ app.controller("cart-ctrl", function($scope, $http) {
 								resp.data.qty = $scope.quantity;
 								resp.data.sizes = $scope.selectedSize;
 								this.saveToDatabase(resp.data);
+								$window.location.reload();
+					
 							});
 
 						});
+					
+						
 
 					});
 				}
+				 
 			}).catch(error => {
 				console.error("Lỗi khi tải dữ liệu từ cơ sở dữ liệu: ", error);
 			});
