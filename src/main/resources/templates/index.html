@@ -112,9 +112,13 @@
 				th:if="${pro.category.available} and ${iterStart.index < 4}">
 				<div class="product-card-shoe">
 					<div class="product-image-container">
-						<img class="product-image-shoe img-fluid"
-							
+
+					<a th:href="@{|/shop-single.html/${pro.id}|}">
+					<img class="product-image-shoe"
+
 							th:src="@{|/images/${pro.images[0].image}|}" th:alt="${pro.name}">
+					</a>
+						
 						<div class="discount-badge-shoe"
 							th:if="${pro.discountProduct != null and not #lists.isEmpty(pro.discountProduct) and
                              (T(java.time.LocalDate).now().isAfter(pro.discountProduct[0].start_Date) and
@@ -167,11 +171,13 @@
 				class="col-md-3 col-6 col-sm-6"
 				th:if="${newProduct.available} and ${newProduct.category.available}">
 				<div class="product-card-shoe">
-					<div class="product-image-container"	>
-						<img class="product-image-shoe img-fluid"
-							
+
+					<div class="product-image-container">
+					<a th:href="@{|/shop-single.html/${newProduct.id}|}"><img class="product-image-shoe"
+
 							th:src="@{|/images/${newProduct.images[0].image}|}"
-							th:alt="${newProduct.name}">
+							th:alt="${newProduct.name}"></a>
+						
 						<div class="discount-badge-shoe"
 							th:if="${newProduct.discountProduct != null and not #lists.isEmpty(newProduct.discountProduct) and
                              (T(java.time.LocalDate).now().isAfter(newProduct.discountProduct[0].start_Date) and

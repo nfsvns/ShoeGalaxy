@@ -3,12 +3,14 @@
     position: relative;
 }
 .btn-show{
-	color: blue;
+	color: green;
 }
 .btn-hide{
+	color:blue;
+}
+.btn-cancel{
 	color:red;
 }
-
 /* CSS cho bảng chi tiết */
 .detail-table {
     opacity: 0.9;
@@ -19,4 +21,22 @@
     max-width: 1000px;
     z-index: 2;
     border-radius: 10px;
+}
+.suggestions {
+    position: absolute;
+    top: 100%; /* Đặt top để nó nổi lên dưới thanh search */
+    left: 0;
+    width: 100%; /* Chiều rộng tương đương với thanh search */
+    background-color: #fff; /* Màu nền */
+    border: 1px solid #ccc; /* Viền */
+    z-index: 1000; /* Đảm bảo nó nằm trên các phần khác */
+}
+
+.suggestions div {
+    padding: 5px;
+    cursor: pointer;
+}
+
+.suggestions div:hover {
+    background-color: #f2f2f2; /* Màu nền khi hover */
 }
