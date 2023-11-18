@@ -36,7 +36,7 @@
     
 </head>
 
-<body class="g-sidenav-show   bg-gray-100" ng-app="app1">
+<body class="g-sidenav-show   bg-gray-100" ng-app="app1" ng-controller="main">
 	<div class="min-height-300 bg-dark position-absolute w-100"></div>
 	<!--ASIDE-->
 	<aside
@@ -57,8 +57,8 @@
 		<div class="collapse navbar-collapse  w-auto "
 			id="sidenav-collapse-main">
 			<ul class="navbar-nav">
-				<li class="nav-item"><a class="nav-link active"
-					href="#!/dashboard">
+				<li class="nav-item" ng-class="{ active: isActive('/dashboard') }"><a class="nav-link"
+					href="#!/dashboard" >
 						<div
 							class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
 							<i class="ni ni-tv-2 text-primary text-sm opacity-10"></i>
@@ -78,20 +78,20 @@
 						</div> <span class="nav-link-text ms-1">Billing</span>
 				</a></li>-->
 
-				<li class="nav-item"><a class="nav-link " href="#!product">
+				<li class="nav-item" ng-class="{ active: isActive('/product') }"><a class="nav-link " href="#!product" >
 						<div
 							class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
 							<i class="ni ni-credit-card text-success text-sm opacity-10"></i>
 						</div> <span class="nav-link-text ms-1">Product</span>
 				</a></li>
-				<li class="nav-item"><a class="nav-link " href="#!history">
+				<li class="nav-item" ng-class="{ active: isActive('/history') }"><a class="nav-link " href="#!history" >
 						<div
 							class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
 							<i class="ni ni-app text-info text-sm opacity-10"></i>
 						</div> <span class="nav-link-text ms-1">History</span>
 				</a></li>
 
-				<li class="nav-item"><a class="nav-link " href="#!discount">
+				<li class="nav-item" ng-class="{ active: isActive('/discount') }"><a class="nav-link " href="#!discount" >
 						<div
 							class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
 							<i class="fa-sharp fa-solid fa-tags fa-beat fa-2xl"
@@ -100,8 +100,8 @@
 						</div> <span class="nav-link-text ms-1">Discount </span>
 				</a></li>
 
-				<li class="nav-item"><a class="nav-link "
-					href="#!discountProduct">
+				<li class="nav-item" ng-class="{ active: isActive('/discountProduct') }"><a class="nav-link "
+					href="#!discountProduct" >
 						<div
 							class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
 							<i class="fa-brands fa-product-hunt fa-beat fa-2xl"
@@ -109,7 +109,7 @@
 						</div> <span class="nav-link-text ms-1">Discount Products</span>
 				</a></li>
 
-				<li class="nav-item"><a class="nav-link " href="#!size">
+				<li class="nav-item" ng-class="{ active: isActive('/size') }"><a class="nav-link " href="#!size" >
 						<div
 							class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
 							<i class="fa-solid fa-shoe-prints fa-beat fa-2xl"
@@ -118,7 +118,7 @@
 				</a></li>
 
 
-				<li class="nav-item"><a class="nav-link " href="#!category">
+				<li class="nav-item" ng-class="{ active: isActive('/category') }"><a class="nav-link " href="#!category">
 						<div
 							class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
 							<i class="fa-solid fa-code-branch fa-beat fa-2xl" style="color: #e21232;"></i>
@@ -126,7 +126,7 @@
 				</a></li>
 
 
-				<li class="nav-item"><a class="nav-link " href="#!authority">
+				<li class="nav-item" ng-class="{ active: isActive('/authority') }"><a class="nav-link " href="#!authority">
 						<div
 							class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
 							<i class="fa-solid fa-shoe-prints fa-beat fa-2xl"
@@ -136,7 +136,7 @@
 				
 				
 				
-				<li class="nav-item"><a class="nav-link "
+				<li class="nav-item" ng-class="{ active: isActive('/account') }"><a class="nav-link "
 					href="#!account">
 						<div
 							class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -319,7 +319,7 @@
 	<script src="../admin2/js/authority-ctrl.js"></script>
 	<script src="../admin2/js/category-ctrl.js"></script>
 	<script src="../admin2/js/account-ctrl.js"></script>
-
+    
 </body>
 
 </html>

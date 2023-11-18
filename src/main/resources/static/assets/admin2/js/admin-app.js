@@ -1,5 +1,9 @@
 const app = angular.module("app1", ["ngRoute"]);
-
+app.controller("main",function($scope,$location){
+	$scope.isActive = function(viewLocation){
+		return viewLocation === $location.path();
+	}
+})
 app.config(function($routeProvider) {
 	$routeProvider
 		.when("/dashboard", {
@@ -55,4 +59,5 @@ app.config(function($routeProvider) {
 		.otherwise({
 			redirectTo: "/dashboard"
 		});
+
 });
