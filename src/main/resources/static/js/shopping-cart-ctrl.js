@@ -31,7 +31,7 @@ app.controller("cart-ctrl", function($scope, $http) {
 			modal.style.display = 'none';
 			var modalBackdrop = document.querySelector('.modal-backdrop');
 			modalBackdrop.parentNode.removeChild(modalBackdrop);
-		}, 3000);
+		}, 700);
 	}
 
 

@@ -1,84 +1,153 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{/layout/layout.html::dynamic(~{::title}, ~{::body})}">
+	th:replace="~{/layout/layout.html::dynamic(~{::title}, ~{::body})}">
 <head>
 <title>Shoe Galaxy</title>
+
 <meta charset="utf-8">
+
 </head>
 <body>
-    <div class="bg-light py-3">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12 mb-0"><a href="index.html">Home</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">Contact</strong></div>
-        </div>
-      </div>
-    </div>  
+	<div class="site-sectionn">
 
-    <div class="site-section">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12">
-            <h2 class="h3 mb-3 text-black">Get In Touch</h2>
-          </div>
-          <div class="col-md-7">
+		<div class="container allContact">
+			<div class="row">
+				<div th:if="${messages != null}" class="alert alert-danger">
+				<p th:text="${messages}"></p>
+			</div>
+				<div class="col-md-6 contact">
+					<div class="col-md-12 text-center mt-3">
+						<h4>CONTACT US</h4>
+					</div>
+					<form action="/addContact" method="post" class="row g-3">
 
-            <form action="#" method="post">
-              
-              <div class="p-3 p-lg-5 border">
-                <div class="form-group row">
-                  <div class="col-md-6">
-                    <label for="c_fname" class="text-black">First Name <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="c_fname" name="c_fname">
-                  </div>
-                  <div class="col-md-6">
-                    <label for="c_lname" class="text-black">Last Name <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="c_lname" name="c_lname">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <div class="col-md-12">
-                    <label for="c_email" class="text-black">Email <span class="text-danger">*</span></label>
-                    <input type="email" class="form-control" id="c_email" name="c_email" placeholder="">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <div class="col-md-12">
-                    <label for="c_subject" class="text-black">Subject </label>
-                    <input type="text" class="form-control" id="c_subject" name="c_subject">
-                  </div>
-                </div>
+						<div class="col-md-6">
+							<label for="c_name" class="form-label">Your Name <span
+								class="text-danger">*</span></label> <input type="text"
+								class="form-control" id="c_name" name="fullname"
+								placeholder="Your Name" required>
+						</div>
+						<div class="col-md-6">
+							<label for="c_phone" class="form-label">Phone Number <span
+								class="text-danger">*</span></label> <input type="tel"
+								class="form-control" id="c_phone" name="phone"
+								placeholder="Your Phone Number" required>
+						</div>
+						<div class="col-12">
+							<label for="c_subject" class="form-label">Email</label> <input
+								type="email" class="form-control" id="c_email" name="email"
+								placeholder="Email">
+						</div>
+						<div class="col-12">
+							<label for="c_subject" class="form-label">Subject</label> <input
+								type="text" class="form-control" id="c_subject" name="subject"
+								placeholder="Subject">
+						</div>
+						<div class="col-12">
+							<label for="c_message" class="form-label">Message <span
+								class="text-danger">*</span></label>
+							<textarea class="form-control" id="c_message" name="message"
+								rows="5" placeholder="Your Message" required></textarea>
+						</div>
+						<div class="col-12">
+							<button type="submit" class="btn btn-dark mt-3">Send
+								Message</button>
+						</div>
+					</form>
 
-                <div class="form-group row">
-                  <div class="col-md-12">
-                    <label for="c_message" class="text-black">Message </label>
-                    <textarea name="c_message" id="c_message" cols="30" rows="7" class="form-control"></textarea>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <div class="col-lg-12">
-                    <input type="submit" class="btn btn-primary btn-lg btn-block" value="Send Message">
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="col-md-5 ml-auto">
-            <div class="p-4 border mb-3">
-              <span class="d-block text-primary h6 text-uppercase">New York</span>
-              <p class="mb-0">203 Fake St. Mountain View, San Francisco, California, USA</p>
-            </div>
-            <div class="p-4 border mb-3">
-              <span class="d-block text-primary h6 text-uppercase">London</span>
-              <p class="mb-0">203 Fake St. Mountain View, San Francisco, California, USA</p>
-            </div>
-            <div class="p-4 border mb-3">
-              <span class="d-block text-primary h6 text-uppercase">Canada</span>
-              <p class="mb-0">203 Fake St. Mountain View, San Francisco, California, USA</p>
-            </div>
 
-          </div>
-        </div>
-      </div>
-    </div>
+				</div>
+				<div class="col-md-6">
+
+					<div class="row contact-info">
+						<div class="col-md-12 text-center mt-3 mb-3">
+							<h4>CONTACT INFO</h4>
+						</div>
+
+						<div class="col-md-4">
+							<p>
+								<i class="fas fa-map-marker-alt fa-sm" style="color: #ff0000;"></i>
+								QTSC Building 1, Quang Trung Software City, Tan Chanh Hiep Ward,
+								District 12, Ho Chi Minh City, Vietnam
+							</p>
+						</div>
+						<div class="col-md-4">
+							<p>
+								<i class="fas fa-envelope-open fa-sm" style="color: #10549d;"></i>
+								ShoeGalaxy@gmail.com
+							</p>
+						</div>
+						<div class="col-md-4">
+							<p>
+								<i class="fas fa-phone-alt fa-sm" style="color: #11e82b;"></i>
+								(84-28) 3715 8888
+							</p>
+						</div>
+						<div class="col-md-10" style="margin-left: 10px;">
+							<iframe
+								src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.4439805401216!2d106.62348867583898!3d10.853796757760167!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752b684ce076f3%3A0x4da1cf0078f423fa!2zRlBUIFBvbHl0ZWNobmljIEjhu5MgQ2jDrSBNaW5oIC0gVG_DoCBU!5e0!3m2!1svi!2s!4v1700220344989!5m2!1svi!2s"
+								width="600" height="350" style="border: 0;" allowfullscreen=""
+								loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+
+
+	</div>
+
+
+	<div class="container-fluid col-sm-10 mt-5" data-aos="fade-up">
+		<img src="/images/bannerIndex.jpg" style="height: 350px; width: 100%"
+			alt="...">
+	</div>
+
+
+
+
+	<div class="site-section site-section-sm site-blocks-1 border-0"
+		data-aos="fade">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 col-lg-4 d-lg-flex mb-4 mb-lg-0 pl-4"
+					data-aos="fade-up" data-aos-delay="">
+					<div class="icon mr-4 align-self-start">
+						<span class="icon-truck"></span>
+					</div>
+					<div class="text">
+						<h2 class="text-uppercase">Free Shipping</h2>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+							Phasellus at iaculis quam. Integer accumsan tincidunt fringilla.</p>
+					</div>
+				</div>
+				<div class="col-md-6 col-lg-4 d-lg-flex mb-4 mb-lg-0 pl-4"
+					data-aos="fade-up" data-aos-delay="100">
+					<div class="icon mr-4 align-self-start">
+						<span class="icon-refresh2"></span>
+					</div>
+					<div class="text">
+						<h2 class="text-uppercase">Free Returns</h2>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+							Phasellus at iaculis quam. Integer accumsan tincidunt fringilla.</p>
+					</div>
+				</div>
+				<div class="col-md-6 col-lg-4 d-lg-flex mb-4 mb-lg-0 pl-4"
+					data-aos="fade-up" data-aos-delay="200">
+					<div class="icon mr-4 align-self-start">
+						<span class="icon-help"></span>
+					</div>
+					<div class="text">
+						<h2 class="text-uppercase">Customer Support</h2>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+							Phasellus at iaculis quam. Integer accumsan tincidunt fringilla.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

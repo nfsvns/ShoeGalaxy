@@ -55,6 +55,14 @@ app.config(function($routeProvider) {
             templateUrl: "/assets/admin2/pages/authority/unauthorized.html",
             controller: "authority-ctrl"
         })
+        .when("/comments", {
+            templateUrl: "/assets/admin2/pages/comment/index.html",
+            controller: "comments-ctrl"
+        })
+         .when("/contacts", {
+            templateUrl: "/assets/admin2/pages/contact/index.html",
+            controller: "contacts-ctrl"
+        })
 		.otherwise({
 			redirectTo: "/dashboard"
 		});

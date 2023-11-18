@@ -27,6 +27,8 @@ app.controller("history-ctrl", function($scope, $http) {
 	$scope.items = [];
 	$scope.form = {};
 	$scope.showDetail = false;
+	
+	
 	$scope.getDetailData = function(item) {
 		if (item.showDetail) {
 			item.showDetail = false;
