@@ -240,7 +240,7 @@ public class OrderController {
 				}
 			} else {
 				request.getSession().setAttribute("messagesAddress", "Vui lòng thêm địa chỉ");
-				return "redirect:/check";
+				return "forward:/check";
 			}
 
 		} else {
