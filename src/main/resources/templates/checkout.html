@@ -73,7 +73,7 @@
 
 										<td><input class="text-black font-weight-bold border border-light" type="text"
 												name="total"
-												th:value="${calculatedValue != null ?  + calculatedValue : '{{cart.amount | number : 2}}'}" />
+												th:value="${calculatedValue != null ?  + calculatedValue : '{{cart.amount}}'}" />
 
 											<input style="text-decoration: line-through;"
 												class="text-black font-weight-bold border border-light" type="text"
@@ -106,15 +106,25 @@
 									ngân hàng
 								</label>
 							</div>
-
+							
 							<div class="form-group">
-								<button class="btn btn-primary btn-lg py-3 btn-block">Place
+								<button class="btn btn-primary btn-lg py-3 btn-block" id="placeOrderButton" onclick="placeOrder()">Place
 									Order</button>
+							</div>
+
+							<!--<div class="form-group">
+								<button class="btn btn-primary btn-lg py-3 btn-block"  formaction="/checkout.html"
+									formmethod="post">Place
+									Order</button>
+							</div>
+							<div class="form-group">
+								<button class="btn btn-primary btn-lg py-3 btn-block" formaction="/VnPay"
+									formmethod="get">VN Pay</button>
 							</div>
 							<div class="form-group">
 								<button class="btn btn-primary btn-lg py-3 btn-block" formaction="/paypal"
 									formmethod="post">Paypal</button>
-							</div>
+							</div>-->
 
 						</div>
 					</div>
@@ -259,6 +269,26 @@
 			}
 		});
 
+		// SỰ KIỆN NÚT PLACE ORDER
+		function placeOrder(){
+			var option1 = document.getElementById("option1");
+			var option2 = document.getElementById("option2");
+			var option3 = document.getElementById("option3");
+			var placeOrderButton = document.getElementById("placeOrderButton");
+			if (option1.checked){
+            	placeOrderButton.formAction = "/checkout.html";
+            	placeOrderButton.formMethod = "post";
+        	} else if(option2.checked){			
+            	placeOrderButton.formAction = "/paypal";
+            	placeOrderButton.formMethod = "post";
+            	placeOrderButton.click();
+			}else if(option3.checked){			
+            	placeOrderButton.formAction = "/VnPay";
+            	placeOrderButton.formMethod = "get";
+            	placeOrderButton.click();
+			}
+		}
+		
 		
 
 
