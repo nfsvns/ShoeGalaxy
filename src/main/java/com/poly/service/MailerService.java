@@ -13,4 +13,6 @@ public interface MailerService {
 	
 	void queue(MailInfo mail);
 	void queue(String to, String subject, String body);
+	public void setMailBody(MailInfo mail, String body);
+	
 }

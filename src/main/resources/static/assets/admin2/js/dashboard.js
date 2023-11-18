@@ -109,9 +109,13 @@ app.controller("dashboard-ctrl", function($scope, $http, $location) {
 		}
 		
 		
-
+$scope.loadCurrentUser();
 	}
-
+$scope.loadCurrentUser = function() {
+    $http.get("/rest/accounts/current-account").then(resp => {
+        $scope.account = resp.data;
+    }); 
+};
 	$scope.getRevenueByYear = function() {
 		// Perform an API call to get revenue data for the selected year
 		// Replace 'YOUR_API_URL' with the actual API endpoint

@@ -14,8 +14,14 @@ app.controller("authority-ctrl", function($scope, $http, $location){
 	    }).catch(error => {
 	    	$location.path("/unauthorized");
 	    })
+	    $scope.loadCurrentUser();
+	    
 	}
-
+$scope.loadCurrentUser = function() {
+    $http.get("/rest/accounts/current-account").then(resp => {
+        $scope.account = resp.data;
+    }); 
+};
 	$scope.authority_of = function (acc, role){
 		if($scope.authorities){
 			return $scope.authorities.find(ur => ur.account.username == acc.username && ur.role.id == role.id);

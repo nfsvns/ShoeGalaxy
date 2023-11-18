@@ -13,4 +13,6 @@ public interface AuthorityService {
 	public void delete(Integer id) ;
 
 	public List<Authority> findAuthoritiesOfAdministrators() ;
+	public List<Authority> findAuthoritiesByUsername(String username);
+	 public boolean revokeAuthoritiesByUsername(String username);
 }

@@ -83,5 +83,9 @@ public class MailerServiceImp  implements MailerService{
 			}
 		}
 	}
+	@Override
+	public void setMailBody(MailInfo mail, String body) {
+	    mail.setBody(body);
+	}
 	
 }

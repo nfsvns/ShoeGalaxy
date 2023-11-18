@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.context.annotation.SessionScope;
 
@@ -80,6 +81,9 @@ public interface ProductDAO extends JpaRepository<Product, Integer> {
 
 	@Query("SELECT p FROM Product p WHERE p.available = True")
 	Page<Product> findDelete(Pageable pageable);
+	
+	@Procedure
+    void DeleteProductAndRelatedData(Integer id);
 
 	@Query(value = "SELECT distinct p.* FROM Products p JOIN Sizes s ON p.id = s.product_id WHERE s.size IN (36,37,38) ", nativeQuery = true)
 	Page<Product> findProductSizeSmall(Pageable pageable);

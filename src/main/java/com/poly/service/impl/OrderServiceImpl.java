@@ -23,6 +23,8 @@ public class OrderServiceImpl implements OrderService{
 	OrderDAO dao;
 	@Autowired
 	OrderDetailDAO detaildao;
+	@Autowired
+	OrderService OrderService;
 	@Override
 	public List<Order> findAll() {
 		return dao.findAll();
@@ -83,7 +85,20 @@ public class OrderServiceImpl implements OrderService{
 	@Override
 	public List<Object[]> getUnshippedOrdersForCurrentAccount(String username) {
 		// TODO Auto-generated method stub
-		return dao.findUnshippedOrdersByAccount(username);
+		return null;
 	}
+	
+	
+	@Override
+	public List<Order> findOrdersByAccount(String username) {
+        return dao.findOrdersByAccount_Username(username);
+    }
 
+	
+
+
+	
+	
+	
+	
 }
