@@ -54,9 +54,17 @@ public class Product implements Serializable {
     @OneToMany(mappedBy = "product")
     private List<Image> images;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "product")
-    private List<DiscountProduct> discountProduct;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "product")
+	private List<DiscountProduct> discountProduct;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "product")
+	private List<ShoppingCart> shoppingCarts;
+	
+	
+
 
     @Override
     public String toString() {
@@ -66,5 +74,6 @@ public class Product implements Serializable {
                 + ", sizes size=" + (sizes != null ? sizes.size() : "null")
                 + ", images size=" + (images != null ? images.size() : "null") + "]";
     }
+
 }
 

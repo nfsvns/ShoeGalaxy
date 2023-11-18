@@ -36,6 +36,7 @@ import com.poly.entity.MailInfo;
 import com.poly.entity.Order;
 import com.poly.entity.OrderDetail;
 import com.poly.entity.Product;
+import com.poly.entity.ShoppingCart;
 import com.poly.entity.Size;
 import com.poly.service.MailerService;
 import com.poly.service.OrderService;
@@ -50,25 +51,23 @@ public class OrderController {
 	@Autowired
 	SessionService sessionService;
 	@Autowired
-	ShoppingCartDAO shoppingCartDAO;
-	@Autowired
 	OrderDAO orderDAO;
 	@Autowired
 	OrderDetailDAO orderDetailDAO;
 	@Autowired
 	ProductDAO productDAO;
-
 	@Autowired
 	AccountDAO accountDAO;
 	@Autowired
 	DiscountCodeDAO dcDAO;
 	@Autowired
 	OrderService orderService;
-
 	@Autowired
 	SizeDAO sizeDAO;
 	@Autowired
 	AddressDAO addressDAO;
+	@Autowired
+	ShoppingCartDAO shoppingCartDAO;
 	String city;
 	String fulladdress;
 
@@ -153,30 +152,25 @@ public class OrderController {
 			@RequestParam(value = "priceTotal", required = false) List<Double> priceTotal) {
 
 		boolean allProductsEnough = true; // Biến để theo dõi xem tất cả sản phẩm có đủ số lượng không
+		
 		// Tạo một danh sách để lưu trạng thái kiểm tra số lượng của từng sản phẩm
 		List<Boolean> productStatus = new ArrayList<>();
-		System.out.println(productID.size());
 		for (int i = 0; i < productID.size(); i++) {
-
 			Integer id = productID.get(i);
 			Integer idSize = size.get(i);
 			Integer countedQuantity = count.get(i);
-
 			// Tìm số lượng (quantity) theo productId và sizeId
 			Integer quantity = sizeDAO.findQuantityByProductIdAndSize(id, idSize);
 			System.out.println(quantity);
-
 			if (quantity != null) {
 				// Kiểm tra xem số lượng có đủ để trừ không
 				if (quantity >= countedQuantity) {
 					// Sản phẩm này đủ số lượng
 					productStatus.add(true);
-
 				} else {
 					// Sản phẩm này không đủ số lượng
 					productStatus.add(false);
 					allProductsEnough = false; // Đặt biến này thành false nếu ít nhất một sản phẩm không đủ
-
 				}
 			} else {
 				// Xử lý nếu không tìm thấy thông tin sản phẩm (ví dụ: throw một Exception hoặc
@@ -221,7 +215,6 @@ public class OrderController {
 						+ a.get().getCity();
 				order.setAddress(fulladdress);
 				System.out.println(order.getAddress());
-
 				order.setDiscountCode(null); // May need a null check here for the discount object
 				order.setAccount(user);
 				order.setAvailable(false);
@@ -373,18 +366,22 @@ public class OrderController {
 
 		bodyBuilder.append("</table>");
 		mail.setBody(bodyBuilder.toString());
-
 		mailerService.queue(mail);
-		request.getSession().removeAttribute("cart");
-
 		return "redirect:/thankyou.html";
 
 	}
 
 	///// THANKYOU /////
 	@RequestMapping("thankyou.html")
-	public String thankyou() {
-		sessionService.setAttribute("cartQuantity", shoppingCartDAO.getCount());
+	public String thankyou(HttpServletRequest request) {
+		String remoteUser = request.getRemoteUser();
+		int totalQuantity = 0;
+		List<ShoppingCart> shoppingCarts = shoppingCartDAO.findShoppingCartsByUsername(remoteUser);
+        for (ShoppingCart cart : shoppingCarts) {
+            totalQuantity += cart.getQty();
+        }
+
+		sessionService.setAttribute("cartQuantity", totalQuantity);
 		return "thankyou";
 	}
 

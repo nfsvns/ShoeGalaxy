@@ -173,9 +173,9 @@
 										<div style="text-decoration: none" class="dropdown"
 											th:if="${#request.remoteUser != null}">
 											<span th:if="${#strings.contains(#request.remoteUser, '@')}"
-												th:text="${#strings.substring(#request.remoteUser, 0, #strings.indexOf(#request.remoteUser, '@'))}"></span>
+												id="remoteU" th:text="${#strings.substring(#request.remoteUser, 0, #strings.indexOf(#request.remoteUser, '@'))}"></span>
 											<span th:unless="${#strings.contains(#request.remoteUser, '@')}"
-												th:text="${#request.remoteUser}"></span>
+												id="remoteU" th:text="${#request.remoteUser}"></span>
 										
 											<span data-bs-toggle="dropdown"><i class="fa-solid fa-user c"></i></span>
 

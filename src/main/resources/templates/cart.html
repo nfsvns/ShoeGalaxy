@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="~{/layout/layout.html::dynamic(~{::title}, ~{::body})}">
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/layout/layout.html::dynamic(~{::title}, ~{::body})}">
 
 <head>
 <title>Shoe Galaxy</title>
@@ -31,6 +32,7 @@
 					<table class="table table-bordered">
 						<thead>
 							<tr>
+								<th></th>
 								<th class="product-thumbnail">Image</th>
 								<th class="product-name">Product</th>
 								<th class="product-size">Size</th>
@@ -38,28 +40,27 @@
 								<th class="product-quantity">Quantity</th>
 								<th class="product-total">Total</th>
 								<th class="product-remove">Remove</th>
-
 							</tr>
 						</thead>
 						<tbody>
 							<tr ng-repeat="item in cart.items">
+								<td><input type="checkbox" ng-model="item.status"
+									ng-click="cart.status_changed(item, item.status)" /></td>
 								<td><img src="/images/{{item.image}}" style="width: 50%">
 								</td>
-
-
-
 								<td>{{item.name}}</td>
-								<td>{{item.sizes}}</td>
+								<td>{{item.size}}</td>
 								<!-- <td>${{item.price | number : 2}}</td> -->
 								<td>${{cart.price_product(item)}}</td>
 
-								<td><input ng-change="cart.saveToLocalStorage()"
+								<td><input
+									ng-change="cart.updateQtyDatabase(item.id,  item.qty)"
 									name="count" ng-model="item.qty" type="number" min="1"
 									style="width: 60px;" /></td>
 								<!-- <td>${{cart.amt_of(item) | number : 2}}</td> -->
 								<td>${{cart.amtt_of(item) | number : 2}}</td>
 								<td>
-									<button ng-click="cart.remove(item.id)"
+									<button ng-click="cart.remove(item)"
 										class="btn btn-sm btn-danger">
 										<i class="fas fa-trash"> </i>
 									</button>
@@ -70,11 +71,6 @@
 
 					</table>
 				</div>
-
-
-
-
-
 
 				<!-- </form> -->
 			</div>
@@ -87,7 +83,8 @@
 								Shopping</a>
 						</div>
 						<div class="col-md-6">
-							<a ng-click="cart.clear()" class="btn btn-dark text-light btn-sm btn-block">Remove All</a>
+							<a ng-click="cart.clearAll()"
+								class="btn btn-outline-primary btn-sm btn-block">Remove All</a>
 						</div>
 					</div>
 					<div class="row">
@@ -96,7 +93,8 @@
 							<p>Enter your coupon code if you have one.</p>
 						</div>
 						<div class="col-md-8 mb-3 mb-md-0">
-							<input type="text" class="form-control py-3" id="coupon" placeholder="Coupon Code">
+							<input type="text" class="form-control py-3" id="coupon"
+								placeholder="Coupon Code">
 						</div>
 						<div class="col-md-4">
 							<button class="btn btn-dark btn-sm">Apply Coupon</button>
@@ -123,20 +121,13 @@
 								</div>
 							</div>
 
-
-
-
 							<div class="row">
 								<div class="col-md-12">
-
 
 									<a th:href="@{/check}">
 										<button class="btn btn-dark btn-lg py-3 btn-block">Proceed
 											To Checkout</button>
 									</a>
-									</form>
-
-
 								</div>
 							</div>
 						</div>

@@ -39,8 +39,6 @@ public class LoadPage {
 	@Autowired
 	HttpServletRequest request;
 	@Autowired
-	private ShoppingCartDAO shoppingCartDAO;
-	@Autowired
 	SessionService sessionService;
 	@Autowired
 	ProductDAO productDAO;
@@ -80,7 +78,6 @@ public class LoadPage {
 
 	@RequestMapping({ "/", "index.html" })
 	public String index(Model model) {
-		sessionService.setAttribute("cartQuantity", shoppingCartDAO.getCount());
 		List<Product> pro = productDAO.topProduct();
 		List<Image> images = imageDAO.findAll();
 		List<Product> products = productDAO.findAll();

@@ -107,19 +107,18 @@
 					</div>
 					<br>
 
-
-
 					<!-- <select ng-model="selectedSize" class="form-control mb-2 mt-3">
 						<option value="" disabled selected>Chọn Size</option>
 						<option th:each="item : ${prodd}" th:if="${item.quantity > 0}"
 							th:value="${item.sizes}" th:text="${item.sizes}"></option>
 					</select> -->
-					<span class="text-uppercase" style="font-weight: bold">Quantity : </span> <input name="count" class="mt-3"
+					<span class="text-uppercase" style="font-weight: bold">Quantity : </span> 
+					<input name="count" class="mt-3"
 						type="number" min="1" style="width: 60px; border: none" ng-model="quantity"
 						ng-init="quantity = 1" />
 						<div class="cart mt-4 align-items-center">
-                                <button th:attr="ng-click=@{|cart.add(${prod.id})|}"
-                             class="addCart btn btn-outline-dark text-uppercase mr-2 px-4" style="font-weight: bold" ng-click="saveToLocalStorage()">Thêm vào giỏ hàng</button>
+                            <button th:attr="ng-click=@{|cart.add(${prod.id})|}" 
+                             class="addCart btn btn-outline-dark text-uppercase mr-2 px-4" style="font-weight: bold" >Thêm vào giỏ hàng</button>
                             </div>
                       <div class="cart mt-4 align-items-center">
                       <a href="/shop.html" style="font-weight: bold" class="addCart btn btn-outline-dark text-uppercase mr-2 px-4">Tiếp tục mua sắm
@@ -415,6 +414,7 @@
 		
 
 
+</body>
 
 
 
