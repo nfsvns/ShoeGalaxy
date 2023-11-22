@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.poly.dao.AccountDAO;
@@ -22,21 +23,36 @@ public class AddressController {
 	@Autowired
 	AddressDAO addressDAO;
 
+	@RequestMapping("/addressAdmin")
+	public String index(Model model, Address add) {
+		Address item = new Address();
+
+		model.addAttribute("item", item);
+		model.addAttribute("addressItems", addressDAO.findAll());
+		return "addressAdmin";
+	}
+
 	@PostMapping("/addAddress")
 	public String addAddress(Model model, @RequestParam String address,
 			@RequestParam(value = "provinceLabel", required = false) String provinceLabel,
 			@RequestParam(value = "districtLabel", required = false) String districtLabel,
 			@RequestParam(value = "wardLabel", required = false) String wardLabel, HttpServletRequest request) {
-		if (provinceLabel == null || provinceLabel.isEmpty() 
+		if (provinceLabel == null || provinceLabel.isEmpty()
 				|| districtLabel == null || districtLabel.isEmpty()
-				|| wardLabel == null || wardLabel.isEmpty() 
+				|| wardLabel == null || wardLabel.isEmpty()
 				|| address == null || address.isEmpty()) {
 			model.addAttribute("messages", "Vui lòng điền đầy đủ thông tin để thêm địa chỉ");
 			return "forward:/check";
 		} else {
 			String username = request.getRemoteUser();
 			Account user = accountDAO.findById(username).orElse(null);
-
+			
+			boolean addressExists = addressDAO.existsByAccountAndAddressDetail(user, address + ", " + wardLabel + ", " + districtLabel + ", " + provinceLabel);
+	        if (addressExists) {
+	            model.addAttribute("messages", "Địa chỉ đã tồn tại. Vui lòng chọn địa chỉ khác.");
+	            return "forward:/check";
+	        }
+			
 			Address ad = new Address();
 			ad.setAccount(user);
 			ad.setAddressDetail(address + ", " + wardLabel + ", " + districtLabel + ", " + provinceLabel);

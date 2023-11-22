@@ -1,6 +1,6 @@
 
 const app = angular.module("app", [])
-app.controller("cart-ctrl", function($scope, $http) {
+app.controller("cart-ctrl", function($scope, $http, $window) {
 	$scope.cart = [];
 
 	$scope.selectedSize = '';
@@ -15,7 +15,7 @@ app.controller("cart-ctrl", function($scope, $http) {
 			modal.style.display = 'none';
 			var modalBackdrop = document.querySelector('.modal-backdrop');
 			modalBackdrop.parentNode.removeChild(modalBackdrop);
-		}, 3000);
+		}, 700);
 	}
 
 
@@ -32,10 +32,11 @@ app.controller("cart-ctrl", function($scope, $http) {
 		for (var i = 0; i < buttons.length; i++) {
 			if (buttons[i].innerText.trim() === size) {
 				buttons[i].classList.remove('btn-dark');
-				buttons[i].classList.add('btn-primary'); // Chọn màu sắc mong muốn cho button được chọn
+				buttons[i].classList.add('btn-danger'); // Chọn màu sắc mong muốn cho button được chọn
 			} else {
-				buttons[i].classList.remove('btn-primary'); // Chọn màu sắc mặc định cho các button không được chọn
+				buttons[i].classList.remove('btn-danger'); // Chọn màu sắc mặc định cho các button không được chọn
 				buttons[i].classList.add('btn-dark');
+				buttons[i].classList.add('text-light');
 			}
 		}
 
@@ -74,7 +75,7 @@ app.controller("cart-ctrl", function($scope, $http) {
 
 	var $cart = $scope.cart = {
 		items: [],
-		add(id) {
+		async add(id) {
 			if (!$scope.selectedSize) {
 				alert('Vui lòng chọn size.');
 				return;
@@ -91,9 +92,11 @@ app.controller("cart-ctrl", function($scope, $http) {
 					// Xử lý lỗi ở đây, ví dụ: ghi lỗi vào một file log
 				}
 			}
-			$http.get(`/rest/carts/username/${spanText}`).then(response => {
+			
+			await $http.get(`/rest/carts/username/${spanText}`).then(response => {
 				var cartItems = response.data;
 				var existingItem = cartItems.find(item => item.product.id == id && item.size == $scope.selectedSize);
+				console.log($scope.selectedSize);
 				if (existingItem) {
 					existingItem.qty += $scope.quantity;
 					existingItem.total = existingItem.qty * existingItem.price;
@@ -101,6 +104,8 @@ app.controller("cart-ctrl", function($scope, $http) {
 						.then(response => {
 							console.log("Dữ liệu đã được cập nhật trong cơ sở dữ liệu", response.data);
 							this.loadFromDatabase();
+							$window.location.reload();
+					
 						})
 						.catch(error => {
 							console.error("Lỗi khi cập nhật dữ liệu trong cơ sở dữ liệu: ", error);
@@ -131,18 +136,24 @@ app.controller("cart-ctrl", function($scope, $http) {
 										this.items.push(resp.data);
 									} else {
 										alert('Số lượng vượt quá số lượng tồn kho.');
+										return;
 									}
 								});
 								// Set the quantity and selected size based on user input
 								resp.data.qty = $scope.quantity;
 								resp.data.sizes = $scope.selectedSize;
 								this.saveToDatabase(resp.data);
+								$window.location.reload();
+					
 							});
 
 						});
+					
+						
 
 					});
 				}
+				 
 			}).catch(error => {
 				console.error("Lỗi khi tải dữ liệu từ cơ sở dữ liệu: ", error);
 			});
@@ -175,6 +186,7 @@ app.controller("cart-ctrl", function($scope, $http) {
 		saveToDatabase(item) {
 			var spanElement = document.getElementById('remoteU');
 			var spanText = spanElement !== null ? spanElement.innerText : null;
+			console.log(spanText);
 			var accountData = null;
 			var productData = null;
 			$http.get(`/rest/accounts/${spanText}`).then(account => {
@@ -203,7 +215,6 @@ app.controller("cart-ctrl", function($scope, $http) {
 						data: data
 					}).then(function(response) {
 						console.log("Dữ liệu đã được lưu vào cơ sở dữ liệu", response.data);
-						this.get();
 					}).catch(function(error) {
 						console.error("Lỗi khi lưu dữ liệu vào cơ sở dữ liệu: ", error);
 					});
@@ -222,8 +233,6 @@ app.controller("cart-ctrl", function($scope, $http) {
 							console.log("Dữ liệu đã được cập nhật trong cơ sở dữ liệu", response.data);
 							// Reload cart data after successful update
 							this.loadFromDatabase(); // Sử dụng arrow function để giữ nguyên ngữ cảnh
-							this.get();
-							console.log(this.count);
 						})
 						.catch(error => {
 							console.error("Lỗi khi cập nhật dữ liệu trong cơ sở dữ liệu: ", error);
@@ -352,3 +361,50 @@ app.controller("cart-ctrl", function($scope, $http) {
 
 
 })
+<<<<<<< HEAD
+=======
+
+/*
+const host = "https://provinces.open-api.vn/api/";
+var callAPI = (api) => {
+	return axios.get(api)
+		.then((response) => {
+			renderData(response.data, "province");
+		});
+}
+callAPI('https://provinces.open-api.vn/api/?depth=1');
+var callApiDistrict = (api) => {
+	return axios.get(api)
+		.then((response) => {
+			renderData(response.data.districts, "district");
+		});
+}
+var callApiWard = (api) => {
+	return axios.get(api)
+		.then((response) => {
+			renderData(response.data.wards, "ward");
+		});
+}
+
+var renderData = (array, select) => {
+	let row = ' <option disable value="">chọn</option>';
+	array.forEach(element => {
+		row += `<option data-code="${element.code}" value="${element.name}">${element.name}</option>`
+	});
+	document.querySelector("#" + select).innerHTML = row;
+}
+
+$("#province").change(() => {
+	let selectedCode = $("#province option:selected").data("code");
+	callApiDistrict(host + "p/" + selectedCode + "?depth=2");
+	// printResult();
+});
+$("#district").change(() => {
+	let selectedCode = $("#district option:selected").data("code");
+	callApiWard(host + "d/" + selectedCode + "?depth=2");
+	// printResult();
+});
+$("#ward").change(() => {
+	// printResult();
+})*/
+>>>>>>> main

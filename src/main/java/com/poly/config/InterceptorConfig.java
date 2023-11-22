@@ -1,4 +1,4 @@
-package com.poly;
+package com.poly.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

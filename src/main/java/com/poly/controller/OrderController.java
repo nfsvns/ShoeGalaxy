@@ -117,10 +117,12 @@ public class OrderController {
 
 				int idCode = foundDiscountCode.getId();
 				double calculatedValue = cartAmount - (cartAmount * (discountAmount / 100.0));
-
+				double priceVoucher= cartAmount - calculatedValue; 
+				
 				// Truyền giá trị mới vào view
 				model.addAttribute("calculatedValue", calculatedValue);
 				model.addAttribute("cartAmount", cartAmount);
+				model.addAttribute("priceVoucher", priceVoucher);
 				model.addAttribute("idCode", idCode);
 				model.addAttribute("messages", "Áp dụng mã giảm giá thành công!");
 			} else {
@@ -240,7 +242,7 @@ public class OrderController {
 				}
 			} else {
 				request.getSession().setAttribute("messagesAddress", "Vui lòng thêm địa chỉ");
-				return "redirect:/check";
+				return "forward:/check";
 			}
 
 		} else {
