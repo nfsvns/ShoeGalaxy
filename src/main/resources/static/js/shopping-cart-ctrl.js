@@ -361,8 +361,7 @@ app.controller("cart-ctrl", function($scope, $http, $window) {
 
 
 })
-<<<<<<< HEAD
-=======
+
 
 /*
 const host = "https://provinces.open-api.vn/api/";
@@ -407,4 +406,3 @@ $("#district").change(() => {
 $("#ward").change(() => {
 	// printResult();
 })*/
->>>>>>> main
