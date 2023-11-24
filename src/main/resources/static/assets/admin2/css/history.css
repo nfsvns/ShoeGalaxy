@@ -1,4 +1,29 @@
 /* CSS */
+.notification-dot {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+}
+
+/* Add styles for the notification list */
+.notification-list {
+    position: absolute;
+    top: 100%; /* Position it below the bell icon */
+    right: 0;
+    width: 300px; /* Adjust the width based on your design */
+    z-index: 1000; /* Adjust the z-index to appear above other elements */
+}
+.pagination {
+    justify-content: center;
+}
+
+.pagination>li {
+    cursor: pointer;
+}
 .table-container {
     position: relative;
 }

@@ -225,6 +225,7 @@ $scope.getOrderDetails = function() {
 				alert("Đặt hàng thành công!");
 				$cart.clear();
 				location.href = "/order/detail/" + resp.data.id;
+				$window.location("../assets/admin2/pages/history.html").reload();
 			}).catch(error => {
 				alert("Đặt hàng lỗi!")
 				console.log(error)

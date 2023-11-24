@@ -34,6 +34,8 @@
     <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.6/ui-bootstrap-csp.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.6/ui-bootstrap-tpls.min.js"></script>
     
 
 </head>
@@ -124,7 +126,7 @@
 						</div> <span class="nav-link-text ms-1">Authority</span>
 				</a></li>
 
-				<li class="nav-item"><a class="nav-link " href="#!address">
+				<li class="nav-item" ng-class="{ active: isActive('/address') }"><a class="nav-link " href="#!address">
 						<div
 							class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
 							<i class="fa-solid fa-shoe-prints fa-beat fa-2xl"
@@ -146,7 +148,7 @@
 
 
 
-				<li class="nav-item"><a class="nav-link " href="#!comments">
+				<li class="nav-item" ng-class="{ active: isActive('/comments') }" ><a class="nav-link " href="#!comments">
 						<div
 							class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
 							<i class="fa-regular fa-comment fa-beat fa-2xl"
@@ -155,7 +157,7 @@
 				</a></li>
 
 
-				<li class="nav-item"><a class="nav-link " href="#!contacts">
+				<li class="nav-item"ng-class="{ active: isActive('/contacts') }" ><a class="nav-link " href="#!contacts">
 						<div
 							class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
 					<i class="fa-regular fa-address-book fa-beat fa-2xl" style="color: #eb0a0a;"></i>

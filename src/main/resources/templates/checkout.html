@@ -285,6 +285,7 @@
 			if (option1.checked){
             	placeOrderButton.formAction = "/checkout.html";
             	placeOrderButton.formMethod = "post";
+            	$window.location("../assets/admin2/pages/history.html").reload();
         	} else if(option2.checked){			
             	placeOrderButton.formAction = "/paypal";
             	placeOrderButton.formMethod = "post";

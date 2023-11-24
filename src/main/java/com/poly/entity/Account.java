@@ -19,7 +19,7 @@ import lombok.Data;
 @Table(name = "Accounts")
 public class Account implements Serializable {
 	@Id
-	String username;
+	public String username;
 	String password;
 	String fullname;
 	String email;
