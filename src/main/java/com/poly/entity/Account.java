@@ -25,7 +25,20 @@ public class Account implements Serializable {
 	String fullname;
 	String email;
 	String photo;
+	
+	
 
+	public Account(String username, String password, String fullname, String email) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.fullname = fullname;
+		this.email = email;
+	}
+
+	public Account() {
+		super();
+	}
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "account")
@@ -50,5 +63,7 @@ public class Account implements Serializable {
 	@JsonIgnore
 	@OneToMany(mappedBy = "account")
 	private List<Reply> reply;
+	
+	
 
 }
