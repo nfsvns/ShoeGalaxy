@@ -117,8 +117,8 @@ public class OrderController {
 
 				int idCode = foundDiscountCode.getId();
 				double calculatedValue = cartAmount - (cartAmount * (discountAmount / 100.0));
-				double priceVoucher= cartAmount - calculatedValue; 
-				
+				double priceVoucher = cartAmount - calculatedValue;
+
 				// Truyền giá trị mới vào view
 				model.addAttribute("calculatedValue", calculatedValue);
 				model.addAttribute("cartAmount", cartAmount);
@@ -152,7 +152,7 @@ public class OrderController {
 			@RequestParam(value = "priceTotal", required = false) List<Double> priceTotal) {
 
 		boolean allProductsEnough = true; // Biến để theo dõi xem tất cả sản phẩm có đủ số lượng không
-		
+
 		// Tạo một danh sách để lưu trạng thái kiểm tra số lượng của từng sản phẩm
 		List<Boolean> productStatus = new ArrayList<>();
 		for (int i = 0; i < productID.size(); i++) {
@@ -377,9 +377,9 @@ public class OrderController {
 		String remoteUser = request.getRemoteUser();
 		int totalQuantity = 0;
 		List<ShoppingCart> shoppingCarts = shoppingCartDAO.findShoppingCartsByUsername(remoteUser);
-        for (ShoppingCart cart : shoppingCarts) {
-            totalQuantity += cart.getQty();
-        }
+		for (ShoppingCart cart : shoppingCarts) {
+			totalQuantity += cart.getQty();
+		}
 
 		sessionService.setAttribute("cartQuantity", totalQuantity);
 		return "thankyou";

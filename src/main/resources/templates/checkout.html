@@ -50,24 +50,22 @@
 
 								</thead>
 								<tbody>
-									<tr ng-repeat="item in cart.items | filter : { status: true }">
-										<td><input ng-model="item.product.id" type="text"
-											name="productId" style="width: 50%"></td>
+									<tr ng-repeat="item in cart.items">
+										<td><input ng-model="item.id" type="text"
+											name="productId"
+											style="width: 50%; border: none; outline: none;"></td>
 
 										<td><img style="width: 50%" src="/images/{{item.image}}"></td>
 
-										<td><input ng-model="item.size" type="text" name="sizeId"
-											style="width: 100%"><br></td>
+										<td><input ng-model="item.sizes" type="text"
+											name="sizeId"
+											style="width: 100%; border: none; outline: none;"><br></td>
 
 										<td>${{cart.price_product(item)}}</td>
-										<td><input ng-change="cart.updateQtyDatabase(item.id,  item.qty)"
+										<td><input ng-change="cart.saveToLocalStorage()"
 											name="countProduct" ng-model="item.qty" type="number" min="1"
-											style="width: 30px" class="border border-light" /></td>
-
-										<td><input type="text" name="priceTotal" style="width: 100%; border: none;"
-												value="{{cart.amtt_of(item)}}"></td>
-
-
+											style="width: 30px; border: none; outline: none;"
+											class="border border-light" /></td>
 
 										<td><input type="text" name="priceTotal"
 											style="width: 100%; border: none;"
@@ -97,10 +95,11 @@
 												th:value="${calculatedValue != null ?  + calculatedValue : '{{cart.amount}}'}" />
 
 											<input style="text-decoration: line-through;"
-											class="text-black font-weight-bold border border-light"
-											type="text" th:value="${{cartAmount}}" /></td>
-										<td><input type="hidden" id="inputAmount"
-											name="totalAmount" value="{{cart.amount}}" /></td>
+												class="text-black font-weight-bold border border-light" type="text"
+												th:value="${{cartAmount}}" />
+										</td>
+										<!-- <td><input type="hidden" id="inputAmount" name="totalAmount"
+												value="{{cart.amount}}" /></td>
 
 										<td><input type="text" id="inputAmount"
 											style="width: 100%; border: none; outline: none;"
@@ -116,13 +115,13 @@
 										</td>
 										<td
 											th:if="${discountCodes != null and calculatedValue != null}">
-											<!-- Kiểm tra xem có mã giảm giá và calculatedValue có giá trị hay không -->
+											Kiểm tra xem có mã giảm giá và calculatedValue có giá trị hay không
 											<input style="width: 100%; border: none; outline: none;"
 											class="text-black font-weight-bold border border-light"
 											type="text" name="total"
 											th:value="${calculatedValue != null ? +calculatedValue : '{{cart.amount | number : 2}}'}" />
 										</td>
-
+ -->
 									</tr>
 								</tbody>
 							</table>

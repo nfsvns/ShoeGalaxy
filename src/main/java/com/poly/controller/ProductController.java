@@ -253,157 +253,37 @@ public class ProductController {
 		model.addAttribute("prodd", listS);
 		model.addAttribute("discountProducts", discountProducts);
 		model.addAttribute("comment", comment);
-
+		List<Object[]> results = dao.countProductsByCategory();
+		model.addAttribute("results", results);
 		// Chắc chắn rằng listS chứa thông tin về số lượng của size
 		return "shop-single";
 	}
 
-	@PostMapping("/shop.html/addComments")
-	public String addComment(@RequestParam("description") String description,
-			@RequestParam(value = "productId", required = false) Integer idProduct, Model model,
-			HttpServletRequest request) {
-		Comment commentt = new Comment();
-		// add Comment
-		// getTime();
-		Timestamp now = new Timestamp(new Date().getTime());
-		// getUserName();
-		String username = request.getRemoteUser();
-		Account user = accountDAO.findById(username).orElse(null);
-		// setDescription
-		commentt.setDescription(description); // Set the comment text
-		// setAccountUsername
-		commentt.setAccount(user);
-		// setDate
-		commentt.setCreate_Date(now);
-
-		// check product
-		if (idProduct != null) {
-			Product product = dao.findById(idProduct).orElse(null);
-			if (product != null) {
-				// if productId != null
-				commentt.setProduct(product);
-			} else {
-				throw new IllegalArgumentException("Product with id " + idProduct + " not found!");
-			}
-		} else {
-			// Handle when productId is null
-			throw new IllegalArgumentException("Product id is null!");
-		}
-
-		// add comments
-		commentDAO.save(commentt);
-
-		// Fetch data again after saving the new comment
-		Product list = dao.findById(idProduct).orElse(null);
-		List<Size> listS = sizeDAO.findByIdProduct(idProduct);
-		List<DiscountProduct> discountProducts = dpDAO.findByIdProduct(idProduct);
-		List<Comment> comment = commentDAO.findByCommentId(idProduct);
-
-		model.addAttribute("prod", list);
-		model.addAttribute("prodd", listS);
-		model.addAttribute("discountProducts", discountProducts);
-		model.addAttribute("comment", comment);
-
-		List<Reply> reply = replyDAO.findByCommentProductId(idProduct);
-
-		model.addAttribute("reply", reply);
-		// Add a success message to the model
-		model.addAttribute("message", "Comment added successfully!");
-		// Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
-		List<Object[]> results = dao.countProductsByCategory();
-		model.addAttribute("results", results);
-		// Return the name of your success template
-		return "shop-single.html";
-	}
-
-	@PostMapping("/shop.html/replyComments")
-	public String replyComment(@RequestParam("descriptionReply") String description,
-			@RequestParam(value = "productIdReply", required = false) Integer idProduct,
-			@RequestParam(value = "parentId", required = false) Integer idComment, Model model,
-			HttpServletRequest request) {
-		Reply commentt = new Reply();
-		Timestamp now = new Timestamp(new Date().getTime());
-		String username = request.getRemoteUser();
-		Account user = accountDAO.findById(username).orElse(null);
-
-		commentt.setDescription(description); // Set the comment text
-		commentt.setAccount(user);
-
-		commentt.setCreate_date(now);
-
-		if (idProduct != null) {
-			Product product = dao.findById(idProduct).orElse(null);
-			if (product != null) {
-				commentt.setProduct(product);
-			} else {
-				throw new IllegalArgumentException("Product with id " + idProduct + " not found!");
-			}
-		} else {
-			// Handle when productId is null
-			throw new IllegalArgumentException("Product id is null!");
-		}
-
-		if (idComment != null) {
-			Comment comment = commentDAO.findById(idComment).orElse(null);
-			if (comment != null) {
-				commentt.setComment(comment);
-			} else {
-				throw new IllegalArgumentException("Product with id " + idProduct + " not found!");
-			}
-		} else {
-			// Handle when productId is null
-			throw new IllegalArgumentException("Product id is null!");
-		}
-
-		replyDAO.save(commentt);
-
-		// Fetch data again after saving the new comment
-		Product list = dao.findById(idProduct).orElse(null);
-		List<Size> listS = sizeDAO.findByIdProduct(idProduct);
-		List<DiscountProduct> discountProducts = dpDAO.findByIdProduct(idProduct);
-		List<Comment> comment = commentDAO.findByCommentId(idProduct);
-
-		model.addAttribute("prod", list);
-		model.addAttribute("prodd", listS);
-		model.addAttribute("discountProducts", discountProducts);
-		model.addAttribute("comment", comment);
-		List<Reply> reply = replyDAO.findByCommentProductId(idProduct);
-
-		model.addAttribute("reply", reply);
-		// Add a success message to the model
-		model.addAttribute("message", "Comment added successfully!");
-		// Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
-		List<Object[]> results = dao.countProductsByCategory();
-		model.addAttribute("results", results);
-		// Return the name of your success template
-		return "shop-single.html";
-	}
+	
 	@GetMapping("/newArrivals")
 	public String index(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
-	    int pageSize = 8; // or any other desired page size
-	    int totalProducts = 24; // or any other desired total number of products
+		int pageSize = 8; // or any other desired page size
+		int totalProducts = 24; // or any other desired total number of products
 
-	    Page<Product> newProductPage = dao.findNewProducts(PageRequest.of(page, pageSize));
-	    List<Product> newProduct = newProductPage.getContent();
+		Page<Product> newProductPage = dao.findNewProducts(PageRequest.of(page, pageSize));
+		List<Product> newProduct = newProductPage.getContent();
 
-	    List<Object[]> orderDetails = orderDetailDAO.findByAllTopProductOrderDetail();
-	    model.addAttribute("orderDetails", orderDetails);
-	    model.addAttribute("newProduct", newProduct);
-	    model.addAttribute("images", imageDAO.findAll());
-	    model.addAttribute("pro", dao.topProduct());
-	    model.addAttribute("products", dao.findAll());
-	    model.addAttribute("discountProducts", dpDAO.findAll());
+		List<Object[]> orderDetails = orderDetailDAO.findByAllTopProductOrderDetail();
+		model.addAttribute("orderDetails", orderDetails);
+		model.addAttribute("newProduct", newProduct);
+		model.addAttribute("images", imageDAO.findAll());
+		model.addAttribute("pro", dao.topProduct());
+		model.addAttribute("products", dao.findAll());
+		model.addAttribute("discountProducts", dpDAO.findAll());
 
-	    // Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
-	    List<Object[]> results = dao.countProductsByCategory();
-	    model.addAttribute("results", results);
+		// Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
+		List<Object[]> results = dao.countProductsByCategory();
+		model.addAttribute("results", results);
 
-	    model.addAttribute("currentPage", page);
-	    model.addAttribute("totalPages", (int) Math.ceil((double) totalProducts / pageSize));
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", (int) Math.ceil((double) totalProducts / pageSize));
 
-	    return "newArrivals.html";
+		return "newArrivals.html";
 	}
-
-
 
 }
