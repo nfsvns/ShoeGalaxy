@@ -261,7 +261,9 @@
 
 									<button class="btn btn-dark btn-sm mt-2 reply-btn"
 										data-comment-id="${cmt.id}">Reply</button>
-									<button class="btn btn-dark btn-sm mt-2 edit-comment-btn"
+									<button
+										th:if="${#request.remoteUser != null and #authentication.principal.username == cmt.account.username }"
+										class="btn btn-dark btn-sm mt-2 edit-comment-btn"
 										data-comment-id="${cmt.id}">Edit</button>
 
 
@@ -363,9 +365,6 @@
 
 
 
-																			<button
-																				class="dropdown-item btn-dark edit-comment-btn"
-																				data-comment-id="${rpl.id}">Edit</button>
 																		</th:block>
 																	</div>
 																</div>
@@ -385,10 +384,11 @@
 															class="reply-date"></p>
 														<p th:text="${rpl.description}" class="reply-description"></p>
 
-
 														<button class="btn btn-dark btn-sm mt-2 reply-btn"
 															data-comment-id="${cmt.id}">Reply</button>
-														<button class="btn btn-dark btn-sm mt-2 edit-comment-btn"
+														<button
+															th:if="${#request.remoteUser != null and #authentication.principal.username == cmt.account.username }"
+															class="btn btn-dark btn-sm mt-2 edit-comment-btn"
 															data-comment-id="${cmt.id}">Edit</button>
 
 
@@ -452,98 +452,100 @@
 							</div>
 						</div>
 					</div>
+				</div>
+			</div>
 
 
 
 
 
-					<div class="container">
+			<div class="container">
 
-						<!-- The Modal -->
-						<div class="modal" id="myModal">
-							<div class="modal-dialog" style="margin-top: 300px;">
-								<div class="modal-content">
-									<!-- Modal body -->
-									<h5 class="text-center mb-2 mt-3">Added to Cart
-										Successfully!</h5>
-									<div class="modal-body">
+				<!-- The Modal -->
+				<div class="modal" id="myModal">
+					<div class="modal-dialog" style="margin-top: 300px;">
+						<div class="modal-content">
+							<!-- Modal body -->
+							<h5 class="text-center mb-2 mt-3">Added to Cart
+								Successfully!</h5>
+							<div class="modal-body">
 
-										<h3 class="text-center">
-											<i class="fa-solid fa-success fa-check fa-2xl"
-												style="color: red;"></i>
-										</h3>
-									</div>
-
-								</div>
+								<h3 class="text-center">
+									<i class="fa-solid fa-success fa-check fa-2xl"
+										style="color: red;"></i>
+								</h3>
 							</div>
+
 						</div>
 					</div>
-
-
-
 				</div>
+			</div>
 
-				<!-- Bootstrap 5.3.1 JavaScript (Popper.js là một phần bắt buộc của Bootstrap) -->
-				<div style="border-bottom: groove;" class="mt-5"></div>
-				<h1 style="text-align: center;">Mặt hàng liên quan</h1>
-				<div class="container">
-					<div class="row col-sm-12">
-						<div class="col-md-3 col-sm-3 col-12"
-							th:each="pro, iterStart : ${prod.category.products}">
-							<div class="product-card-shoe">
-								<div class="product-image-container">
-									<a th:href="@{|/shop-single.html/${pro.id}|}"><img
-										class="product-image-shoe"
-										th:src="@{|/images/${pro.images[0].image}|}"
-										th:alt="${pro.name}"></a>
-									<div class="discount-badge-shoe"
-										th:if="${pro.discountProduct != null and not #lists.isEmpty(pro.discountProduct) and
+
+
+		</div>
+
+		<!-- Bootstrap 5.3.1 JavaScript (Popper.js là một phần bắt buộc của Bootstrap) -->
+		<div style="border-bottom: groove;" class="mt-5"></div>
+		<h1 style="text-align: center;">Mặt hàng liên quan</h1>
+		<div class="container">
+			<div class="row col-sm-12">
+				<div class="col-md-3 col-sm-3 col-12"
+					th:each="pro, iterStart : ${prod.category.products}">
+					<div class="product-card-shoe">
+						<div class="product-image-container">
+							<a th:href="@{|/shop-single.html/${pro.id}|}"><img
+								class="product-image-shoe"
+								th:src="@{|/images/${pro.images[0].image}|}"
+								th:alt="${pro.name}"></a>
+							<div class="discount-badge-shoe"
+								th:if="${pro.discountProduct != null and not #lists.isEmpty(pro.discountProduct) and
                              (T(java.time.LocalDate).now().isAfter(pro.discountProduct[0].start_Date) and
                              (T(java.time.LocalDate).now().isBefore(pro.discountProduct[0].end_Date) or
                              T(java.time.LocalDate).now().isEqual(pro.discountProduct[0].end_Date)))} and ${pro.discountProduct[0].active}">
-										<span th:text="${pro.discountProduct[0].percentage + '%'}"></span>
+								<span th:text="${pro.discountProduct[0].percentage + '%'}"></span>
 
-									</div>
-								</div>
-								<div class="product-details-shoe">
-									<div class="product-title-shoe text-truncate"
-										th:text="${pro.name}"></div>
-									<div
-										th:if="${pro.discountProduct != null and not #lists.isEmpty(pro.discountProduct) and
+							</div>
+						</div>
+						<div class="product-details-shoe">
+							<div class="product-title-shoe text-truncate"
+								th:text="${pro.name}"></div>
+							<div
+								th:if="${pro.discountProduct != null and not #lists.isEmpty(pro.discountProduct) and
                              pro.discountProduct[0].active and
                              (T(java.time.LocalDate).now().isAfter(pro.discountProduct[0].start_Date) and
                              (T(java.time.LocalDate).now().isBefore(pro.discountProduct[0].end_Date) or
                              T(java.time.LocalDate).now().isEqual(pro.discountProduct[0].end_Date)))} and ${pro.discountProduct[0].active}">
 
-										<span class="product-price-shoe"
-											th:text="${'$' + (pro.price - (pro.price * pro.discountProduct[0].percentage / 100))}"></span>
-										<del class="original-price-shoe" th:text="${'$' + pro.price}"></del>
-									</div>
-									<div class="product-price-shoe"
-										th:if="${pro.discountProduct != null and not #lists.isEmpty(pro.discountProduct) and
+								<span class="product-price-shoe"
+									th:text="${'$' + (pro.price - (pro.price * pro.discountProduct[0].percentage / 100))}"></span>
+								<del class="original-price-shoe" th:text="${'$' + pro.price}"></del>
+							</div>
+							<div class="product-price-shoe"
+								th:if="${pro.discountProduct != null and not #lists.isEmpty(pro.discountProduct) and
                              (T(java.time.LocalDate).now().isBefore(pro.discountProduct[0].start_Date) or
                              T(java.time.LocalDate).now().isAfter(pro.discountProduct[0].end_Date))} and ${pro.discountProduct[0].active}">
-										<span th:text="${'$' + pro.price}"></span>
-									</div>
-									<div class="product-price-shoe"
-										th:unless="${pro.discountProduct != null and not #lists.isEmpty(pro.discountProduct) and pro.discountProduct[0].active}">
-										<span th:text="${'$' + pro.price}"></span>
-									</div>
-								</div>
+								<span th:text="${'$' + pro.price}"></span>
+							</div>
+							<div class="product-price-shoe"
+								th:unless="${pro.discountProduct != null and not #lists.isEmpty(pro.discountProduct) and pro.discountProduct[0].active}">
+								<span th:text="${'$' + pro.price}"></span>
 							</div>
 						</div>
 					</div>
 				</div>
-
 			</div>
+		</div>
+
+	</div>
 
 
-			<script
-				src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-			<script
-				src="https://cdn.jsdelivr.net/npm/popper.js@2.11.6/dist/umd/popper.min.js"></script>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/popper.js@2.11.6/dist/umd/popper.min.js"></script>
 
-			<script>
+	<script>
 		$(document).ready(function() {
 			var isFormDisplayed = false;
 
@@ -564,7 +566,7 @@
 			});
 		});
 	</script>
-			<script>
+	<script>
 		$(document)
 				.ready(
 						function() {
@@ -608,6 +610,10 @@
 											});
 						});
 	</script>
+
+
+
+
 
 
 </body>
