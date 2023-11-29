@@ -187,7 +187,7 @@
 										<b class="glyphicon glyphicon-save"></b> Update
 									</button>
 									<button ng-click="delete(form)"
-										ng-if="form.status == 'Đang Giao' || form.status=='Đang Xác Nhận' || form.status=='Đã Giao'"
+										ng-if="form.status == 'Đang Giao' || form.status=='Đang Xác Nhận' && !form.available"
 										class="btn btn-danger">
 										<b class="glyphicon glyphicon-trash"></b> Delete
 									</button>
