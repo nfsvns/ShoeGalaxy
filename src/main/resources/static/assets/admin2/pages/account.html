@@ -162,57 +162,49 @@
 							</label>
 						</div>
 						
-						
+						<!--  -->
 						<div class="col-sm-8">
-							<div class="row">
-							
-							
-							<!--  -->
-							
-										
-										
-										
-										
-										
-										
-										
-										
-								<div class="row"></div>
-								<div class="form-group col-sm-4">
-									<div>Fullname</div>
-									<input ng-model="form.fullname" class="form-control">
-								</div>
-								<div class="form-group col-sm-4">
-									<div>Email</div>
-									<input id="email" type="email" ng-model="form.email" class="form-control">
-								</div>
-							
-							<div class="row">
-							<div class="form-group col-sm-4">
-									<div>Available?</div>
-									<div class="form-control">
-										<label class="radio-inline"> <input
-											ng-model="form.activate" ng-value="true" name="available"
-											type="radio">Yes
-										</label> <label class="radio-inline"> <input
-											ng-model="form.activate" ng-value="false" name="available"
-											type="radio">No
-										</label>
-									</div>
-								</div>
-								<div class="form-group col-sm-5 my-2">
-									<div>Image</div>
-									<input type="file" class="form-control" id="image"
-										onchange="angular.element(this).scope().imageChanged(this.files)">
-								</div>
-								
-								
-								
-							</div>
-							
-							</div>
-							
-						</div>
+    <div class="row">
+
+        <!-- First Column -->
+        <div class="form-group col-sm-5">
+            <div>Fullname</div>
+            <input ng-model="form.fullname" class="form-control">
+        </div>
+
+        <!-- Second Column -->
+        <div class="form-group col-sm-5">
+            <div>Email</div>
+            <input id="email" type="email" ng-model="form.email" class="form-control">
+        </div>
+
+        <!-- Third Column -->
+        <div class="form-group col-sm-5">
+            <div>Available?</div>
+            <div class="form-control">
+                <label class="radio-inline">
+                    <input ng-model="form.activate" ng-value="true" name="available" type="radio">Yes
+                </label>
+                <label class="radio-inline">
+                    <input ng-model="form.activate" ng-value="false" name="available" type="radio">No
+                </label>
+            </div>
+        </div>
+
+        <!-- Fourth Column -->
+        <div class="form-group col-sm-5">
+            <div>Image</div>
+            <input type="file" class="form-control" id="image"
+                onchange="angular.element(this).scope().imageChanged(this.files)">
+        </div>
+
+    </div>
+</div>
+						
+						<!--  -->
+						
+						
+						
 					</div>
 				</div>
 
