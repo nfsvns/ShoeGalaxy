@@ -20,16 +20,13 @@ app.controller("address-ctrl", function($scope, $http) {
 	}
 	$scope.create = function() {
 		var item = angular.copy($scope.form);
-
-
-
 		$http.post(`/rest/address`, item).then(resp => {
 			$scope.items.push(resp.data);
 			$scope.reset();
 
 			alert("Thêm mới thành công!");
 		}).catch(error => {
-			alert("Lỗi thêm mới !");
+			alert("Thêm địa chỉ không thành công");
 			console.log("Error", error);
 		});
 	}
@@ -56,7 +53,7 @@ $scope.delete = function(item) {
             var index = $scope.items.findIndex(p => p.id === item.id);
             $scope.items.splice(index, 1);
             $scope.reset();
-            alert("Xóa thành công!");
+            alert("Xóa địa chỉ thành công!");
         }).catch(error => {
             if (error.status === 500) {
                 alert("Lỗi máy chủ, vui lòng thử lại sau.");
@@ -98,7 +95,7 @@ $scope.delete = function(item) {
 	}
 		$scope.reset = function() {
 		$scope.form = {
-			available: true,
+			available: true
 		}
 	}
 	$scope.initialize();
