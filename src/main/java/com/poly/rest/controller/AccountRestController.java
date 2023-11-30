@@ -63,9 +63,12 @@ public class AccountRestController {
 	JavaMailSender emailSender;
 	@Autowired
 	MailerService mailerService;
+	
 	@GetMapping
 	public List<Account> getAccounts() {
-	    return accountService.findAllWithPasswordEncoder();
+		List<Account> accounts = accountService.findAllWithPasswordEncoder();
+	    return accounts;
+		
 	}
 	 
 
@@ -73,12 +76,27 @@ public class AccountRestController {
 	public Account getOne(@PathVariable("username") String username) {
 		return accountService.findById(username);
 	}
+	
+	
 
 	@PutMapping("{username}")
 	public Account put(@PathVariable("username") String username, @RequestBody Account account) {
-		return accountService.update(account);
+	    return accountService.updateAccountvan(account);
+	}
+	
+
+
+	@DeleteMapping("{username}/saveData")
+	public void deleteSaveData(@PathVariable("username") String username) {
+	    Account account = accountService.findById(username);
+	    if (account != null) {
+	        accountService.deleteSaveData(account);
+	    }
 	}
 
+
+
+	
 	@DeleteMapping("{username}")
 	public void delete(@PathVariable("username") String username) {
 
@@ -90,6 +108,7 @@ public class AccountRestController {
 	@PostMapping
 	public Account post(@RequestBody Account account) {   
       accountService.create(account);
+      
 	    return account;  
 	}
 

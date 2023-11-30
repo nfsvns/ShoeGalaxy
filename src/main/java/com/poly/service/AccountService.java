@@ -17,13 +17,20 @@ public interface AccountService {
 	 public Account getCurrentAccount();
 	 public void deleteAddressesByAccount(Account account);
 	 public List<Account> findAllWithPasswordEncoder();
+	 public Account deleteSaveData(Account account) ;
 	 public Account update(Account account) ;
 	 public Account create(Account account);
 	 public void delete(String username);
 	 Account findByEmail(String email);
 	 public List<String> findAllAccountEmails();
 	 public boolean isEmailExists(String email);
+	 public boolean existsById(Integer id);
+	 public boolean existsByUsername(String username);
+	 boolean existsByIdAndUsername(Integer id, String username);
 	 public void deleteAccountAndRelatedData(String username);
+	 public List<Account> findAllWithDESC();
+	 public Account updateAccountInDatabase(Account account);
+	 public Account updateAccountvan(Account updatedAccount);
 	 
 
 }

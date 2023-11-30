@@ -84,6 +84,9 @@ public class LoginController2 {
 			user.setFullname(fullname);
 			user.setEmail(email);
 			user.setPhoto("nv01.jpg");
+			Integer nextId = accountDAO.getMaxAccountId() + 1;
+	        user.setId(nextId);
+	        user.setActivate(true);
 			accountDAO.save(user);
 
 			Authority authority = new Authority();

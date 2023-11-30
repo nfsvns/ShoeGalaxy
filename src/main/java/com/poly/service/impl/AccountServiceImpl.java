@@ -2,8 +2,10 @@ package com.poly.service.impl;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Sort;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.poly.dao.AccountDAO;
 import com.poly.dao.AddressDAO;
@@ -39,6 +43,8 @@ public class AccountServiceImpl implements AccountService{
 	OrderService OrderService;
 	@Autowired
 	OrderDetailDAO orderdetailDAO;
+	 @Autowired
+	    private JdbcTemplate jdbcTemplate;
 	public List<Account> findAll() {
 		return dao.findAll();
 	}
@@ -81,18 +87,24 @@ public class AccountServiceImpl implements AccountService{
 	        String username = authentication.getName();
 	        return dao.findByUsername(username);
 	}
-
 	@Override
-	public Account update(Account account) {
-		
-		return dao.save(account);
+	public boolean existsById(Integer id) {
+	    return dao.existsById(id);
 	}
 
 	@Override
+	public Account update(Account account) {
+	    return dao.saveAndFlush(account);
+	}
+
+	
+
+
+	@Override
 	public Account create(Account account) {
-		// TODO Auto-generated method stub
-		
-		return dao.save(account);
+	    Integer nextId = dao.getMaxAccountId() + 1;
+	    account.setId(nextId);
+	    return dao.save(account);
 	}
 
 	@Override
@@ -115,23 +127,35 @@ public class AccountServiceImpl implements AccountService{
 
         return false;
     }
-	
+	 @Override
+	    public boolean existsByUsername(String username) {
+	        return dao.existsById(username);
+	    }
 	@Override
 	public List<Account> findAllWithPasswordEncoder() {
 		// TODO Auto-generated method stub
-		 List<Account> accounts = dao.findAll();
+		 List<Account> accounts = dao.findAllDESC();
 	        for (Account account : accounts) {
 	        String encryptedPassword = passwordEncoder.encode(account.getPassword());
-	   	    account.setPassword(encryptedPassword.substring(0, 25));
+	   	    account.setPassword(encryptedPassword.substring(0, 17));
 	        }
-	        Collections.reverse(accounts);
-	        return accounts;
+	        return dao.findAllDESC();
 	
 	}
+	
+	@Override
+	public List<Account> findAllWithDESC() {
+		// TODO Auto-generated method stub
+		 List<Account> accounts = dao.findAll(Sort.by(Sort.Direction.DESC, "id"));
+		 return accounts;
+	
+	}
+
 
 	@Override
 	 public void deleteAddressesByAccount(Account account) {
         List<Address> addressesToDelete = addressdao.findByAccount(account);
+        
         for (Address address : addressesToDelete) {
         	addressdao.delete(address);
         }
@@ -161,11 +185,56 @@ public class AccountServiceImpl implements AccountService{
 	    List<Account> accounts = dao.findAll();
 	    for (Account account : accounts) {
 	        if (email.equals(account.getEmail())) {
-	            return true; // Email đã tồn tại trong hệ thống
+	            return true;
 	        }
 	    }
-	    return false; // Email chưa tồn tại
+	    return false;
 	}
+	
+
+	 public Account updateAccountvan(Account account) {
+        Integer accountId = account.getId();
+        Optional<Account> existingAccountOptional = dao.findById(accountId);
+
+        if (existingAccountOptional.isPresent()) {
+            Account existingAccount = existingAccountOptional.get();
+            existingAccount.setUsername(account.getUsername());
+            existingAccount.setPassword(account.getPassword());
+            existingAccount.setFullname(account.getFullname());
+            existingAccount.setEmail(account.getEmail());
+            existingAccount.setPhoto(account.getPhoto());
+            existingAccount.setId(accountId);
+            existingAccount.setActivate(account.getActivate());
+            return updateAccountInDatabase(existingAccount);
+        } else {
+            throw new EntityNotFoundException("Account not found with ID: " + accountId);
+        }
+    }
+
+
+	@Override
+	 public Account updateAccountInDatabase(Account account) {
+        String sql = "UPDATE Accounts SET username = ?, password = ?, fullname = ?, email = ?, photo = ? , activate = ? WHERE id = ?";
+        jdbcTemplate.update(sql, account.getUsername(), account.getPassword(), account.getFullname(), account.getEmail(), account.getPhoto(), account.getActivate(), account.getId());
+        return account;
+    }
+
+	@Override
+	public boolean existsByIdAndUsername(Integer id, String username) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Account deleteSaveData(Account account) {
+		account.setActivate(Boolean.FALSE);
+		return dao.save(account);
+	}
+
+
+
+
+	
 
 
 	
