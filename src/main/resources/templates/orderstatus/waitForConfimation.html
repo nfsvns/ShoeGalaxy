@@ -27,7 +27,7 @@
 									<div class="col-md-2">
 										<div>
 											<p class="small text-muted">Customer Name</p>
-											<p class="lead fw-normal mb-0" th:text="${order.nguoinhan}"></p>
+											<p class="lead fw-normal mb-0" th:text="${order.id}"></p>
 										</div>
 									</div>
 									<div class="col-md-2">
@@ -60,7 +60,18 @@
 									</div>
 
 									<div class="col-md-2"
-										th:if="${order.status == 'Đã Giao' || order.status == 'Đã Hủy'}">
+										th:if="${order.status == 'Đã Hủy'}">
+										<input type="hidden" id="orderId" th:value="${order.id}">
+										<p class="small text-muted">Action</p>
+										<button class="btn btn-secondary" ng-click="getOrderDetails()">Repurchase</button>
+
+
+
+
+									</div>
+									
+													<div class="col-md-2"
+										th:if="${order.status == 'Đã Giao'}">
 										<input type="hidden" id="orderId" th:value="${order.id}">
 										<p class="small text-muted">Action</p>
 										<button class="btn btn-secondary" ng-click="getOrderDetails()">Repurchase</button>
