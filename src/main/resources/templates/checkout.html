@@ -9,27 +9,11 @@
 </head>
 
 <body>
-	<div class="bg-light py-3">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-12 mb-0">
-					<a href="index.html">Home</a> <span class="mx-2 mb-0">/</span> <a
-						href="cart.html">Cart</a> <span class="mx-2 mb-0">/</span> <strong
-						class="text-black">Checkout</strong>
-				</div>
-			</div>
-		</div>
-	</div>
+
 
 	<div class="site-section">
 		<div class="container">
-			<div class="row mb-5">
-				<div class="col-md-12">
-					<div class="border p-4 rounded" role="alert">
-						Returning customer? <a href="#">Click here</a> to login
-					</div>
-				</div>
-			</div>
+
 			<div th:if="${messages != null}" class="alert alert-danger">
 				<p th:text="${messages}"></p>
 			</div>
@@ -65,7 +49,7 @@
 										<td><input
 											ng-change="cart.updateQtyDatabase(item.id,  item.qty)"
 											name="countProduct" ng-model="item.qty" type="number" min="1"
-											style="width: 30px" class="border border-light" /></td>
+											style="width: 50px" class="border border-light" /></td>
 
 										<td><input type="text" name="priceTotal"
 											style="width: 100%; border: none;"
@@ -79,12 +63,30 @@
 
 										<td><input
 											class="text-black font-weight-bold border border-light"
-											type="text" name="total"
-											th:value="${calculatedValue != null ?  + calculatedValue : '{{cart.amount | number : 2}}'}" />
+											type="text" value="{{cart.amount}}" /> <th:block
+												th:if="${calculatedValue != null}">
+												<!-- Hiển thị giá trị calculatedValue trong thẻ input -->
+												<input type="text"
+													class="text-black font-weight-bold border border-light"
+													th:value="${#numbers.formatDecimal( '- ' + ' '+ discountPrice, 2, 'COMMA', 2, 'POINT')}" />
+													
+													
+													
+											</th:block> <th:block th:if="${calculatedValue != null}">
+												<!-- Hiển thị giá trị calculatedValue trong thẻ input -->
 
-											<input style="text-decoration: line-through;"
+
+												<input type="text"
+													class="text-danger font-weight-bold border border-light"
+													th:value="${calculatedValue}" readonly="readonly" />
+											</th:block> <input
 											class="text-black font-weight-bold border border-light"
-											type="text" th:value="${{cartAmount}}" /></td>
+											type="hidden" name="total"
+											th:value="${calculatedValue != null ?  + calculatedValue : '{{cart.amount}}'}" />
+
+										</td>
+
+
 										<td><input type="hidden" id="inputAmount"
 											name="totalAmount" value="{{cart.amount}}" /></td>
 
@@ -113,11 +115,11 @@
 								</label>
 							</div>
 
-							<div class="form-group">
-								<button class="btn btn-primary btn-lg py-3 btn-block"
-									id="placeOrderButton" onclick="placeOrder()">Place
-									Order</button>
-							</div>
+
+							<button class="btn btn-dark btn-lg py-3 btn-block"
+								id="placeOrderButton" onclick="placeOrder()">Place
+								Order</button>
+
 						</div>
 					</div>
 

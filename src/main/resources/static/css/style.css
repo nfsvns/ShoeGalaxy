@@ -1,4 +1,17 @@
 
+@media (max-width: 767px) {
+    .site-menu {
+        display: none; /* Hide the menu by default on small screens */
+    }
+
+    .site-menu.show-menu {
+        display: block; /* Show the menu when the 'show-menu' class is added */
+    }
+}
+
+
+
+
 table {
             width: 100%;
             border-collapse: collapse;

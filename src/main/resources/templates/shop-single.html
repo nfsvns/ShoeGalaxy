@@ -387,7 +387,7 @@
 														<button class="btn btn-dark btn-sm mt-2 reply-btn"
 															data-comment-id="${cmt.id}">Reply</button>
 														<button
-															th:if="${#request.remoteUser != null and #authentication.principal.username == cmt.account.username }"
+															th:if="${#request.remoteUser != null and #authentication.principal.username == rpl.account.username }"
 															class="btn btn-dark btn-sm mt-2 edit-comment-btn"
 															data-comment-id="${cmt.id}">Edit</button>
 
