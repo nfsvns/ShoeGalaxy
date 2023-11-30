@@ -139,7 +139,6 @@
 				</div>
 			</div>
 		</div>
-		</div>
 	</section>
 
 	<script
@@ -151,11 +150,13 @@
 			$(".reply-btn").click(function() {
 				var commentId = $(this).data('comment-id');
 				if (isFormDisplayed) {
+					console.log("123");
 					$('.reply-form').hide();
 					$(this).text('View Product Details');
 					isFormDisplayed = false;
 				} else {
 					$('.reply-form').hide();
+					console.log("123");
 					$(this).siblings('.reply-form').show();
 					$(this).text('Turn Off View Product Details');
 					isFormDisplayed = true;

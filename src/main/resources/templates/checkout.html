@@ -52,49 +52,35 @@
 								<tbody>
 									<tr ng-repeat="item in cart.items | filter : { status: true }">
 										<td><input ng-model="item.product.id" type="text"
-											name="productId" style="width: 50%"></td>
+											name="productId"
+											style="width: 50%; border: none; outline: none;"></td>
 
-										<td><img style="width: 50%" src="/images/{{item.image}}"></td>
+										<td><img style="width: 50%; border: none; outline: none;"
+											src="/images/{{item.image}}"></td>
 
 										<td><input ng-model="item.size" type="text" name="sizeId"
-											style="width: 100%"><br></td>
+											style="width: 100%; border: none; outline: none;"><br></td>
 
 										<td>${{cart.price_product(item)}}</td>
-										<td><input ng-change="cart.updateQtyDatabase(item.id,  item.qty)"
+										<td><input
+											ng-change="cart.updateQtyDatabase(item.id,  item.qty)"
 											name="countProduct" ng-model="item.qty" type="number" min="1"
 											style="width: 30px" class="border border-light" /></td>
 
-										<td><input type="text" name="priceTotal" style="width: 100%; border: none;"
-												value="{{cart.amtt_of(item)}}"></td>
-
-
-
 										<td><input type="text" name="priceTotal"
 											style="width: 100%; border: none;"
-											value="{{ cart.amtt_of(item)}}"></td>
+											value="{{cart.amtt_of(item)}}"></td>
+
+
 									</tr>
-								</tbody>
-
-
-							</table>
-
-							<table class="table site-block-order-table mb-5">
-								<thead>
-									<th>Total order amount</th>
-									<th
-										th:if="${discountCodes != null and calculatedValue != null}">Discount</th>
-									<th
-										th:if="${discountCodes != null and calculatedValue != null}">Price
-										after discount</th>
-
-								</thead>
-								<tbody>
 									<tr>
+										<td class="text-black font-weight-bold"><strong>Order
+												Total</strong></td>
 
-
-										<td><input class="text-black font-weight-bold border border-light" type="text"
-												name="total"
-												th:value="${calculatedValue != null ?  + calculatedValue : '{{cart.amount}}'}" />
+										<td><input
+											class="text-black font-weight-bold border border-light"
+											type="text" name="total"
+											th:value="${calculatedValue != null ?  + calculatedValue : '{{cart.amount | number : 2}}'}" />
 
 											<input style="text-decoration: line-through;"
 											class="text-black font-weight-bold border border-light"
@@ -102,30 +88,13 @@
 										<td><input type="hidden" id="inputAmount"
 											name="totalAmount" value="{{cart.amount}}" /></td>
 
-										<td><input type="text" id="inputAmount"
-											style="width: 100%; border: none; outline: none;"
-											name="totalAmount" class="text-black font-weight-bold"
-											value="{{cart.amount}}" /></td>
-
-										<td
-											th:if="${discountCodes != null and calculatedValue != null}"><input
-											style="width: 100%; border: none; outline: none;"
-											class="text-black font-weight-bold border border-light"
-											type="text"
-											th:value="${#numbers.formatDecimal(priceVoucher, 2, 'COMMA', 2, 'POINT')}" />
-										</td>
-										<td
-											th:if="${discountCodes != null and calculatedValue != null}">
-											<!-- Kiểm tra xem có mã giảm giá và calculatedValue có giá trị hay không -->
-											<input style="width: 100%; border: none; outline: none;"
-											class="text-black font-weight-bold border border-light"
-											type="text" name="total"
-											th:value="${calculatedValue != null ? +calculatedValue : '{{cart.amount | number : 2}}'}" />
-										</td>
-
 									</tr>
 								</tbody>
+
+
 							</table>
+
+
 
 							<input class="text-black font-weight-bold border border-light"
 								type="hidden" th:value="${{idCode}}" name="IdCode" />
@@ -143,9 +112,10 @@
 									ngân hàng
 								</label>
 							</div>
-							
+
 							<div class="form-group">
-								<button class="btn btn-primary btn-lg py-3 btn-block" id="placeOrderButton" onclick="placeOrder()">Place
+								<button class="btn btn-primary btn-lg py-3 btn-block"
+									id="placeOrderButton" onclick="placeOrder()">Place
 									Order</button>
 							</div>
 						</div>
@@ -193,8 +163,9 @@
 											</select>
 										</div>
 
-									
-										<a class="btn btn-dark mt-4 col-sm-2 text-light" id="editButton">Edit</a>
+
+										<a class="btn btn-dark mt-4 col-sm-2 text-light"
+											id="editButton">Edit</a>
 
 										<div class="col-md-12 mt-3 address-div" style="display: none;">
 											<label for="c_fname" class="text-black">Province/City<span
@@ -220,7 +191,7 @@
 												aria-label="Basic example">
 												<button class="btn btn-primary my-3  py-3 btn-block  mx-1"
 													formaction="/addAddress" formmethod="post">Thêm</button>
-													
+
 												<button class="btn my-3  py-3 btn-block  mx-1 "
 													formaction="/updateAddress" formmethod="post">Sửa</button>
 												<button class="btn my-3  py-3 btn-block  mx-1 "
@@ -278,25 +249,24 @@
 			}
 		});
 		// SỰ KIỆN NÚT PLACE ORDER
-		function placeOrder(){
+		function placeOrder() {
 			var option1 = document.getElementById("option1");
 			var option2 = document.getElementById("option2");
 			var option3 = document.getElementById("option3");
 			var placeOrderButton = document.getElementById("placeOrderButton");
-			if (option1.checked){
-            	placeOrderButton.formAction = "/checkout.html";
-            	placeOrderButton.formMethod = "post";
-        	} else if(option2.checked){			
-            	placeOrderButton.formAction = "/paypal";
-            	placeOrderButton.formMethod = "post";
-            	placeOrderButton.click();
-			}else if(option3.checked){			
-            	placeOrderButton.formAction = "/VnPay";
-            	placeOrderButton.formMethod = "get";
-            	placeOrderButton.click();
+			if (option1.checked) {
+				placeOrderButton.formAction = "/checkout.html";
+				placeOrderButton.formMethod = "post";
+			} else if (option2.checked) {
+				placeOrderButton.formAction = "/paypal";
+				placeOrderButton.formMethod = "post";
+				placeOrderButton.click();
+			} else if (option3.checked) {
+				placeOrderButton.formAction = "/VnPay";
+				placeOrderButton.formMethod = "get";
+				placeOrderButton.click();
 			}
 		}
-
 	</script>
 </body>
 
