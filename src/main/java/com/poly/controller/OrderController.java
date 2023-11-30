@@ -87,8 +87,7 @@ public class OrderController {
 	@RequestMapping("/searchCodee")
 	public String searchDiscountCode(Model model, @RequestParam(value = "code", required = false) String code,
 			@RequestParam(value = "totalAmount", required = false) String totalAmount,
-			@RequestParam(value = "IdCode", required = false) Integer IdCode,
-			HttpServletRequest request) {
+			@RequestParam(value = "IdCode", required = false) Integer IdCode, HttpServletRequest request) {
 		List<DiscountCode> discountCodes = new ArrayList<>();
 
 		if (code != null && !code.isEmpty()) {
@@ -116,6 +115,10 @@ public class OrderController {
 				int idCode = foundDiscountCode.getId();
 				double calculatedValue = cartAmount - (cartAmount * (discountAmount / 100.0));
 
+				double discountPrice = cartAmount - calculatedValue;
+				System.out.println(discountPrice);
+				model.addAttribute("discountPrice", discountPrice);
+
 				// Truyền giá trị mới vào view
 				model.addAttribute("calculatedValue", calculatedValue);
 				model.addAttribute("cartAmount", cartAmount);
@@ -129,7 +132,7 @@ public class OrderController {
 
 		model.addAttribute("code", code);
 		model.addAttribute("discountCodes", discountCodes);
-		
+
 		String username = request.getRemoteUser();
 		Account user = accountDAO.findById(username).orElse(null);
 
@@ -143,7 +146,7 @@ public class OrderController {
 	public String checkout1(Model model, @RequestParam String address, @RequestParam String[] productId,
 			@RequestParam(value = "address2", required = false) Integer address2, @RequestParam String[] sizeId,
 			@RequestParam String[] countProduct, @RequestParam String email, @RequestParam String fullname,
-			@RequestParam double total, HttpServletRequest request,
+			@RequestParam (value = "total", required = false)  double total, HttpServletRequest request,
 			@RequestParam(value = "provinceLabel", required = false) String provinceLabel,
 			@RequestParam(value = "districtLabel", required = false) String districtLabel,
 			@RequestParam(value = "wardLabel", required = false) String wardLabel,
