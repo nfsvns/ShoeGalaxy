@@ -105,14 +105,12 @@ public class LoginController2 {
 		model.addAttribute("email", email);
 
 		// Kiểm tra điều kiện đăng ký, như bạn đã thực hiện
-		System.out.println(email);
-		if (accountDAO.findByEmail(email).isPresent()) {
-			System.out.println(accountDAO.findByEmail(email));
-			model.addAttribute("error", "Địa chỉ email đã được sử dụng. Vui lòng chọn địa chỉ email khác!");
+		if (accountDAO.findById(username).isPresent()) {
+			model.addAttribute("error", "Vui lòng đặt tên username khác!");
 			return "register";
 		} else {
-			if (accountDAO.findById(username).isPresent()) {
-				model.addAttribute("error", "Vui lòng đặt tên username khác!");
+			if (accountDAO.findByEmail(email).isPresent()) {
+				model.addAttribute("error", "Địa chỉ email đã được sử dụng. Vui lòng chọn địa chỉ email khác!");
 				return "register";
 			} else if (!password.equals(confirmPassword)) {
 				model.addAttribute("error", "Mật khẩu và xác nhận mật khẩu không khớp. Vui lòng nhập lại.");
