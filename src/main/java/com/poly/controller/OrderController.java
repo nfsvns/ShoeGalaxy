@@ -87,7 +87,8 @@ public class OrderController {
 	@RequestMapping("/searchCodee")
 	public String searchDiscountCode(Model model, @RequestParam(value = "code", required = false) String code,
 			@RequestParam(value = "totalAmount", required = false) String totalAmount,
-			@RequestParam(value = "IdCode", required = false) Integer IdCode) {
+			@RequestParam(value = "IdCode", required = false) Integer IdCode,
+			HttpServletRequest request) {
 		List<DiscountCode> discountCodes = new ArrayList<>();
 
 		if (code != null && !code.isEmpty()) {
@@ -95,20 +96,17 @@ public class OrderController {
 
 			// Kiểm tra ngày hết hạn
 			LocalDate currentDate = LocalDate.now();
-			// check nếu như ngày hiện tại nằm trong khoảng thời gian. và ngày hiện tại bằng
-			// ngày bắt đầu và ngày hiện tại cũng bằng kết thúc
 			discountCodes.removeIf(dc -> (dc.getEnd_Date() != null && dc.getEnd_Date().isBefore(currentDate))
 					|| (dc.getStart_Date() != null && dc.getStart_Date().isAfter(currentDate)));
 
 			if (!discountCodes.isEmpty()) {
 				// Tìm thấy mã giảm giá
-
 				DiscountCode foundDiscountCode = discountCodes.get(0);
 
 				// Check if the quantity is 0
 				if (foundDiscountCode.getQuantity() == 0) {
 					model.addAttribute("messages", "Mã giảm giá này đã hết");
-					return "forward:/check";
+					return "checkout.html";
 				}
 
 				// Tính toán giá trị mới
@@ -117,12 +115,10 @@ public class OrderController {
 
 				int idCode = foundDiscountCode.getId();
 				double calculatedValue = cartAmount - (cartAmount * (discountAmount / 100.0));
-				double priceVoucher= cartAmount - calculatedValue; 
-				
+
 				// Truyền giá trị mới vào view
 				model.addAttribute("calculatedValue", calculatedValue);
 				model.addAttribute("cartAmount", cartAmount);
-				model.addAttribute("priceVoucher", priceVoucher);
 				model.addAttribute("idCode", idCode);
 				model.addAttribute("messages", "Áp dụng mã giảm giá thành công!");
 			} else {
@@ -133,7 +129,14 @@ public class OrderController {
 
 		model.addAttribute("code", code);
 		model.addAttribute("discountCodes", discountCodes);
-		return "forward:/check";
+		
+		String username = request.getRemoteUser();
+		Account user = accountDAO.findById(username).orElse(null);
+
+		List<Address> userAddresses = addressDAO.getAddressesByUsername(username);
+		model.addAttribute("userAddresses", userAddresses);
+		model.addAttribute("user", user);
+		return "checkout.html";
 	}
 
 	@PostMapping("checkout.html")
@@ -152,7 +155,7 @@ public class OrderController {
 			@RequestParam(value = "priceTotal", required = false) List<Double> priceTotal) {
 
 		boolean allProductsEnough = true; // Biến để theo dõi xem tất cả sản phẩm có đủ số lượng không
-		
+
 		// Tạo một danh sách để lưu trạng thái kiểm tra số lượng của từng sản phẩm
 		List<Boolean> productStatus = new ArrayList<>();
 		for (int i = 0; i < productID.size(); i++) {
@@ -377,9 +380,9 @@ public class OrderController {
 		String remoteUser = request.getRemoteUser();
 		int totalQuantity = 0;
 		List<ShoppingCart> shoppingCarts = shoppingCartDAO.findShoppingCartsByUsername(remoteUser);
-        for (ShoppingCart cart : shoppingCarts) {
-            totalQuantity += cart.getQty();
-        }
+		for (ShoppingCart cart : shoppingCarts) {
+			totalQuantity += cart.getQty();
+		}
 
 		sessionService.setAttribute("cartQuantity", totalQuantity);
 		return "thankyou";
