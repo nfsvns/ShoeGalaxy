@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/layout/layout.html::dynamic(~{::title}, ~{::body})}">
+<head>
+<title>New Arrivals</title>
+
+<meta charset="utf-8">
+</head>
+<body>
+	<div class="container mt-5 mb-3" data-aos="fade-up">
+		<div class="row">
+			<!-- <div class="col-12 ">
+				<h1 class="big-sale">NEW PRODUCTS</h1>
+			</div> -->
+			<div th:each="newProduct : ${newProduct}"
+				class="col-md-3 col-6 col-sm-6"
+				th:if="${newProduct.available} and ${newProduct.category.available}">
+				<div class="product-card-shoe">
+					<div class="product-image-container">
+					<a th:href="@{|/shop-single.html/${newProduct.id}|}">
+					<img class="product-image-shoe img-fluid"
+							th:src="@{|/images/${newProduct.images[0].image}|}"
+							th:alt="${newProduct.name}">
+					
+					</a>
+						
+						<div class="discount-badge-shoe"
+							th:if="${newProduct.discountProduct != null and not #lists.isEmpty(newProduct.discountProduct) and
+                             (T(java.time.LocalDate).now().isAfter(newProduct.discountProduct[0].start_Date) and
+                             (T(java.time.LocalDate).now().isBefore(newProduct.discountProduct[0].end_Date) or
+                             T(java.time.LocalDate).now().isEqual(newProduct.discountProduct[0].end_Date)))} and ${newProduct.discountProduct[0].active}">
+							<span th:text="${newProduct.discountProduct[0].percentage + '%'}"></span>
+						</div>
+					</div>
+					<div class="product-details-shoe">
+						<div class="product-title-shoe text-truncate"
+							th:text="${newProduct.name}"></div>
+						<div
+							th:if="${newProduct.discountProduct != null and not #lists.isEmpty(newProduct.discountProduct) and
+                             newProduct.discountProduct[0].active and
+                             (T(java.time.LocalDate).now().isAfter(newProduct.discountProduct[0].start_Date) and
+                             (T(java.time.LocalDate).now().isBefore(newProduct.discountProduct[0].end_Date) or
+                             T(java.time.LocalDate).now().isEqual(newProduct.discountProduct[0].end_Date)))} and ${newProduct.discountProduct[0].active}">
+							<span class="product-price-shoe"
+								th:text="${'$' + (newProduct.price - (newProduct.price * newProduct.discountProduct[0].percentage / 100))}"></span>
+							<del class="original-price-shoe"
+								th:text="${'$' + newProduct.price}"></del>
+						</div>
+						<div
+							th:if="${newProduct.discountProduct != null and not #lists.isEmpty(newProduct.discountProduct) and
+                             (T(java.time.LocalDate).now().isBefore(newProduct.discountProduct[0].start_Date) or
+                             T(java.time.LocalDate).now().isAfter(newProduct.discountProduct[0].end_Date))} and ${newProduct.discountProduct[0].active}">
+							<span class="product-price-shoe"
+								th:text="${'$' + newProduct.price}"></span>
+						</div>
+						<div
+							th:unless="${newProduct.discountProduct != null and not #lists.isEmpty(newProduct.discountProduct) and newProduct.discountProduct[0].active}">
+							<span class="product-price-shoe"
+								th:text="${'$' + newProduct.price}"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row" data-aos="fade-up">
+		<div class="col-md-12 text-center">
+			<div class="site-block-27 ">
+
+				<!-- ĐIỀU HƯỚNG -->
+				<div class="pagination-center">
+					<ul>
+						
+						<li th:if="${currentPage > 0}" class="page-item"><a
+							th:href="@{'/newArrivals?page=' + ${currentPage - 1}}">Prev</a>
+						</li>
+						<li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"><a
+							class="" th:href="@{'/newArrivals?page=' + ${i}}"
+							th:text="${i + 1}"></a></li>
+						<li th:if="${currentPage < totalPages - 1}" class="page-item">
+							<a th:href="@{'/newArrivals?page=' + ${currentPage + 1}}">Next</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+	<div class="container-fluid col-sm-10 mt-5" data-aos="fade-up">
+		<img src="/images/bannerIndex.jpg" style="height: 350px; width: 100%"
+			alt="...">
+	</div>
+
+
+
+
+	<div class="site-section site-section-sm site-blocks-1 border-0"
+		data-aos="fade">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 col-lg-4 d-lg-flex mb-4 mb-lg-0 pl-4"
+					data-aos="fade-up" data-aos-delay="">
+					<div class="icon mr-4 align-self-start">
+						<span class="icon-truck"></span>
+					</div>
+					<div class="text">
+						<h2 class="text-uppercase">Free Shipping</h2>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+							Phasellus at iaculis quam. Integer accumsan tincidunt fringilla.</p>
+					</div>
+				</div>
+				<div class="col-md-6 col-lg-4 d-lg-flex mb-4 mb-lg-0 pl-4"
+					data-aos="fade-up" data-aos-delay="100">
+					<div class="icon mr-4 align-self-start">
+						<span class="icon-refresh2"></span>
+					</div>
+					<div class="text">
+						<h2 class="text-uppercase">Free Returns</h2>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+							Phasellus at iaculis quam. Integer accumsan tincidunt fringilla.</p>
+					</div>
+				</div>
+				<div class="col-md-6 col-lg-4 d-lg-flex mb-4 mb-lg-0 pl-4"
+					data-aos="fade-up" data-aos-delay="200">
+					<div class="icon mr-4 align-self-start">
+						<span class="icon-help"></span>
+					</div>
+					<div class="text">
+						<h2 class="text-uppercase">Customer Support</h2>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+							Phasellus at iaculis quam. Integer accumsan tincidunt fringilla.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,23 +1,28 @@
 package com.poly.dao;
 
-import java.util.Collection;
+import java.util.List;
 
-import com.poly.entity.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-public interface ShoppingCartDAO {
+import com.poly.entity.ShoppingCart;
 
-	double getAmount();
+public interface ShoppingCartDAO extends JpaRepository<ShoppingCart, Integer> {
 
-	void clear();
+	@Query("SELECT s FROM ShoppingCart s WHERE s.account.username LIKE ?1")
+	List<ShoppingCart> findShoppingCartsByUsername(String username);
 
-	int getCount();
+	@Query("SELECT s FROM ShoppingCart s WHERE s.product.id like ?1 and s.account.id like ?2 and s.size like ?3")
+	ShoppingCart findShoppingCartByProductIdAndUsernameAndSize(Integer id, String username, Integer size);
 
-	void remove(int productId);
-
-	void update(int productId, int quantity);
-
-	void add(Product item);
-
-	Collection<Product> getAll();
-
+	@Modifying
+	@Query("DELETE FROM ShoppingCart s WHERE s.account.username = :username")
+	void deleteAllByUsername(@Param("username") String username);
+	
+	@Modifying
+	@Query("SELECT s FROM ShoppingCart s WHERE s.account.username like ?1 and s.status = true")
+	List<ShoppingCart> findByUsernameWithStatus(@Param("username") String username);
+	
 }

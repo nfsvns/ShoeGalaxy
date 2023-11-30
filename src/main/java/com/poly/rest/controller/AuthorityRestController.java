@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.poly.entity.Authority;
+import com.poly.entity.Order;
 import com.poly.service.AuthorityService;
 
 
@@ -33,7 +34,14 @@ public class AuthorityRestController {
 		}
 		return authorityService.findAll();
 	}
-	
+	@GetMapping("{id}")
+	public Authority getOne(@PathVariable("id") Integer id) {
+		return authorityService.findById(id);
+	}
+	@GetMapping("/username/{username}")
+	public List<Authority>  getOne(@PathVariable("username") String username) {
+		return authorityService.findUsername(username);
+	}
 	@PostMapping
 	public Authority post(@RequestBody Authority auth) {
 		return authorityService.create(auth);

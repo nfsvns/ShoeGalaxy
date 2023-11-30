@@ -8,33 +8,10 @@
 <meta charset="UTF-8">
 </head>
 <body>
-	
-<div class="container">
-		<div class="row p-4">
-
-			<div class="col-3 text-center ">
-				<a class="ka" style="border-bottom: 1px solid #ee83e5;"
-					th:href="@{/waitForConfimation}">Wait for confirmation</a>
-			</div>
-			<div class="col-3 text-center ">
-				<a class="ka" th:href="@{/unshipped}"
-					style="text-decoration: none; color: black;"> On the way</a>
-			</div>
-			<div class="col-3 text-center">
-				<a class="ka" th:href="@{/shipped}"
-					style="text-decoration: none; color: black;">Shipped</a>
-			</div>
-			<div class="col-3 text-center ">
-				<a class="ka" style="border-bottom: 1px solid #ee83e5;"
-					th:href="@{/cancelled}">Cancelled</a>
-			</div>
-		</div>
-	</div>
-
 	<section class="vh-90" style="margin-bottom: 100px">
-		<div class="container-fluid">
+		<div class="container">
 			<div class="row d-flex justify-content-center align-items-center"
-				th:each="order: ${order}" th:if="${order.status} == 'Đang Xác Nhận'">
+				th:each="order: ${order}">
 				<div class="col">
 					<div class="card mb-4 t-2">
 						<div class="card-body p-4">
@@ -72,74 +49,86 @@
 											<p class="lead fw-normal mb-0" th:text="${order.status}"></p>
 										</div>
 									</div>
-									<div class="col-md-2">
+									<div class="col-md-2"
+										th:if="${order.status} == 'Đang Xác Nhận'">
 										<form method="post" action="/updateOrder">
 											<input type="hidden" name="orderId" th:value="${order.id}">
 											<p class="small text-muted">Action</p>
-											<button type="submit" class="btn btn-secondary">Cancel order</button>
+											<button type="submit" class="btn btn-secondary">Cancel
+												order</button>
 										</form>
 									</div>
 
-									<button class="btn btn-secondary btn-sm mt-2 reply-btn"
-										data-comment-id="${order.id}">View Product Details</button>
+									<div class="col-md-2"
+										th:if="${order.status == 'Đã Giao' || order.status == 'Đã Hủy'}">
+										<input type="hidden" id="orderId" th:value="${order.id}">
+										<p class="small text-muted">Action</p>
+										<button class="btn btn-secondary" ng-click="getOrderDetails()">Repurchase</button>
 
 
 
-									<br>
 
-									<div class="reply-form card border-0"
-										data-comment-id="${order.id}" style="display: none;">
-										<div class="row col-sm-12 align-items-center"
-											th:each="orderDetail : ${orderDetail}"
-											th:if="${orderDetail.order.id} == ${order.id}">
-											<!-- Display order details here -->
-											<div class="col-md-2 d-flex justify-content-center">
-												<div>
-													<p class="small text-muted mb-4 pb-2">OrderId</p>
-													<p class="lead fw-normal mb-0"
-														th:text="${orderDetail.order.id}"></p>
-												</div>
+									</div>
+
+
+								</div>
+
+								<button
+									class="btn col-sm-2 btn-dark text-light btn-sm mt-2 reply-btn"
+									data-comment-id="${order.id}">View Product Details</button>
+								<br>
+
+								<div class="reply-form card border-0"
+									data-comment-id="${order.id}" style="display: none;">
+									<div class="row col-sm-12 align-items-center"
+										th:each="orderDetail : ${orderDetail}"
+										th:if="${orderDetail.order.id} == ${order.id}">
+										<!-- Display order details here -->
+										<div class="col-md-2 d-flex justify-content-center">
+											<div>
+												<p class="small text-muted mb-4 pb-2">OrderId</p>
+												<p class="lead fw-normal mb-0"
+													th:text="${orderDetail.order.id}"></p>
 											</div>
-											<div class="col-md-2 d-flex justify-content-center">
-												<div>
-													<p class="small text-muted pb-2">Image</p>
-													<span th:each="pro : ${products}"> <span
-														th:if="${pro.id == orderDetail.product.id}"> <img
-															th:if="${pro.images != null &amp;&amp; pro.images.size() &gt; 0}"
-															class="img-fluid" alt="Generic placeholder image"
-															style="width: 30%"
-															th:src="@{|/images/${pro.images[0].image}|}">
-													</span>
-													</span>
-												</div>
+										</div>
+										<div class="col-md-2 d-flex justify-content-center">
+											<div>
+												<p class="small text-muted pb-2">Image</p>
+												<span th:each="pro : ${products}"> <span
+													th:if="${pro.id == orderDetail.product.id}"> <img
+														th:if="${pro.images != null &amp;&amp; pro.images.size() &gt; 0}"
+														class="img-fluid" alt="Generic placeholder image"
+														style="width: 30%"
+														th:src="@{|/images/${pro.images[0].image}|}">
+												</span>
+												</span>
 											</div>
-											<div class="col-md-2 d-flex justify-content-center">
-												<div>
-													<p class="small truncate mb-4 pb-2">Name</p>
-													<p class="lead fw-normal mb-0"
-														th:text="${orderDetail.product.name}"></p>
-												</div>
+										</div>
+										<div class="col-md-2 d-flex justify-content-center">
+											<div>
+												<p class="small truncate mb-4 pb-2">Name</p>
+												<p class="lead fw-normal mb-0"
+													th:text="${orderDetail.product.name}"></p>
 											</div>
-											<div class="col-md-2 d-flex justify-content-center">
-												<div>
-													<p class="small text-muted mb-4 pb-2">Price</p>
-													<p class="lead fw-normal mb-0"
-														th:text="${orderDetail.price}"></p>
-												</div>
+										</div>
+										<div class="col-md-2 d-flex justify-content-center">
+											<div>
+												<p class="small text-muted mb-4 pb-2">Price</p>
+												<p class="lead fw-normal mb-0"
+													th:text="${orderDetail.price}"></p>
 											</div>
-											<div class="col-md-2 d-flex justify-content-center">
-												<div>
-													<p class="small text-muted mb-4 pb-2">Size</p>
-													<p class="lead fw-normal mb-0"
-														th:text="${orderDetail.size}"></p>
-												</div>
+										</div>
+										<div class="col-md-2 d-flex justify-content-center">
+											<div>
+												<p class="small text-muted mb-4 pb-2">Size</p>
+												<p class="lead fw-normal mb-0" th:text="${orderDetail.size}"></p>
 											</div>
-											<div class="col-md-2 d-flex justify-content-center">
-												<div>
-													<p class="small text-muted mb-4 pb-2">Quantity</p>
-													<p class="lead fw-normal mb-0"
-														th:text="${orderDetail.quantity}"></p>
-												</div>
+										</div>
+										<div class="col-md-2 d-flex justify-content-center">
+											<div>
+												<p class="small text-muted mb-4 pb-2">Quantity</p>
+												<p class="lead fw-normal mb-0"
+													th:text="${orderDetail.quantity}"></p>
 											</div>
 										</div>
 									</div>
@@ -149,6 +138,7 @@
 					</div>
 				</div>
 			</div>
+		</div>
 		</div>
 	</section>
 

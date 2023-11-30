@@ -54,8 +54,8 @@ public class OrderStatusController {
 
 	@GetMapping("/TrangThai")
 	public String viewOrderStatus(Model model, HttpServletRequest request) {
-		model.addAttribute("cartItems", shoppingCartDAO.getAll());
-		model.addAttribute("total", shoppingCartDAO.getAmount());
+//		model.addAttribute("cartItems", shoppingCartDAO.getAll());
+//		model.addAttribute("total", shoppingCartDAO.getAmount());
 		return "TrangThai";
 	}
 	@GetMapping({ "/shipped", "/unshipped", "/waitForConfimation", "/cancelled" })

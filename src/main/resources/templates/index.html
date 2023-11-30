@@ -7,7 +7,7 @@
 </head>
 <body>
 
-	<div id="carouselExampleIndicators"
+	<div id="carouselExampleIndicators" data-aos="fade-up"
 		class=" container-fluid col-sm-10  carousel slide">
 		<div class="carousel-indicators">
 			<button type="button" data-bs-target="#carouselExampleIndicators"
@@ -57,12 +57,14 @@
 	</div>
 
 
-	<div class="container mt-5">
+
+
+	<div class="container mt-5" data-aos="fade-up">
 		<div class="row">
 			<div class="col-12">
 				<h1 class="big-sale">BIG SALES</h1>
 			</div>
-			<div class="col-md-3 col-sm-3 col-12"
+			<div class="col-md-3 col-6 col-sm-6"
 				th:each="discountProduct : ${discountProducts}"
 				th:if="${(T(java.time.LocalDate).now().isAfter(discountProduct.start_Date) and T(java.time.LocalDate).now().isBefore(discountProduct.end_Date)) or 
            T(java.time.LocalDate).now() == discountProduct.start_Date or T(java.time.LocalDate).now() == discountProduct.end_Date} 
@@ -73,7 +75,8 @@
 							<span th:if="${not #lists.isEmpty(images)}"> <span
 								th:each="pro : ${pro}"> <span
 									th:if="${pro.id == discountProduct.product.id}"> <img
-										class="product-image-shoe"
+										class="product-image-shoe img-fluid"
+										style=" height:auto;"
 										th:src="@{|/images/${pro.images[0].image}|}"
 										alt="Nike Dunk Low Retro Premium">
 
@@ -99,18 +102,23 @@
 			</div>
 		</div>
 	</div>
-	<div class="container mt-5 mb-3">
+	<div class="container mt-5 mb-3" data-aos="fade-up">
 		<div class="row">
 			<div class="col-12 ">
 				<h1 class="big-sale">POPULAR SHOES</h1>
 			</div>
-			<div class="col-md-3 col-sm-3 col-12"
+			<div class="col-md-3 col-6 col-sm-6"
 				th:each="pro, iterStart : ${pro}"
 				th:if="${pro.category.available} and ${iterStart.index < 4}">
 				<div class="product-card-shoe">
 					<div class="product-image-container">
-						<img class="product-image-shoe"
+
+					<a th:href="@{|/shop-single.html/${pro.id}|}">
+					<img class="product-image-shoe"
+
 							th:src="@{|/images/${pro.images[0].image}|}" th:alt="${pro.name}">
+					</a>
+						
 						<div class="discount-badge-shoe"
 							th:if="${pro.discountProduct != null and not #lists.isEmpty(pro.discountProduct) and
                              (T(java.time.LocalDate).now().isAfter(pro.discountProduct[0].start_Date) and
@@ -148,25 +156,28 @@
 			</div>
 		</div>
 	</div>
-	<div class="container-fluid col-sm-10 mt-5">
+	<div class="container-fluid col-sm-10 mt-5" data-aos="fade-up">
 		<img src="images/banner5.jpg" style="height: 350px; width: 100%"
 			alt="...">
 	</div>
 
 
-	<div class="container mt-5 mb-3">
+	<div class="container mt-5 mb-3" data-aos="fade-up">
 		<div class="row">
 			<div class="col-12 ">
 				<h1 class="big-sale">NEW PRODUCTS</h1>
 			</div>
 			<div th:each="newProduct : ${newProduct}"
-				class="col-md-3 col-sm-3 col-12"
+				class="col-md-3 col-6 col-sm-6"
 				th:if="${newProduct.available} and ${newProduct.category.available}">
 				<div class="product-card-shoe">
+
 					<div class="product-image-container">
-						<img class="product-image-shoe"
+					<a th:href="@{|/shop-single.html/${newProduct.id}|}"><img class="product-image-shoe"
+
 							th:src="@{|/images/${newProduct.images[0].image}|}"
-							th:alt="${newProduct.name}">
+							th:alt="${newProduct.name}"></a>
+						
 						<div class="discount-badge-shoe"
 							th:if="${newProduct.discountProduct != null and not #lists.isEmpty(newProduct.discountProduct) and
                              (T(java.time.LocalDate).now().isAfter(newProduct.discountProduct[0].start_Date) and
@@ -209,13 +220,13 @@
 
 
 
-	<div class="container mt-5 mb-3">
+	<div class="container mt-5 mb-3" data-aos="fade-up">
 		<div class="row">
 			<div class="col-12 ">
 				<h1 class="big-sale">Best Selling Products</h1>
 			</div>
 			<div th:each="detail : ${orderDetails}"
-				class="col-md-3 col-sm-3 col-12" th:if="${detail[4]} ">
+				class="col-md-3 col-6 col-sm-6" th:if="${detail[4]} ">
 				<div class="product-card-shoe" th:each="pro : ${pro}"
 					th:if="${pro.id == detail[0] and pro.category.available}">
 					<div class="product-image-container">
@@ -224,7 +235,7 @@
 								th:each="pro : ${pro}"> <span
 									th:if="${pro.id == detail[0]}"> <!-- Hiển thị ảnh --> <img
 										th:if="${not #lists.isEmpty(pro.images)}"
-										class="product-image-shoe"
+										class="product-image-shoe img-fluid"
 										th:src="@{|/images/${pro.images[0].image}|}">
 								</span>
 							</span>
@@ -277,7 +288,7 @@
 		</div>
 	</div>
 
-	<div class="container-fluid col-sm-10 mt-5">
+	<div class="container-fluid col-sm-10 mt-5" data-aos="fade-up">
 		<img src="images/bannerIndex.jpg" style="height: 350px; width: 100%"
 			alt="...">
 	</div>
@@ -286,9 +297,9 @@
 
 
 	<div id="carouselExampleControls" class="carousel slide"
-		data-ride="carousel">
+		data-ride="carousel" data-aos="fade-up">
 
-		<div class="row justify-content-center">
+		<div class="row justify-content-center col-sm-12 mt-3">
 			<div class="col-md-7 site-section-heading text-center pt-4">
 				<h2 th:text="#{body.collection}">Local Collections</h2>
 			</div>
@@ -443,95 +454,50 @@
 
 
 
-
-
-
-
-
-
-
-
-
-	<div class="row">
-		<div class="col-md-12">
-			<div class="nonloop-block-3 owl-carousel">
-				<div class="item">
-					<div class="block-4 text-center">
-						<figure class="block-4-image">
-							<img src="images/b5.webp" alt="Image placeholder"
-								class="img-fluid">
-						</figure>
-						<div class="block-4-text p-4">
-							<h3>
-								<a href="#">ADIDAS</a>
-							</h3>
-							<p class="mb-0">ADIDAS ZX 1K BOOST 'WHITE BLACK'</p>
-							<p class="text-primary font-weight-bold">$50</p>
-						</div>
+	<div class="site-section site-section-sm site-blocks-1 border-0"
+		data-aos="fade">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 col-lg-4 d-lg-flex mb-4 mb-lg-0 pl-4"
+					data-aos="fade-up" data-aos-delay="">
+					<div class="icon mr-4 align-self-start">
+						<span class="icon-truck"></span>
+					</div>
+					<div class="text">
+						<h2 class="text-uppercase">Free Shipping</h2>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+							Phasellus at iaculis quam. Integer accumsan tincidunt fringilla.</p>
 					</div>
 				</div>
-				<div class="item">
-					<div class="block-4 text-center">
-						<figure class="block-4-image">
-							<img src="images/b6.webp" alt="Image placeholder"
-								class="img-fluid">
-						</figure>
-						<div class="block-4-text p-4">
-							<h3>
-								<a href="#">Converse</a>
-							</h3>
-							<p class="mb-0">CONVERSE CHUCK TAYLOR ALL STAR</p>
-							<p class="text-primary font-weight-bold">$70</p>
-						</div>
+				<div class="col-md-6 col-lg-4 d-lg-flex mb-4 mb-lg-0 pl-4"
+					data-aos="fade-up" data-aos-delay="100">
+					<div class="icon mr-4 align-self-start">
+						<span class="icon-refresh2"></span>
+					</div>
+					<div class="text">
+						<h2 class="text-uppercase">Free Returns</h2>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+							Phasellus at iaculis quam. Integer accumsan tincidunt fringilla.</p>
 					</div>
 				</div>
-				<div class="item">
-					<div class="block-4 text-center">
-						<figure class="block-4-image">
-							<img src="images/b7.webp" alt="Image placeholder"
-								class="img-fluid">
-						</figure>
-						<div class="block-4-text p-4">
-							<h3>
-								<a href="#">FILA</a>
-							</h3>
-							<p class="mb-0">FILA RAY TRACER</p>
-							<p class="text-primary font-weight-bold">$60</p>
-						</div>
+				<div class="col-md-6 col-lg-4 d-lg-flex mb-4 mb-lg-0 pl-4"
+					data-aos="fade-up" data-aos-delay="200">
+					<div class="icon mr-4 align-self-start">
+						<span class="icon-help"></span>
 					</div>
-				</div>
-				<div class="item">
-					<div class="block-4 text-center">
-						<figure class="block-4-image">
-							<img src="images/b8.webp" alt="Image placeholder"
-								class="img-fluid">
-						</figure>
-						<div class="block-4-text p-4">
-							<h3>
-								<a href="#">FILA</a>
-							</h3>
-							<p class="mb-0">FILA WOMEN'S DISRUPTOR 2 PREMIUM</p>
-							<p class="text-primary font-weight-bold">$50</p>
-						</div>
-					</div>
-				</div>
-				<div class="item">
-					<div class="block-4 text-center">
-						<figure class="block-4-image">
-							<img src="images/b9.webp" alt="Image placeholder"
-								class="img-fluid">
-						</figure>
-						<div class="block-4-text p-4">
-							<h3>
-								<a href="#">Fila</a>
-							</h3>
-							<p class="mb-0">FILA RAY TRACER</p>
-							<p class="text-primary font-weight-bold">$80</p>
-						</div>
+					<div class="text">
+						<h2 class="text-uppercase">Customer Support</h2>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+							Phasellus at iaculis quam. Integer accumsan tincidunt fringilla.</p>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+
+
+
+
+
 </body>
 </html>

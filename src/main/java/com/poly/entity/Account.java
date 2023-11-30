@@ -48,6 +48,10 @@ public class Account implements Serializable {
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "account")
+    List<ShoppingCart> shoppingCarts;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "account")
 	private List<Comment> comments;
 	
 	@JsonIgnore

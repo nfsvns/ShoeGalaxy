@@ -2,6 +2,7 @@ package com.poly.controller;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,7 +31,8 @@ import com.poly.dao.AccountDAO;
 import com.poly.dao.CategoryDAO;
 import com.poly.dao.CommentDAO;
 import com.poly.dao.DiscountProductDAO;
-
+import com.poly.dao.ImageDAO;
+import com.poly.dao.OrderDetailDAO;
 import com.poly.dao.ProductDAO;
 
 import com.poly.dao.ReplyDAO;
@@ -38,6 +40,7 @@ import com.poly.dao.SizeDAO;
 import com.poly.entity.Account;
 import com.poly.entity.Comment;
 import com.poly.entity.DiscountProduct;
+import com.poly.entity.Image;
 import com.poly.entity.Product;
 import com.poly.entity.Reply;
 import com.poly.entity.Size;
@@ -62,25 +65,29 @@ public class ProductController {
 	ReplyDAO replyDAO;
 
 	@Autowired
+	ImageDAO imageDAO;
+	@Autowired
+	OrderDetailDAO orderDetailDAO;
+
+	@Autowired
 	SessionService sessionService;
 
 	@RequestMapping("/shop.html")
 	public String list(Model model, @RequestParam("p") Optional<Integer> p) {
-	    Pageable pageable = PageRequest.of(p.orElse(0), 6);
-	    Page<Product> page = dao.findDelete(pageable);
-	    
-	    // Lấy danh sách DiscountProduct
-	    List<DiscountProduct> discountProducts = dpDAO.findAll();
-	    model.addAttribute("discountProducts", discountProducts);
-	    model.addAttribute("products", page);
-	    
-	    // Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
-	    List<Object[]> results = dao.countProductsByCategory();
-	    model.addAttribute("results", results);
+		Pageable pageable = PageRequest.of(p.orElse(0), 6);
+		Page<Product> page = dao.findDelete(pageable);
 
-	    return "shop";
+		// Lấy danh sách DiscountProduct
+		List<DiscountProduct> discountProducts = dpDAO.findAll();
+		model.addAttribute("discountProducts", discountProducts);
+		model.addAttribute("products", page);
+
+		// Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
+		List<Object[]> results = dao.countProductsByCategory();
+		model.addAttribute("results", results);
+
+		return "shop";
 	}
-
 
 	@RequestMapping("/shop.html/search")
 	public String searchAndPage(Model model, @RequestParam("keywords") Optional<String> kw,
@@ -95,32 +102,86 @@ public class ProductController {
 		List<DiscountProduct> discountProducts = dpDAO.findAll();
 		model.addAttribute("discountProducts", discountProducts);
 		model.addAttribute("check", "1");
-		 // Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
-	    List<Object[]> results = dao.countProductsByCategory();
-	    model.addAttribute("results", results);
+		// Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
+		List<Object[]> results = dao.countProductsByCategory();
+		model.addAttribute("results", results);
 		return "shop";
 	}
 
 	@RequestMapping("shop.html/findByPrice")
-	public String findByPrice(Model model, @RequestParam("priceRange") String priceRange,
-	                          @RequestParam("p") Optional<Integer> p) {
-	    String[] priceValues = priceRange.split("-");
-	    double minPrice = Double.parseDouble(priceValues[0]);
-	    double maxPrice = Double.parseDouble(priceValues[1]);
-	    sessionService.setAttribute("minPrice", minPrice);
-	    sessionService.setAttribute("maxPrice", maxPrice);
-	    List<DiscountProduct> discountProducts = dpDAO.findAll();
-	    model.addAttribute("discountProducts", discountProducts);
-	    Pageable pageable = PageRequest.of(p.orElse(0), 6);
-	    Page<Product> item = dao.findByPriceBetween(minPrice, maxPrice, pageable);
-	    model.addAttribute("products", item);
-	    model.addAttribute("check", "2");
-	    // Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
-	    List<Object[]> results = dao.countProductsByCategory();
-	    model.addAttribute("results", results);
-	    return "shop";
+	public String findByPrice(Model model, @RequestParam("p") Optional<Integer> p,
+			@RequestParam(value = "priceRange", required = false) String priceRange) {
+		// Check if priceRange is null or does not have the expected format
+		if (priceRange == null || !priceRange.matches("\\d+-\\d+")) {
+			// Handle the case where priceRange is not valid, perhaps by setting default
+			// values or redirecting to an error page.
+			return "error"; // Replace "error" with the actual error view name
+		}
+
+		String[] priceValues = priceRange.split("-");
+		if (priceValues.length != 2 || priceValues[0] == null || priceValues[1] == null) {
+			// Handle the case where priceValues are not valid, perhaps by setting default
+			// values or redirecting to an error page.
+			return "error"; // Replace "error" with the actual error view name
+		}
+
+		try {
+			double minPrice = Double.parseDouble(priceValues[0]);
+			double maxPrice = Double.parseDouble(priceValues[1]);
+			System.out.println(minPrice);
+			System.out.println(maxPrice);
+
+			// rest of your code...
+
+			List<DiscountProduct> discountProducts = dpDAO.findAll();
+			model.addAttribute("discountProducts", discountProducts);
+			Pageable pageable = PageRequest.of(p.orElse(0), 6);
+			Page<Product> page = dao.findByPriceBetween(minPrice, maxPrice, pageable);
+			model.addAttribute("products", page);
+			model.addAttribute("check", "2");
+			model.addAttribute("priceRange", priceRange); // Add priceRange to the model for use in the view
+			// Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
+			List<Object[]> results = dao.countProductsByCategory();
+			model.addAttribute("results", results);
+
+			return "shop";
+		} catch (NumberFormatException e) {
+			// Handle the case where parsing fails, perhaps by setting default values or
+			// redirecting to an error page.
+			return "error"; // Replace "error" with the actual error view name
+		}
 	}
 
+	@RequestMapping("/findSizeProducts")
+	public String getProductsBySize(@RequestParam(value = "size", required = false) String size, Model model,
+			Pageable pageable) {
+
+		Page<Product> page;
+
+		if ("small".equals(size)) {
+			page = dao.findProductsBySize36To38(PageRequest.of(pageable.getPageNumber(), 6));
+		} else if ("medium".equals(size)) {
+			page = dao.findProductsBySize40To42(PageRequest.of(pageable.getPageNumber(), 6));
+		} else if ("large".equals(size)) {
+			page = dao.findProductsBySize42To44(PageRequest.of(pageable.getPageNumber(), 6));
+		} else {
+			// Xử lý khi size là null hoặc không phù hợp
+			page = new PageImpl<>(Collections.emptyList());
+		}
+
+		model.addAttribute("products", page);
+		model.addAttribute("check", "6");
+		model.addAttribute("size", size);
+
+		List<DiscountProduct> discountProducts = dpDAO.findAll();
+		model.addAttribute("discountProducts", discountProducts);
+
+		// Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
+		List<Object[]> results = dao.countProductsByCategory();
+		model.addAttribute("results", results);
+
+		return "shop";
+	}
 
 	@RequestMapping("/shop.html/sort")
 	public String sort(Model model, @RequestParam("desc") Optional<String> de, @RequestParam("p") Optional<Integer> p) {
@@ -133,9 +194,9 @@ public class ProductController {
 		Page<Product> page = dao.findAll(pageable);
 		model.addAttribute("products", page);
 		model.addAttribute("check", "4");
-		 // Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
-	    List<Object[]> results = dao.countProductsByCategory();
-	    model.addAttribute("results", results);
+		// Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
+		List<Object[]> results = dao.countProductsByCategory();
+		model.addAttribute("results", results);
 		List<DiscountProduct> discountProducts = dpDAO.findAll();
 		model.addAttribute("discountProducts", discountProducts);
 		return "shop";
@@ -151,20 +212,14 @@ public class ProductController {
 		model.addAttribute("products", page);
 		List<DiscountProduct> discountProducts = dpDAO.findAll();
 		model.addAttribute("discountProducts", discountProducts);
-		
+
 		model.addAttribute("check", "5");
-		 // Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
-	    List<Object[]> results = dao.countProductsByCategory();
-	    model.addAttribute("results", results);
+		// Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
+		List<Object[]> results = dao.countProductsByCategory();
+		model.addAttribute("results", results);
 		return "shop";
 	}
-	
-	
-	
-	
-	
-	
-	
+
 	@RequestMapping("/shop.html/searchBrand")
 	public String brand(Model model, @RequestParam("brand") Optional<String> br,
 			@RequestParam("p") Optional<Integer> p) {
@@ -173,46 +228,16 @@ public class ProductController {
 
 		Pageable pageable = PageRequest.of(p.orElse(0), 6);
 		Page<Product> page = dao.findByBrand(brand, pageable);
+
 		model.addAttribute("products", page);
 		model.addAttribute("check", "3");
 		List<DiscountProduct> discountProducts = dpDAO.findAll();
 		model.addAttribute("discountProducts", discountProducts);
-		 // Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
-	    List<Object[]> results = dao.countProductsByCategory();
-	    model.addAttribute("results", results);
+		// Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
+		List<Object[]> results = dao.countProductsByCategory();
+		model.addAttribute("results", results);
 		return "shop";
 	}
-
-	
-	@RequestMapping("/findSizeProducts")
-	public String getProductsBySize(@RequestParam("size") String size, Model model, Pageable pageable) {
-	    Page<Product> page;
-	 // Trong phương thức controller của bạn
-	    if (size.equals("small")) {
-	        page = dao.findProductSizeSmall(pageable);
-	    } else if (size.equals("medium")) {
-	        page = dao.findProductSizeMedium(pageable);
-	    } else if (size.equals("large")) {
-	        page = dao.findProductSizeLarge(pageable);
-	    } else {
-	        page = new PageImpl<>(Collections.emptyList()); // Trả về một Page trống nếu không phù hợp
-	    }
-
-	    model.addAttribute("products", page);
-
-	    
-		model.addAttribute("check", "1");
-		List<DiscountProduct> discountProducts = dpDAO.findAll();
-		model.addAttribute("discountProducts", discountProducts);
-		 // Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
-	    List<Object[]> results = dao.countProductsByCategory();
-	    model.addAttribute("results", results);
-		return "shop";
-	    // Xử lý logic cho các kích thước khác (nếu có)
-
-	}
-
-	
 
 	@RequestMapping("/shop-single.html/{productId}")
 	public String getProduct(Model model, @PathVariable("productId") int productId) {
@@ -284,9 +309,9 @@ public class ProductController {
 		model.addAttribute("reply", reply);
 		// Add a success message to the model
 		model.addAttribute("message", "Comment added successfully!");
-		 // Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
-	    List<Object[]> results = dao.countProductsByCategory();
-	    model.addAttribute("results", results);
+		// Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
+		List<Object[]> results = dao.countProductsByCategory();
+		model.addAttribute("results", results);
 		// Return the name of your success template
 		return "shop-single.html";
 	}
@@ -347,15 +372,38 @@ public class ProductController {
 		model.addAttribute("reply", reply);
 		// Add a success message to the model
 		model.addAttribute("message", "Comment added successfully!");
-		 // Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
-	    List<Object[]> results = dao.countProductsByCategory();
-	    model.addAttribute("results", results);
+		// Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
+		List<Object[]> results = dao.countProductsByCategory();
+		model.addAttribute("results", results);
 		// Return the name of your success template
 		return "shop-single.html";
 	}
-	
-	
-	
-	
+	@GetMapping("/newArrivals")
+	public String index(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
+	    int pageSize = 8; // or any other desired page size
+	    int totalProducts = 24; // or any other desired total number of products
+
+	    Page<Product> newProductPage = dao.findNewProducts(PageRequest.of(page, pageSize));
+	    List<Product> newProduct = newProductPage.getContent();
+
+	    List<Object[]> orderDetails = orderDetailDAO.findByAllTopProductOrderDetail();
+	    model.addAttribute("orderDetails", orderDetails);
+	    model.addAttribute("newProduct", newProduct);
+	    model.addAttribute("images", imageDAO.findAll());
+	    model.addAttribute("pro", dao.topProduct());
+	    model.addAttribute("products", dao.findAll());
+	    model.addAttribute("discountProducts", dpDAO.findAll());
+
+	    // Truy vấn danh sách hãng và số lượng sản phẩm tương ứng
+	    List<Object[]> results = dao.countProductsByCategory();
+	    model.addAttribute("results", results);
+
+	    model.addAttribute("currentPage", page);
+	    model.addAttribute("totalPages", (int) Math.ceil((double) totalProducts / pageSize));
+
+	    return "newArrivals.html";
+	}
+
+
 
 }
