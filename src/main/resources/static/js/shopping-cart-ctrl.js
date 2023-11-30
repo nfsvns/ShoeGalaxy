@@ -362,7 +362,7 @@ app.controller("cart-ctrl", function($scope, $http, $window) {
 
 })
 
-/*
+
 const host = "https://provinces.open-api.vn/api/";
 var callAPI = (api) => {
 	return axios.get(api)
@@ -395,13 +395,9 @@ var renderData = (array, select) => {
 $("#province").change(() => {
 	let selectedCode = $("#province option:selected").data("code");
 	callApiDistrict(host + "p/" + selectedCode + "?depth=2");
-	// printResult();
 });
 $("#district").change(() => {
 	let selectedCode = $("#district option:selected").data("code");
 	callApiWard(host + "d/" + selectedCode + "?depth=2");
-	// printResult();
 });
-$("#ward").change(() => {
-	// printResult();
-})*/
+
