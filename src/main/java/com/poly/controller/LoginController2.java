@@ -98,24 +98,36 @@ public class LoginController2 {
 
 	@RequestMapping("/register/success")
 	public String register1(Model model, @RequestParam String username, @RequestParam String password,
-@RequestParam String fullname, @RequestParam String email, @RequestParam String confirmPassword,
+			@RequestParam String fullname, @RequestParam String email, @RequestParam String confirmPassword,
 			HttpServletRequest request, @RequestParam(required = false) String otp) throws MessagingException {
+		model.addAttribute("username", username); // Thêm vào Controller
+		model.addAttribute("fullname", fullname);
+		model.addAttribute("email", email);
+
 		// Kiểm tra điều kiện đăng ký, như bạn đã thực hiện
-		if (accountDAO.findById(username).isPresent()) {
-			model.addAttribute("error", "Vui lòng đặt tên username khác!");
-			return "register";
-		} else if (!password.equals(confirmPassword)) {
-			model.addAttribute("error", "Mật khẩu và xác nhận mật khẩu không khớp. Vui lòng nhập lại.");
+		System.out.println(email);
+		if (accountDAO.findByEmail(email).isPresent()) {
+			System.out.println(accountDAO.findByEmail(email));
+			model.addAttribute("error", "Địa chỉ email đã được sử dụng. Vui lòng chọn địa chỉ email khác!");
 			return "register";
 		} else {
-			String generatedOtp = generateOtp();
-			otpMap.put(username, generatedOtp);
-			// Lưu trữ otpMap trong phiên
-			sessionService.setAttribute("otpMap", otpMap);
-			sessionService.setAttribute("account", new Account(username, password, fullname, email));
-			mailerService.sendOtpEmail(email, "Xác nhận đăng ký", "Mã OTP của bạn là: " + generatedOtp);
-			return "otp";
+			if (accountDAO.findById(username).isPresent()) {
+				model.addAttribute("error", "Vui lòng đặt tên username khác!");
+				return "register";
+			} else if (!password.equals(confirmPassword)) {
+				model.addAttribute("error", "Mật khẩu và xác nhận mật khẩu không khớp. Vui lòng nhập lại.");
+				return "register";
+			} else {
+				String generatedOtp = generateOtp();
+				otpMap.put(username, generatedOtp);
+				// Lưu trữ otpMap trong phiên
+				sessionService.setAttribute("otpMap", otpMap);
+				sessionService.setAttribute("account", new Account(username, password, fullname, email));
+				mailerService.sendOtpEmail(email, "Xác nhận đăng ký", "Mã OTP của bạn là: " + generatedOtp);
+				return "otp";
+			}
 		}
+
 	}
 
 	@PostMapping("/verify-otp")

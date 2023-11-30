@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Your head content here -->
+</head>
+<body>
+    <h2>File Edit Form</h2>
+    <form th:action="@{/edit}" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" />
+        <button type="submit">Edit</button>
+    </form>
+</body>
+</html>

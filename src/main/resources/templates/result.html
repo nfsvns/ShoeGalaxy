@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Your head content here -->
+</head>
+<body>
+    <h2>Edit Result</h2>
+    <p th:if="${error}" th:text="${error}"></p>
+    <p th:if="${success}" th:text="${success}"></p>
+    <p th:if="${fileName}" th:text="'File Name: ' + ${fileName}"></p>
+    <form th:if="${fileContent}" th:action="@{/save}" method="post">
+        <input type="hidden" name="fileName" th:value="${fileName}" />
+        <textarea name="fileContent" th:text="${fileContent}"></textarea>
+        <button type="submit">Save</button>
+    </form>
+</body>
+</html>
