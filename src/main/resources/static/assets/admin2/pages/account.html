@@ -162,49 +162,38 @@
 							</label>
 						</div>
 						
-						<!--  -->
+						
 						<div class="col-sm-8">
-    <div class="row">
-
-        <!-- First Column -->
-        <div class="form-group col-sm-5">
-            <div>Fullname</div>
-            <input ng-model="form.fullname" class="form-control">
-        </div>
-
-        <!-- Second Column -->
-        <div class="form-group col-sm-5">
-            <div>Email</div>
-            <input id="email" type="email" ng-model="form.email" class="form-control">
-        </div>
-
-        <!-- Third Column -->
-        <div class="form-group col-sm-5">
-            <div>Available?</div>
-            <div class="form-control">
-                <label class="radio-inline">
-                    <input ng-model="form.activate" ng-value="true" name="available" type="radio">Yes
-                </label>
-                <label class="radio-inline">
-                    <input ng-model="form.activate" ng-value="false" name="available" type="radio">No
-                </label>
-            </div>
-        </div>
-
-        <!-- Fourth Column -->
-        <div class="form-group col-sm-5">
-            <div>Image</div>
-            <input type="file" class="form-control" id="image"
-                onchange="angular.element(this).scope().imageChanged(this.files)">
-        </div>
-
-    </div>
-</div>
-						
-						<!--  -->
-						
-						
-						
+							<div class="row">
+								<div class="form-group col-sm-4">
+									<div>Username</div>
+									<input ng-model="form.username" class="form-control">
+								</div>
+								<div class="form-group col-sm-4">
+									<div>Password</div>
+									<input ng-value=" " type="password" disabled class="form-control" > 
+									
+								</div>			
+								<div class="row"></div>
+								<div class="form-group col-sm-4">
+									<div>Fullname</div>
+									<input ng-model="form.fullname" class="form-control">
+								</div>
+								<div class="form-group col-sm-4">
+									<div>Email</div>
+									<input id="email" type="email" ng-model="form.email" class="form-control">
+								</div>
+							
+							<div class="row">
+								<div class="form-group col-sm-4">
+									<div>Image</div>
+									<input type="file" class="form-control" id="image"
+										onchange="angular.element(this).scope().imageChanged(this.files)">
+								</div>
+								
+							</div>
+							
+						</div>
 					</div>
 				</div>
 
@@ -219,12 +208,11 @@
 		<button ng-click="update()" ng-disabled="!form.username"
 			class="btn btn-success">
 			<b class="glyphicon glyphicon-save"></b> Update
+		</button>
+		<button ng-click="delete(form)" ng-disabled="!form.username"
+			class="btn btn-danger">
+			<b class="glyphicon glyphicon-trash"></b> Delete
 		</button>	
-		<button  class="btn btn-danger" data-bs-toggle="modal" ng-disabled="!form.username"
-				data-bs-target="#exampleModal">
-				<b class="bi bi-plus"></b>Delete
-			</button>
-			
 		<button class="btn btn-info me-2" 
 			     data-bs-toggle="modal" data-bs-target="#secondModal">
                 <b class="glyphicon glyphicon-refresh"></b> Reset
@@ -260,9 +248,6 @@
 												<th
 												class="text-uppercase text-secondary text-xxs font-weight-bolde text-center opacity-7 ">
 												Photo</th>
-												<th
-												class="text-uppercase text-secondary text-xxs font-weight-bolde text-center opacity-7 ">
-												Activate</th>
 											
 										        <th></th>
 										</tr>
@@ -274,13 +259,12 @@
     <td>{{item.fullname}}</td>
     <td>{{item.email}}</td>
     <td>{{item.photo}}</td>
-    <td>{{item.activate?'Yes':'No'}}</td>
     <td>
         <div class="btn-group btn-group-xs">
             <a ng-click="edit(item)" href="" class="btn btn-warning">
                 <i class="fa fa-pen-to-square"></i>
             </a>
-            <a ng-click="deleteSaveData(item)" href="" class="btn btn-danger">
+            <a ng-click="delete(item)" href="" class="btn btn-danger">
                 <i class="fa fa-trash"></i>
             </a>
         </div>
@@ -361,7 +345,9 @@
         <div class="modal-content">
           <div class="modal-header">
         <h5 class="modal-title"id="resetPasswordModalLabel" style="text-align:center">Reset Form</h5>
-       
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
       <div class="modal-footer">
         
@@ -374,20 +360,5 @@
     </div>
 </div>
 <!--modal van  -->
-	<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Deactivate And Delete ShoeGalaxy Account</h5>
-       
-      </div>
-      <div class="modal-footer">
-      <button ng-click="deleteSaveData(form)" type="button" class="btn btn-danger">Vô hiệu hóa tài khoản</button>
-        <button ng-click="delete(form)" type="button" class="btn btn-secondary"  data-dismiss="modal">Xóa vĩnh viễn</button>
-        
-      </div>
-    </div>
-  </div>
-</div>
+	
 			

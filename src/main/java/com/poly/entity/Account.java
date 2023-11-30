@@ -31,8 +31,7 @@ public class Account implements Serializable {
 	String fullname;
 	String email;
 	String photo;
-	Integer id;
-	Boolean activate;
+
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "account")

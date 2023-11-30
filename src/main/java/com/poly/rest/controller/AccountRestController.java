@@ -42,7 +42,6 @@ import com.poly.service.OrderService;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
-
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/rest/accounts")
@@ -51,7 +50,6 @@ public class AccountRestController {
 	AccountService accountService;
 	@Autowired
 	ImageService imageService;
-
 	@Autowired
 	AuthorityService authorityService;
 
@@ -63,52 +61,30 @@ public class AccountRestController {
 	JavaMailSender emailSender;
 	@Autowired
 	MailerService mailerService;
-	
 	@GetMapping
 	public List<Account> getAccounts() {
-		List<Account> accounts = accountService.findAllWithPasswordEncoder();
-	    return accounts;
-		
+	    return accountService.findAllWithPasswordEncoder();
 	}
 	 
-
 	@GetMapping("{username}")
 	public Account getOne(@PathVariable("username") String username) {
 		return accountService.findById(username);
 	}
 	
-	
-
 	@PutMapping("{username}")
 	public Account put(@PathVariable("username") String username, @RequestBody Account account) {
-	    return accountService.updateAccountvan(account);
+		return accountService.update(account);
 	}
-	
-
-
-	@DeleteMapping("{username}/saveData")
-	public void deleteSaveData(@PathVariable("username") String username) {
-	    Account account = accountService.findById(username);
-	    if (account != null) {
-	        accountService.deleteSaveData(account);
-	    }
-	}
-
-
-
 	
 	@DeleteMapping("{username}")
 	public void delete(@PathVariable("username") String username) {
-
 	    accountService.deleteAccountAndRelatedData(username);
 	}
-
 
 
 	@PostMapping
 	public Account post(@RequestBody Account account) {   
       accountService.create(account);
-      
 	    return account;  
 	}
 
