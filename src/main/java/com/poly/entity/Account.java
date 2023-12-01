@@ -1,6 +1,7 @@
 package com.poly.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -31,6 +32,20 @@ public class Account implements Serializable {
 	String fullname;
 	String email;
 	String photo;
+	
+	
+
+	public Account(String username, String password, String fullname, String email) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.fullname = fullname;
+		this.email = email;
+	}
+
+	public Account() {
+		super();
+	}
 
 	
 	@JsonIgnore
