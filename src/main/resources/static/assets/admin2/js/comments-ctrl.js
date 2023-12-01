@@ -1,6 +1,6 @@
 
 // app.controller.js
-app.controller("comments-ctrl", function($scope, $http) {
+app.controller("comments-ctrl", function($scope, $http, $window) {
 	$scope.comments = [];
 	$scope.commentForm = {};
 	$scope.products = [];
@@ -31,6 +31,7 @@ app.controller("comments-ctrl", function($scope, $http) {
 
 						$scope.comments[commentIndex].replies.splice(replyIndex, 1);
 						alert("Xóa trả lời thành công!");
+						$window.location.reload();
 					})
 					.catch(function(error) {
 						alert("Lỗi xóa trả lời!");
@@ -61,26 +62,10 @@ app.controller("comments-ctrl", function($scope, $http) {
 	}
 	$scope.deleteComment = function(comment) {
 		if (confirm("Bạn có chắc muốn xóa bình luận này?")) {
-			// Check if there are associated replies
-			if (comment.replies && comment.replies.length > 0) {
-				if (confirm("Bình luận này có các trả lời liên quan. Bạn có muốn xóa tất cả trả lời trước khi xóa bình luận không?")) {
-					// Delete associated replies first
-					comment.replies.forEach(reply => {
-						$http.delete("/rest/replies/" + reply.id)
-							.then(resp => {
-								// Handle success if needed
-							})
-							.catch(error => {
-								// Handle error if needed
-								console.log("Error deleting reply", error);
-							});
-					});
-				} else {
-					// User chose not to delete comment with associated replies
-					return;
-				}
-			}
-
+			$scope.resetPager = function() {
+				// Reset pager to the first page after updating comments
+				$scope.pager.first();
+			};
 			// Now delete the comment
 			$http.delete("/rest/comments/" + comment.id)
 				.then(resp => {
@@ -88,6 +73,7 @@ app.controller("comments-ctrl", function($scope, $http) {
 					$scope.pager.items.splice(index, 1);
 					$scope.resetForm();
 					alert("Xóa bình luận thành công!");
+					$scope.initialize();
 
 				})
 				.catch(error => {
@@ -172,6 +158,8 @@ app.controller("comments-ctrl", function($scope, $http) {
 			this.page--;
 		}
 	};
+	
 
 	$scope.initialize();
+	
 });

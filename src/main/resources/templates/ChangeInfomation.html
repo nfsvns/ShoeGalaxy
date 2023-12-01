@@ -95,21 +95,22 @@
             <div class="card-body">
               <p class="text-uppercase text-sm">User Information</p>
               <div class="row">
-               <div class="col-md-8">
+                <div class="col-md-8 my">
+                  <div class="form-group">
+                    <label for="example-text-input" class="form-control-label mx-3 font-weight-bolder text-xs">Username <span class="text-danger">*</span></label>
+                    
+                    <input type="text" disabled style="background-color:#c9c1c1;border: 1px solid black;" class="form-control" id="username" name="username"
+                                       th:value="${account != null ? account.username : ''}" required>
+                  </div>
+                </div>
+               <div class="col-md-8 my-3">
                   <div class="form-group">
                     <label class="form-control-label mx-3 font-weight-bolder text-xs" >Họ và tên <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" style="background-color:white;border: 1px solid black;" id="fullname" name="fullname"
                                        th:value="${account != null ? account.fullname : ''}" required>
                   </div>
                 </div>
-                <div class="col-md-8 my-3">
-                  <div class="form-group">
-                    <label for="example-text-input" class="form-control-label mx-3 font-weight-bolder text-xs">Username <span class="text-danger">*</span></label>
-                    
-                    <input type="text" style="background-color:white;border: 1px solid black;" class="form-control" id="username" name="username"
-                                       th:value="${account != null ? account.username : ''}" required>
-                  </div>
-                </div>
+              
                 
                 
                 

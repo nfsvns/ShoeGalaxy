@@ -22,6 +22,8 @@ public interface AccountDAO extends JpaRepository<Account, String> {
 	
 //	 List<Account> findByEmail(String email);
 	 
+	 public boolean existsByusername(String username);
+
 	@Procedure
     void DeleteAccountAndRelatedData(String username);
 }

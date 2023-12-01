@@ -13,8 +13,8 @@ app.controller("cart-ctrl", function($scope, $http, $window) {
 			var modal = document.getElementById('myModal');
 			modal.classList.remove('show');
 			modal.style.display = 'none';
-			var modalBackdrop = document.querySelector('.modal-backdrop');
-			modalBackdrop.parentNode.removeChild(modalBackdrop);
+			/*	var modalBackdrop = document.querySelector('.modal-backdrop');*/
+			/*	modalBackdrop.parentNode.removeChild(modalBackdrop);*/
 		}, 700);
 	}
 
@@ -55,14 +55,50 @@ app.controller("cart-ctrl", function($scope, $http, $window) {
 						$scope.cart.items = [];
 						if (orderDetails && orderDetails.length > 0) {
 							for (var j = 0; j < orderDetails.length; j++) {
-								var orderDetail = orderDetails[j];
-								$scope.cart.items.push(orderDetail);
+								(function(orderDetail) {
+									var spanElement = document.getElementById('remoteUi');
+									var spanText = spanElement !== null ? spanElement.innerText : null;
+									console.log(spanText);
+									var accountData = null;
+									var productData = null;
+									$http.get(`/rest/accounts/${spanText}`).then(account => {
+										accountData = account.data;
+										$http.get(`/rest/products/${orderDetail.id}`).then(product => {
+											productData = product.data;
+											var data = {
+												account: accountData,
+												product: productData,
+												image: orderDetail.image,
+												name: orderDetail.name,
+												size: orderDetail.sizes,
+												price: orderDetail.price,
+												qty: orderDetail.qty,
+												total: orderDetail.price * orderDetail.qty,
+												status: true,
+											};
+											$http({
+												method: 'POST',
+												url: '/rest/carts',
+												data: data
+											}).then(function(response) {
+												console.log("Dữ liệu đã được lưu vào cơ sở dữ liệu", response.data);
+											}).catch(function(error) {
+												console.error("Lỗi khi lưu dữ liệu vào cơ sở dữ liệu: ", error);
+											});
+											$window.location.reload();
+											window.location.href = 'http://localhost:8080/cart.html';
+										});
+									});
+									console.log(orderDetail);
+									$scope.cart.items.push(orderDetail);
+								})(orderDetails[j]);
+								
 							}
 						} else {
 							console.log("No order details found");
 						}
-						$scope.cart.saveToLocalStorage();
-						window.location.href = 'http://localhost:8080/cart.html';
+
+
 					})
 					.catch(function(error) {
 						console.error(error);
@@ -72,7 +108,6 @@ app.controller("cart-ctrl", function($scope, $http, $window) {
 		}
 	};
 
-
 	var $cart = $scope.cart = {
 		items: [],
 		async add(id) {
@@ -81,7 +116,7 @@ app.controller("cart-ctrl", function($scope, $http, $window) {
 				return;
 			}
 
-			var spanElement = document.getElementById('remoteU');
+			var spanElement = document.getElementById('remoteUi');
 			var spanText = spanElement !== null ? spanElement.innerText : null;
 			if (spanText == null) {
 				try {
@@ -92,7 +127,7 @@ app.controller("cart-ctrl", function($scope, $http, $window) {
 					// Xử lý lỗi ở đây, ví dụ: ghi lỗi vào một file log
 				}
 			}
-			
+
 			await $http.get(`/rest/carts/username/${spanText}`).then(response => {
 				var cartItems = response.data;
 				var existingItem = cartItems.find(item => item.product.id == id && item.size == $scope.selectedSize);
@@ -104,8 +139,10 @@ app.controller("cart-ctrl", function($scope, $http, $window) {
 						.then(response => {
 							console.log("Dữ liệu đã được cập nhật trong cơ sở dữ liệu", response.data);
 							this.loadFromDatabase();
+							console.log(existingItem.qty);
 							$window.location.reload();
-					
+							displayModal();
+
 						})
 						.catch(error => {
 							console.error("Lỗi khi cập nhật dữ liệu trong cơ sở dữ liệu: ", error);
@@ -134,6 +171,7 @@ app.controller("cart-ctrl", function($scope, $http, $window) {
 
 									if (availableStock >= resp.data.qty) {
 										this.items.push(resp.data);
+										displayModal();
 									} else {
 										alert('Số lượng vượt quá số lượng tồn kho.');
 										return;
@@ -143,17 +181,18 @@ app.controller("cart-ctrl", function($scope, $http, $window) {
 								resp.data.qty = $scope.quantity;
 								resp.data.sizes = $scope.selectedSize;
 								this.saveToDatabase(resp.data);
-								$window.location.reload();
-					
+
+
+
 							});
 
 						});
-					
-						
+
+
 
 					});
 				}
-				 
+
 			}).catch(error => {
 				console.error("Lỗi khi tải dữ liệu từ cơ sở dữ liệu: ", error);
 			});
@@ -184,7 +223,7 @@ app.controller("cart-ctrl", function($scope, $http, $window) {
 				.reduce((total, amt) => total += amt, 0);
 		},
 		saveToDatabase(item) {
-			var spanElement = document.getElementById('remoteU');
+			var spanElement = document.getElementById('remoteUi');
 			var spanText = spanElement !== null ? spanElement.innerText : null;
 			console.log(spanText);
 			var accountData = null;
@@ -244,7 +283,7 @@ app.controller("cart-ctrl", function($scope, $http, $window) {
 		},
 		loadFromDatabase() {
 			if (this.items.length == 0) {
-				var spanElement = document.getElementById('remoteU');
+				var spanElement = document.getElementById('remoteUi');
 				var spanText = spanElement !== null ? spanElement.innerText : null;
 				$http.get(`/rest/carts/username/${spanText}`).then(response => {
 					this.items = response.data;
@@ -265,7 +304,7 @@ app.controller("cart-ctrl", function($scope, $http, $window) {
 				});
 		},
 		clearAll() { // Xóa sạch các mặt hàng trong giỏ
-			var spanElement = document.getElementById('remoteU');
+			var spanElement = document.getElementById('remoteUi');
 			var spanText = spanElement !== null ? spanElement.innerText : null;
 			if (!spanText) {
 				console.error('Không thể xác định tên người dùng.');
@@ -305,7 +344,7 @@ app.controller("cart-ctrl", function($scope, $http, $window) {
 				});
 		},
 		clear() {
-			var spanElement = document.getElementById('remoteU');
+			var spanElement = document.getElementById('remoteUi');
 			var spanText = spanElement !== null ? spanElement.innerText : null;
 			if (!spanText) {
 				console.error('Không thể xác định tên người dùng.');
@@ -360,7 +399,7 @@ app.controller("cart-ctrl", function($scope, $http, $window) {
 
 })
 
-/*
+
 const host = "https://provinces.open-api.vn/api/";
 var callAPI = (api) => {
 	return axios.get(api)
@@ -393,13 +432,9 @@ var renderData = (array, select) => {
 $("#province").change(() => {
 	let selectedCode = $("#province option:selected").data("code");
 	callApiDistrict(host + "p/" + selectedCode + "?depth=2");
-	// printResult();
 });
 $("#district").change(() => {
 	let selectedCode = $("#district option:selected").data("code");
 	callApiWard(host + "d/" + selectedCode + "?depth=2");
-	// printResult();
 });
-$("#ward").change(() => {
-	// printResult();
-})*/
+

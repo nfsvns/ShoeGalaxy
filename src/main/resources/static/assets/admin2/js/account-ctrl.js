@@ -9,13 +9,13 @@ app.controller("account-ctrl", function($scope, $http) {
 				
 			};
 			
-             $scope.reset(); // To have a clean form initially
-              $scope.loadCurrentUser();
+             $scope.reset(); 
+             $scope.loadCurrentUser();
         });
 
        
     };
-    
+  
 $scope.reset = function(){
 		$scope.form = {
 			photo: "cloud-upload.jpg"
@@ -65,7 +65,18 @@ $scope.reset = function(){
 		$scope.form = angular.copy(item);
 		$(".nav-tabs a:eq(0)").tab("show");
 	}
-	
+ $scope.deleteSaveData = function(item) {
+        if (confirm("Bạn có muốn vô hiệu hóa tài khoản này không ?")) {
+            $http.delete(`/rest/accounts/${item.username}/saveData`).then(resp => {
+                alert("vô hiệu hóa tài khoản thành công !");
+                $scope.reset();
+                $scope.initialize();
+            }).catch(error => {
+                alert("Lỗi vô hiệu hóa tài khoản !");
+                console.log("Error", error);
+            });
+        }
+    };
 	$scope.update = function(){
 		var item = angular.copy($scope.form);
 		$http.put(`/rest/accounts/${item.username}`, item).then(resp => {
@@ -78,8 +89,9 @@ $scope.reset = function(){
 			console.log("Error", error);
 		});
 	}
-	
-	
+
+
+
       
     
 	$scope.create = function() {
@@ -141,5 +153,7 @@ $scope.reset = function(){
         }
     };
 
+    
     $scope.initialize();
+
 });

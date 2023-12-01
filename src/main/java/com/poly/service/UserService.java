@@ -81,6 +81,7 @@ public class UserService implements UserDetailsService{
 	        account.setFullname(name);
 	        account.setPassword(password); // Mã hóa mật khẩu trước khi lưu
 	        account.setEmail(email);
+	        account.setPhoto("nv01.jpg");
 	        accountDAO.save(account);
 	        Authority authority = new Authority();
 			authority.setAccount(account);
