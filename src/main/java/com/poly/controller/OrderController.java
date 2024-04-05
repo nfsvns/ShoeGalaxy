@@ -163,7 +163,7 @@ public class OrderController {
 		List<Boolean> productStatus = new ArrayList<>();
 		for (int i = 0; i < productID.size(); i++) {
 			Integer id = productID.get(i);
-			Integer idSize = size.get(i);
+			String idSize = size.get(i).toString();
 			Integer countedQuantity = count.get(i);
 			// Tìm số lượng (quantity) theo productId và sizeId
 			Integer quantity = sizeDAO.findQuantityByProductIdAndSize(id, idSize);
@@ -190,7 +190,7 @@ public class OrderController {
 			// Nếu tất cả sản phẩm có đủ số lượng, thực hiện cập nhật cho tất cả sản phẩm
 			for (int i = 0; i < productID.size(); i++) {
 				Integer id = productID.get(i);
-				Integer idSize = size.get(i);
+				String idSize = size.get(i).toString();
 				Integer countedQuantity = count.get(i);
 
 				// Trừ số lượng
@@ -239,7 +239,7 @@ public class OrderController {
 						OrderDetail orderDetail = new OrderDetail();
 						orderDetail.setOrder(newOrder);
 						orderDetail.setProduct(product);
-						orderDetail.setSize(Integer.parseInt(sizeId[i]));
+						orderDetail.setSize(sizeId[i]);
 						orderDetail.setPrice(priceTotal.get(i));
 						orderDetail.setQuantity(Integer.parseInt(countProduct[i]));
 
@@ -316,7 +316,7 @@ public class OrderController {
 						OrderDetail orderDetail = new OrderDetail();
 						orderDetail.setOrder(newOrder);
 						orderDetail.setProduct(product);
-						orderDetail.setSize(Integer.parseInt(sizeId[i]));
+						orderDetail.setSize(sizeId[i]);
 						orderDetail.setPrice(priceTotal.get(i));
 						orderDetail.setQuantity(Integer.parseInt(countProduct[i]));
 						orderDetailDAO.save(orderDetail);

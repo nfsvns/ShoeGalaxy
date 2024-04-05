@@ -15,7 +15,7 @@ public interface ShoppingCartDAO extends JpaRepository<ShoppingCart, Integer> {
 	List<ShoppingCart> findShoppingCartsByUsername(String username);
 
 	@Query("SELECT s FROM ShoppingCart s WHERE s.product.id like ?1 and s.account.id like ?2 and s.size like ?3")
-	ShoppingCart findShoppingCartByProductIdAndUsernameAndSize(Integer id, String username, Integer size);
+	ShoppingCart findShoppingCartByProductIdAndUsernameAndSize(Integer id, String username, String size);
 
 	@Modifying
 	@Query("DELETE FROM ShoppingCart s WHERE s.account.username = :username")

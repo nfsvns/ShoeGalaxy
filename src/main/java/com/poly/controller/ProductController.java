@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.catalina.startup.ClassLoaderFactory.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -37,6 +38,7 @@ import com.poly.dao.ProductDAO;
 
 import com.poly.dao.ReplyDAO;
 import com.poly.dao.SizeDAO;
+import com.poly.dao.SizeProjection;
 import com.poly.entity.Account;
 import com.poly.entity.Comment;
 import com.poly.entity.DiscountProduct;
@@ -243,12 +245,13 @@ public class ProductController {
 	public String getProduct(Model model, @PathVariable("productId") int productId) {
 		Product list = dao.findById(productId).get();
 		List<Size> listS = sizeDAO.findByIdProduct(productId);
+		List<String> sizes = sizeDAO.findSizeByIdProduct(productId);
 		List<DiscountProduct> discountProducts = dpDAO.findByIdProduct(productId);
 		List<Comment> comment = commentDAO.findByCommentId(productId);
-
 		List<Reply> reply = replyDAO.findByCommentProductId(productId);
 
 		model.addAttribute("reply", reply);
+		model.addAttribute("sizes", sizes);
 		model.addAttribute("prod", list);
 		model.addAttribute("prodd", listS);
 		model.addAttribute("discountProducts", discountProducts);
@@ -259,7 +262,6 @@ public class ProductController {
 		return "shop-single";
 	}
 
-	
 	@GetMapping("/newArrivals")
 	public String index(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
 		int pageSize = 8; // or any other desired page size

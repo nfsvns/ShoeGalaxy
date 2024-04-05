@@ -30,7 +30,7 @@ public class ShoppingCart {
 
 	private String image;
 	private String name;
-	private Integer size;
+	private String size;
 	private float price;
 	private int qty;
 	private float total;

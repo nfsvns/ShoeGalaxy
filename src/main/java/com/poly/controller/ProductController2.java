@@ -44,6 +44,7 @@ public class ProductController2 {
 
 	@RequestMapping("/shop/detail/{id}")
 	public String detail(Model model, @PathVariable("id") Integer id) {
+		
 		Product item = productService.findById(id);
 		model.addAttribute("item", item);
 		return "shop-single";

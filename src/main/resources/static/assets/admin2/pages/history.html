@@ -69,7 +69,7 @@
 											<h6 class="text-sm font-weight-normal mb-1">{{
 												notification.message }}</h6>
 											<p class="text-xs text-secondary mb-0">
-<i class="fa fa-clock me-1"></i> {{ notification.timestamp |
+												<i class="fa fa-clock me-1"></i> {{ notification.timestamp |
 												date: 'medium' }}
 											</p>
 										</div>
@@ -150,7 +150,7 @@
 										<div
 											class="form-group col-sm-6 text-uppercase text-secondary text-xs font-weight-bolder opacity-7">
 											<div>Status?</div>
-<div class="form-control">
+											<div class="form-control">
 												<label
 													class="radio-inline text-uppercase text-secondary text-xxs font-weight-bolder">
 													<input ng-model="form.status" ng-value="'Đang Giao'"
@@ -227,9 +227,9 @@
 									ID</th>
 								<th
 									class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">
-									Username</th>
+									Email</th>
 								<th
-class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">
+									class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">
 									Create Date</th>
 								<th
 									class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7">
@@ -262,7 +262,7 @@ class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">
 						<tbody class="text-xs font-weight-bolder text-center ">
 							<tr ng-repeat="item in pagedItems">
 								<td>{{item.id}}</td>
-								<td>{{item.account.username}}</td>
+								<td>{{item.account.email}}</td>
 								<td>{{item.createDate | date:'dd/MM/yyyy'}}</td>
 								<td class="text-truncate" style="max-width: 200px">
 									{{item.address}}</td>
@@ -301,7 +301,7 @@ class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">
 
 					<div class="panel-footer text-center">
 						<button ng-click="pager.first()" class="btn" style="width: 60px;">
-<i class="fa-solid fa-backward-step"></i>
+							<i class="fa-solid fa-backward-step"></i>
 						</button>
 						<button ng-click="pager.prev()" class="btn" style="width: 60px;">
 							<i class="fa-solid fa-backward"></i>

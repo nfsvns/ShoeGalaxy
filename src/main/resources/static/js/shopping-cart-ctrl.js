@@ -1,9 +1,8 @@
-
 const app = angular.module("app", [])
 app.controller("cart-ctrl", function($scope, $http, $window) {
 	$scope.cart = [];
 
-	$scope.selectedSize = '';
+	$scope.selectedSize = "";
 
 	function displayModal() {
 		var modal = document.getElementById('myModal');
@@ -17,9 +16,6 @@ app.controller("cart-ctrl", function($scope, $http, $window) {
 			/*	modalBackdrop.parentNode.removeChild(modalBackdrop);*/
 		}, 700);
 	}
-
-
-
 	$scope.getSize = function(event) {
 		var size = event.target.innerText;
 		$scope.selectedSize = size.trim();
@@ -42,13 +38,14 @@ app.controller("cart-ctrl", function($scope, $http, $window) {
 
 
 	}
+
 	$scope.totalCount = 0; // Khai báo biến totalCount trong $scope
 	$scope.getOrderDetails = function() {
 		var buttons = document.getElementsByClassName('btn-secondary');
 		for (var i = 0; i < buttons.length; i++) {
 			buttons[i].addEventListener('click', function(event) {
 				var orderId = event.currentTarget.parentNode.querySelector('#orderId').value;
-
+                
 				$http.get(`/rest/products/repurchase/${orderId}`)
 					.then(function(response) {
 						var orderDetails = response.data.orderDetails;
@@ -61,6 +58,7 @@ app.controller("cart-ctrl", function($scope, $http, $window) {
 									console.log(spanText);
 									var accountData = null;
 									var productData = null;
+									var size = event.currentTarget.getAttribute('data-size');
 									$http.get(`/rest/accounts/${spanText}`).then(account => {
 										accountData = account.data;
 										$http.get(`/rest/products/${orderDetail.id}`).then(product => {
@@ -70,7 +68,7 @@ app.controller("cart-ctrl", function($scope, $http, $window) {
 												product: productData,
 												image: orderDetail.image,
 												name: orderDetail.name,
-												size: orderDetail.sizes,
+												size: size,
 												price: orderDetail.price,
 												qty: orderDetail.qty,
 												total: orderDetail.price * orderDetail.qty,
@@ -108,95 +106,68 @@ app.controller("cart-ctrl", function($scope, $http, $window) {
 		}
 	};
 
-	var $cart = $scope.cart = {
-		items: [],
-		async add(id) {
-			if (!$scope.selectedSize) {
-				alert('Vui lòng chọn size.');
-				return;
-			}
+var $cart = $scope.cart = {
+    items: [],
+    add(id) {
+        if (!$scope.selectedSize) {
+            alert('Vui lòng chọn size.');
+            console.log($scope.selectedSize);
+            return;
+        }
 
-			var spanElement = document.getElementById('remoteUi');
-			var spanText = spanElement !== null ? spanElement.innerText : null;
-			if (spanText == null) {
-				try {
-					alert("Vui lòng đăng nhập");
-					window.location.href = "/login";
-				} catch (error) {
-					console.error('Thông báo lỗi: ' + error);
-					// Xử lý lỗi ở đây, ví dụ: ghi lỗi vào một file log
-				}
-			}
+        var spanElement = document.getElementById('remoteUi');
+        var spanText = spanElement !== null ? spanElement.innerText : null;
+        if (spanText == null) {
+            try {
+                alert("Vui lòng đăng nhập");
+                window.location.href = "/login";
+                return; // Ngừng thực thi hàm nếu không có người dùng đăng nhập
+            } catch (error) {
+                console.error('Thông báo lỗi: ' + error);
+                // Xử lý lỗi ở đây, ví dụ: ghi lỗi vào một file log
+                return;
+            }
+        }
 
-			await $http.get(`/rest/carts/username/${spanText}`).then(response => {
-				var cartItems = response.data;
-				var existingItem = cartItems.find(item => item.product.id == id && item.size == $scope.selectedSize);
-				console.log($scope.selectedSize);
-				if (existingItem) {
-					existingItem.qty += $scope.quantity;
-					existingItem.total = existingItem.qty * existingItem.price;
-					$http.put(`/rest/carts/${existingItem.id}`, existingItem)
-						.then(response => {
-							console.log("Dữ liệu đã được cập nhật trong cơ sở dữ liệu", response.data);
-							this.loadFromDatabase();
-							console.log(existingItem.qty);
-							$window.location.reload();
-							displayModal();
-
-						})
-						.catch(error => {
-							console.error("Lỗi khi cập nhật dữ liệu trong cơ sở dữ liệu: ", error);
-						});
-				} else {
-					$http.get(`/rest/products/${id}`).then(resp => {
-						// Fetch product images 
-						$http.get(`/rest/products/${id}/images`).then(imageResp => {
-							if (imageResp.data.length > 0) {
-								resp.data.image = imageResp.data[0].image;
-							} else {
-								// Set a default image URL if no images are available
-								resp.data.image = 'url_to_default_image.jpg';
-							}
-
-							$http.get(`/rest/products/${id}/price`).then(totalAmount => {
-								if (totalAmount.data.length > 0) {
-									resp.data.percentage = totalAmount.data[0].percentage;
-
-								} else {
-									resp.data.percetage = 1;
-								}
-								// Check stock quantity before adding to cart
-								$http.get(`/rest/sizeManager/checkQuantity/${id}/${$scope.selectedSize}`).then(stockResp => {
-									var availableStock = stockResp.data;
-
-									if (availableStock >= resp.data.qty) {
-										this.items.push(resp.data);
-										displayModal();
-									} else {
-										alert('Số lượng vượt quá số lượng tồn kho.');
-										return;
-									}
-								});
-								// Set the quantity and selected size based on user input
-								resp.data.qty = $scope.quantity;
-								resp.data.sizes = $scope.selectedSize;
-								this.saveToDatabase(resp.data);
-
-
-
-							});
-
-						});
-
-
-
-					});
-				}
-
-			}).catch(error => {
-				console.error("Lỗi khi tải dữ liệu từ cơ sở dữ liệu: ", error);
-			});
-		},
+        // Lấy thông tin sản phẩm từ server
+        $http.get(`/rest/products/${id}`)
+            .then(resp => {
+                var product = resp.data;
+console.log($scope.selectedSize)
+                // Kiểm tra số lượng tồn kho của sản phẩm với kích thước đã chọn
+                $http.get(`/rest/sizeManager/checkQuantity/${id}/${$scope.selectedSize}`)
+                    .then(stockResp => {
+                        var availableStock = stockResp.data;
+                        
+                        // Kiểm tra xem có đủ hàng trong kho không
+                        if (availableStock >= product.qty) {
+                            // Thêm sản phẩm vào giỏ hàng
+                            var item = {
+								id:id,
+                                product: product,
+                                size: $scope.selectedSize,
+                                qty: product.qty, // Số lượng mặc định
+                                total: product.qty * product.price // Tính tổng tiền
+                            };
+                           
+                            // Thêm item vào giỏ hàng
+                            this.items.push(item);
+                            
+                            // Hiển thị modal thông báo
+                            displayModal();
+                        } else {
+                            alert('Số lượng vượt quá số lượng tồn kho.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Lỗi khi kiểm tra số lượng tồn kho: ", error);
+                    });
+            })
+            .catch(error => {
+                console.error("Lỗi khi tải thông tin sản phẩm từ server: ", error);
+            });
+    },
+    // Các phương thức khác của đối tượng $cart ở đây...
 		price_product(item) {
 			if (item.percentage == null || item.percentage === 0) {
 				return item.price;

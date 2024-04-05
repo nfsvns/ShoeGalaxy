@@ -70,7 +70,7 @@ public class VNPayController {
 		System.out.println(productID.size());
 		for (int i = 0; i < productID.size(); i++) {
 			Integer id = productID.get(i);
-			Integer idSize = size.get(i);
+			String idSize = size.get(i).toString();
 			Integer countedQuantity = count.get(i);
 
 			// Tìm số lượng (quantity) theo productId và sizeId
@@ -99,7 +99,7 @@ public class VNPayController {
 			// Nếu tất cả sản phẩm có đủ số lượng, thực hiện cập nhật cho tất cả sản phẩm
 			for (int i = 0; i < productID.size(); i++) {
 				Integer id = productID.get(i);
-				Integer idSize = size.get(i);
+				String idSize = size.get(i).toString();
 				Integer countedQuantity = count.get(i);
 
 				// Trừ số lượng
@@ -231,7 +231,7 @@ public class VNPayController {
 				OrderDetail orderDetail = new OrderDetail();
 				orderDetail.setOrder(newOrder);
 				orderDetail.setProduct(product);
-				orderDetail.setSize(size.get(i));
+				orderDetail.setSize(size.get(i).toString());
 				orderDetail.setPrice(product.getPrice());
 				orderDetail.setQuantity(count.get(i));
 				orderDetailDAO.save(orderDetail);

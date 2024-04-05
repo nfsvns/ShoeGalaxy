@@ -44,7 +44,7 @@ public class ShoppingCartRestController {
 
 	@GetMapping("/product/{username}/{id}/{size}")
 	public ShoppingCart findByProductIdAndUsernameAndSize(@PathVariable("username") String username,
-			@PathVariable("id") Integer id, @PathVariable("size") Integer size) {
+			@PathVariable("id") Integer id, @PathVariable("size") String size) {
 		return shoppingCartService.findByProductIdAndUsernameAndSize(id, username, size);
 	}
 

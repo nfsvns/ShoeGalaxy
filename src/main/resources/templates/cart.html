@@ -51,14 +51,14 @@
 								<td>{{item.name}}</td>
 								<td>{{item.size}}</td>
 								<!-- <td>${{item.price | number : 2}}</td> -->
-								<td>${{cart.price_product(item)}}</td>
+								<td>{{cart.price_product(item)}} VND</td>
 
 								<td><input
 									ng-change="cart.updateQtyDatabase(item.id,  item.qty)"
 									name="count" ng-model="item.qty" type="number" min="1"
 									style="width: 60px; border: none; outline: none;" /></td>
 								<!-- <td>${{cart.amt_of(item) | number : 2}}</td> -->
-								<td>${{cart.amtt_of(item) | number : 2}}</td>
+								<td>{{cart.amtt_of(item) }} VND</td>
 								<td>
 									<button ng-click="cart.remove(item)"
 										class="btn btn-sm btn-danger">

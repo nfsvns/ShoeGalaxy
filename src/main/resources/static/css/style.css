@@ -20,6 +20,11 @@ table {
     font-family: "Barlow", sans-serif;
     font-size: 15px;
 }
+.be-vietnam {
+  font-family: "Be Vietnam Pro", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
 .btn-outline-dark {
     background-color: white;
     color: black;
@@ -85,7 +90,7 @@ table {
 	position: relative;
 }
 
-.big-sale:before {
+/* .big-sale:before {
 	content: '';
 	position: absolute;
 	width: 100px;
@@ -95,7 +100,7 @@ table {
 	margin-top: 20px;
 	left: 0;
 }
-
+ */
 .product-card-shoe {
 	border: 1px solid #eaeaea;
 	border-radius: 10px;

@@ -18,9 +18,7 @@ public class Size implements Serializable {
 	private Product product;
 	
 	@Column(name = "size")
-	private Integer sizes;
-
-	
+	private String sizes;
 
     @Column(name = "quantity")
     private Integer quantity;

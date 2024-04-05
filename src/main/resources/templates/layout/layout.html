@@ -5,7 +5,7 @@
 <head>
 
 <meta charset="UTF-8">
-<title th:replace="${title}">Shoe Galaxy</title>
+<title th:replace="${title}">God Father</title>
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -25,7 +25,7 @@
 <script
 	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 
-<link rel="icon" type="image/x-icon" href="/images/logo.jpg"
+<link rel="icon" type="image/x-icon" href="/image/logo.png"
 	class="img-fluid rounded">
 
 <script src="https://kit.fontawesome.com/fa975b375a.js"
@@ -47,7 +47,9 @@
 	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 <script src="https://kit.fontawesome.com/2ddd33de1c.js"
 	crossorigin="anonymous"></script>
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
 
 <style>
@@ -140,29 +142,23 @@
     </div> -->
 
 
-	<header class="site-navbar" role="banner">
+	<header class="site-navbar sticky-top" role="banner">
 		<div class="site-navbar-top">
 			<div class="container">
 
-				<div class="row mt-5 ">
+				<div class="row mt-5 be-vietnam">
 					<div
 						class="col-6 col-md-4 order-2 order-md-1 site-search-icon text-left">
-						<form th:action="@{/shop.html/search}"
-							class="site-block-top-search">
-							<span class="icon icon-search2"></span> <input type="text"
-								name="keywords" th:value="${keywords}"
-								th:onblur="$(this).closest('form').submit()"
-								class="form-control border-0" placeholder="Search">
-						</form>
+
 					</div>
 
 					<div class="col-12 mb-md-0 col-md-4 order-1 order-md-2 text-center">
 						<div class="site-logo">
 
-							<img th:src="@{../../images/logowebsite.jpg}"
+							<!-- <img th:src="@{../../images/logowebsite.jpg}"
 								alt="Image placeholder" class="img-fluid rounded"
-								style="width: 40%; height: 10%">
-
+								style="width: 40%; height: 10%"> -->
+							<h1>𝔊𝔬𝔡 𝔉𝔞𝔱𝔥𝔢𝔯</h1>
 						</div>
 					</div>
 					<div class="col-6 col-md-4 order-3 order-md-3 text-right">
@@ -180,20 +176,16 @@
 											th:unless="${#strings.contains(#request.remoteUser, '@')}"
 											id="remoteU" th:text="${#request.remoteUser}"></span> <span
 											data-bs-toggle="dropdown"><i
-											class="fa-solid fa-user c"></i></span> 
-											
-											<span
-										
-											id="remoteUi"
-											th:text="${#request.remoteUser}"  style="display: none;"></span>
+											class="fa-solid fa-user c"></i></span> <span id="remoteUi"
+											th:text="${#request.remoteUser}" style="display: none;"></span>
 
 
-										
+
 
 
 										<ul class="dropdown-menu">
 											<li
-												th:if="${#request.isUserInRole('DIRE') or #request.isUserInRole('STAF')}">
+												th:if="${#request.isUserInRole('ADMI') or #request.isUserInRole('STAF')}">
 												<a class="dropdown-item" th:href="@{/admin2}"
 												th:text="#{nav.admin}">Admin</a>
 											</li>
@@ -217,8 +209,6 @@
 									th:unless="${#request.remoteUser != null}"> <span
 										class="icon icon-person"></span>
 								</a></li>
-								<li><a href="#" style="text-decoration: none"><span
-										class="icon icon-heart-o c"></span></a></li>
 
 
 
@@ -252,24 +242,24 @@
 			</div>
 		</div>
 
-		<nav class="site-navigation mt-4 mb-3 text-right text-md-center"
+		<nav class="site-navigation mt-4 mb-3 text-right text-md-center be-vietnam"
 			role="navigation">
 
 
 			<div class="container">
-			
-			 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-    
-    
-    </div>
+
+				<button class="navbar-toggler" type="button"
+					data-bs-toggle="collapse" data-bs-target="#navbarNav"
+					aria-controls="navbarNav" aria-expanded="false"
+					aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarNav"></div>
 				<ul class="site-menu js-clone-nav d-none d-md-block">
-					<li><a href="/index.html" th:text="#{nav.home}">Home</a>
-					<li><a href="/about.html" th:text="#{nav.about}">About</a></li>
+					<li><a href="/index.html" th:text="#{nav.home}" style="font-size: 120%">Home</a>
+					<li><a href="/about.html" th:text="#{nav.about}" style="font-size: 120%">About</a></li>
 					<li class="has-children"><a href="/shop.html"
-						th:text="#{nav.shop}">Shop</a>
+						th:text="#{nav.shop}" style="font-size: 120%">Shop</a>
 						<ul class="dropdown">
 
 							<li th:each="result : ${results}" th:if="${result[2]}"><a
@@ -278,9 +268,6 @@
 						</ul></li>
 
 
-					<li><a href="/newArrivals" th:text="#{nav.newarrivals}">New
-							Arrivals</a></li>
-					<li><a href="/contact.html" th:text="#{nav.contact}">Contact</a></li>
 
 
 
@@ -322,85 +309,55 @@
 	<main th:replace="${view}"></main>
 
 	<footer
-		class="page-footer container-fluid col-sm-12 text-center text-md-start"
-		style="background-color: #0000; color: black; bottom: 0px; margin-top: 20px">
-		<div class="container">
+		class="page-footer container-fluid col-sm-12 text-center text-md-start be-vietnam"
+		style="background-color: #0000; color: black; bottom: 0px; margin-top: 20px; border-top: 1px solid gray">
+		<div class="container mt-4">
 			<div class="row">
 
-				<div class="col-md-3">
-					<h5 class="font-weight-bold text-uppercase mt-3 mb-4">Shoe
-						Galaxy</h5>
-					<p th:text="#{footer.abc}">Bringing you quality sneakers from top brands for confident
-						steps every day.</p>
+				<div class="col-md-4">
+					<h4 class="font-weight-bold text-uppercase mt-3 mb-2">𝔊𝔬𝔡
+						𝔉𝔞𝔱𝔥𝔢𝔯</h4>
+					<span style="color: 		rgb(104,104,104); font-size:large;"><i class="fa-solid fa-envelope p-2 px-2" style="left: -1px"></i>
+						thegodfathervietnamfanpage@gmail.com<br>
+					<i class="fa-solid fa-phone p-2 px-2"></i>0922128168 <br>
+					<i class="fa-solid fa-location-dot p-2 px-2"></i>Tp. Hồ Chí Minh/ Hà Nội
+					</span>
 
 
-					<img th:src="@{../../images/thongbao.webp}" alt="Product 1"
-						class="img-fluid mb-3" style="height: 70px">
+
 				</div>
-				<div class="col-md-3">
-					<h5 class="font-weight-bold text-uppercase mt-3 mb-4"th:text="#{footer.info}">Information</h5>
-					<ul class="list-unstyled">
-						<li><a href="#!" class="text-decoration-none "th:text="#{footer.about}">About Us</a></li>
-						<li><a href="#!" class="text-decoration-none"th:text="#{footer.privacy}">Privacy
-								Policy</a></li>
-						<li><a href="#!" class="text-decoration-none"th:text="#{footer.terms}">Terms and
-								Conditions</a></li>
-						<li><a href="#!" class="text-decoration-none"th:text="#{footer.site}">Site Map</a></li>
-						<li><a href="#!" class="text-decoration-none" th:text="#{footer.size}">Size Guide</a></li>
-						<li><a href="#!" class="text-decoration-none"th:text="#{footer.feed}">Feedback</a></li>
+				<div class="col-md-4 px-1" align="center">
+					<h5 class="font-weight-bold text-uppercase mt-3 mb-2">THÔNG
+						TIN LIÊN HỆ</h5>
+					<span class="mt-1" style="color: 	rgb(104,104,104); font-size: large;">Theo dõi chúng
+						tôi</span>
+					<ul class="list-inline mt-2">
+						<li class="list-inline-item" style="margin-right: 20px;"><a
+							href="https://www.facebook.com/bogia.thegodfather.vietnam"><i
+								class="fab fa-facebook-f fa-lg fa-2x" style="color: #3b5998;"></i></a></li>
+						<li class="list-inline-item" style="margin-right: 20px;"><a
+							href="https://www.tiktok.com/@thegodfather_vietnam?lang=vi-VN"><i
+								class="fa-brands fa-tiktok fa-lg fa-2x"></i></a></li>
+						<li class="list-inline-item" style="margin-right: 20px;"><a
+							href="https://www.instagram.com/thegodfather_vietnam/"><i
+								class="fab fa-instagram fa-lg fa-2x" style="color: #e46c40;"></i></a></li>
 					</ul>
 				</div>
-				<div class="col-md-3">
-					<h5 class="font-weight-bold text-uppercase mt-3 mb-4"th:text="#{footer.freeshipping}">Customer
-						Services</h5>
-					<ul class="list-unstyled">
-						<li><a href="#!" class="text-decoration-none "th:text="#{footer.contact}">Contact</a></li>
-						<li><a href="#!" class="text-decoration-none "th:text="#{footer.support}">Support</a></li>
-						<li><a href="#!" class="text-decoration-none "th:text="#{footer.returns}">Returns</a></li>
-						<li><a href="#!" class="text-decoration-none "th:text="#{footer.order}">Order
-								Status</a></li>
-						<li><a href="#!" class="text-decoration-none "th:text="#{footer.faq}">FAQ</a></li>
-						<li><a href="#!" class="text-decoration-none "th:text="#{footer.loyalty}">Loyalty
-								Program</a></li>
-					</ul>
-				</div>
-				<div class="col-md-3">
-					<h5 class="font-weight-bold text-uppercase mt-3 mb-4"th:text="#{footer.contactAdd}">Contact
-						Address</h5>
-
-					<p th:text="#{footer.address1}">
-						QTSC Building 1, Quang Trung Software City, Tan Chanh
-						Hiep Ward, District 12, Ho Chi Minh City, Vietnam 
-					</p>Email:
-						ShoeGalaxy@sneakers.com <br> Hotline: (84-28) 3715 8888
-
-
+				<div class="col-md-4 " align="end">
+					<h5 class="font-weight-bold text-uppercase mt-3 mb-2" style="padding-right: 5% ;">TRANG
+						CỦA CHÚNG TÔI</h5>
+					<iframe 
+						src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fbogia.thegodfather.vietnam&tabs=timeline&width=270&height=130&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=1003754280493071"
+						width="270" height="130" style="border: none; overflow: hidden"
+						scrolling="no" frameborder="0" allowfullscreen="true"
+						allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-md-12 text-center" style="margin-top: 20px;">
-					<h5 class="font-weight-bold text-uppercase mt-1 mb-4"
-						style="letter-spacing: 4px;">Get In Touch</h5>
-					<ul class="list-inline text-center">
-						<li class="list-inline-item" style="margin-right: 20px;"><a
-							href="#"><i class="fab fa-facebook-f fa-lg fa-2x"
-								style="color: #3b5998;"></i></a></li>
-						<li class="list-inline-item" style="margin-right: 20px;"><a
-							href="#"><i class="fab fa-twitter fa-lg fa-2x"
-								style="color: #1da1f2;"></i></a></li>
-						<li class="list-inline-item" style="margin-right: 20px;"><a
-							href="#"><i class="fab fa-instagram fa-lg fa-2x"
-								style="color: #e46c40;"></i></a></li>
-						<li class="list-inline-item"><a href="#"><i
-								class="fab fa-pinterest fa-lg fa-2x" style="color: #bd081c;"></i></a></li>
-					</ul>
-				</div>
-			</div>
+
 		</div>
 		<div class="text-center container-fluid col-sm p-3"
 			style="background-color: #0000;">
-			© 2020 <a href="/" class=" text-decoration-none" style="color: black">Shoe
-				Galaxy Shop - Sneakers</a>
+			© 2021 <a href="/" class=" text-decoration-none" style="color: black">GodFather</a>
 		</div>
 
 

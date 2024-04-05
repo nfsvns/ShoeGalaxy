@@ -48,7 +48,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 	}
 
 	@Override
-	public ShoppingCart findByProductIdAndUsernameAndSize(Integer id, String username, Integer size) {
+	public ShoppingCart findByProductIdAndUsernameAndSize(Integer id, String username, String size) {
 		return shoppingCartDAO.findShoppingCartByProductIdAndUsernameAndSize(id, username, size);
 	}
 	

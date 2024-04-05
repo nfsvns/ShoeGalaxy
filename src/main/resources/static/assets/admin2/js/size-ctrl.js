@@ -56,10 +56,12 @@ $scope.loadCurrentUser = function() {
 
 
 	$scope.edit = function(item) {
-		$scope.form = angular.copy(item);
+    $scope.form = angular.copy(item);
+    // Gán kích thước của mục được chọn vào form.sizes
+    $scope.form.sizes = item.sizes;
+    $(".nav-tabs a:eq(0)").tab("show");
+}
 
-		$(".nav-tabs a:eq(0)").tab("show");
-	}
 
 	$scope.reset = function() {
 		$scope.form = {

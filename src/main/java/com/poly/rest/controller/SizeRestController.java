@@ -58,7 +58,7 @@ public class SizeRestController {
 	@GetMapping("/checkQuantity/{id}/{size}")
 	public Integer checkQuantity(
 	    @PathVariable("id") Integer id,
-	    @PathVariable("size")  Integer size
+	    @PathVariable("size")Integer size
 	) {
 	    return sizeService.findQuantityByProductIdAndSize(id, size);
 	}
